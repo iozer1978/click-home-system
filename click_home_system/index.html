@@ -1,0 +1,40 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+{% block content %}
+<div id="content-main">
+    
+    {% if metrics %}
+    <h2>{% translate 'מצב הפעילות הנוכחי' %}</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; margin-bottom: 30px;">
+        {% for metric in metrics %}
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-right: 5px solid {{ metric.color }};">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 14px; color: #777;">{{ metric.title }}</h3>
+                <i class="{{ metric.icon }}" style="font-size: 24px; color: {{ metric.color }}; opacity: 0.8;"></i>
+            </div>
+            <p style="margin: 10px 0 0 0; font-size: 28px; font-weight: 900; color: #333; direction: ltr; text-align: left;">
+                {{ metric.value }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    <hr>
+    {% endif %}
+
+    <div class="app-switcher">
+        {% for app in app_list %}
+            <div class="app-group">
+                <div class="app-group-row">
+                    {% for model in app.models %}
+                        {% include "admin/includes/dashboard_module.html" with model=model app=app %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% include "admin/app_list.html" with app_list=app_list show_changelist=True %}
+</div>
+{% endblock %}

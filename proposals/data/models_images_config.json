@@ -1,0 +1,321 @@
+{
+  "images_base_dir": "Static/images/House",
+  "rules": {
+    "drawing_keyword": "drawing",
+    "drawing_meaning": "שרטוט אדריכלי / Floor Plan",
+    "img_keyword": "img",
+    "img_meaning": "תמונות הדמיה/חוץ/פנים"
+  },
+  "model_content_note": "אופציונלי: לכל דגם אפשר להוסיף description, specs, internal_layout. אם ריק – לא מעדכן.",
+  "model_content": {},
+  "model_titles": {
+    "MODEL_01": "דגם 1 - Pavilion",
+    "MODEL_02": "דגם 2 - Pavilion",
+    "MODEL_03": "דגם 3 - Outdoor Terrance",
+    "MODEL_04": "דגם 4 - Wooden Garage",
+    "MODEL_05": "דגם 5 - House Floor Plan",
+    "MODEL_06": "דגם 6 - House Floor Plan",
+    "MODEL_07": "דגם 7 - House Floor Plan",
+    "MODEL_08": "דגם 8 - House Floor Plan",
+    "MODEL_09": "דגם 9 - House Floor Plan",
+    "MODEL_10": "דגם 10 - House Floor Plan",
+    "MODEL_11": "דגם 11 - House Floor Plan",
+    "MODEL_12": "דגם 12 - House Floor Plan",
+    "MODEL_13": "דגם 13 - House Floor Plan",
+    "MODEL_14": "דגם 14 - House Floor Plan",
+    "MODEL_15": "דגם 15 - House Floor Plan",
+    "MODEL_16": "דגם 16 - House Floor Plan",
+    "MODEL_17": "דגם 17 - House Floor Plan",
+    "MODEL_18": "דגם 18 - House Floor Plan",
+    "MODEL_19": "דגם 19 - House Floor Plan",
+    "MODEL_20": "דגם 20 - House Floor Plan",
+    "MODEL_21": "דגם 21 - House Floor Plan",
+    "MODEL_22": "דגם 22 - House Floor Plan",
+    "MODEL_23": "דגם 23 - House Floor Plan",
+    "MODEL_24": "דגם 24 - House Floor Plan",
+    "MODEL_25": "דגם 25 - House Floor Plan",
+    "MODEL_26": "דגם 26 - House Floor Plan",
+    "MODEL_27": "דגם 27 - House Floor Plan",
+    "MODEL_28": "דגם 28 - House Floor Plan",
+    "MODEL_29": "דגם 29 - House Floor Plan",
+    "MODEL_30": "דגם 30 - House Floor Plan",
+    "MODEL_31": "דגם 31 - House Floor Plan",
+    "MODEL_32": "דגם 32 - House Floor Plan",
+    "MODEL_33": "דגם 33 - House Floor Plan",
+    "MODEL_34": "דגם 34 - House Floor Plan"
+  },
+  "models_images": {
+    "MODEL_01": {
+      "drawings": [],
+      "images": [
+        "PAVILION MODEL 1 img 1.jpg",
+        "PAVILION MODEL 1 img 2.jpg",
+        "PAVILION MODEL 1 img 3.jpg",
+        "PAVILION MODEL 1 img 4.jpg",
+        "PAVILION MODEL 1 img 5.jpg"
+      ]
+    },
+    "MODEL_02": {
+      "drawings": [],
+      "images": [
+        "PAVILION MODEL 2 img 1.jpg",
+        "PAVILION MODEL 2 img 2.jpg",
+        "PAVILION MODEL 2 img 3.jpg"
+      ]
+    },
+    "MODEL_03": {
+      "drawings": [],
+      "images": [
+        "OUTDOOR TERRENCE MODEL 3 img 1.jpg",
+        "OUTDOOR TERRENCE MODEL 3 img 2.jpg",
+        "OUTDOOR TERRENCE MODEL 3 img 3.jpg",
+        "OUTDOOR TERRENCE MODEL 3 img 4.jpg",
+        "OUTDOOR TERRENCE MODEL 3 img 5.jpg"
+      ]
+    },
+    "MODEL_04": {
+      "drawings": [],
+      "images": [
+        "WOODEN GARAGE MODEL 4 img 1.jpg",
+        "WOODEN GARAGE MODEL 4 img 2.jpg",
+        "WOODEN GARAGE MODEL 4 img 3.jpg",
+        "WOODEN GARAGE MODEL 4 img 4.jpg"
+      ]
+    },
+    "MODEL_05": {
+      "drawings": ["HOUSE MODEL 5 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 5 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 5 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_06": {
+      "drawings": ["HOUSE MODEL6FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL6FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL6FLOOR PLAN img 2.jpg",
+        "HOUSE MODEL6FLOOR PLAN img 3.jpg"
+      ]
+    },
+    "MODEL_07": {
+      "drawings": ["HOUSE MODEL 7 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 7 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 7 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_08": {
+      "drawings": ["HOUSE MODEL 8 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 8 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 8 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_09": {
+      "drawings": [
+        "HOUSE MODEL 9 FLOOR PLAN drawing 1.jpg",
+        "HOUSE MODEL 9 FLOOR PLAN drawing 2.jpg"
+      ],
+      "images": [
+        "HOUSE MODEL 9 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 9 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_10": {
+      "drawings": ["HOUSE MODEL 10 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 10 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 10 FLOOR PLAN img 2.jpg",
+        "HOUSE MODEL 10 FLOOR PLAN img 3.jpg"
+      ]
+    },
+    "MODEL_11": {
+      "drawings": ["HOUSE MODEL 11 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 11 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 11 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_12": {
+      "drawings": ["HOUSE MODEL 12 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 12 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 12 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_13": {
+      "drawings": [],
+      "images": [
+        "HOUSE MODEL 13 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 13 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_14": {
+      "drawings": ["HOUSE MODEL 14 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 14 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 14 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_15": {
+      "drawings": ["HOUSE MODEL 15 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 15 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 15 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_16": {
+      "drawings": ["HOUSE MODEL 16 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 16 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 16 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_17": {
+      "drawings": ["HOUSE MODEL 17 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 17 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 17 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_18": {
+      "drawings": [
+        "HOUSE MODEL 18 FLOOR PLAN drawing 1.jpg",
+        "HOUSE MODEL 18 FLOOR PLAN drawing 2.jpg"
+      ],
+      "images": [
+        "HOUSE MODEL 18 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 18 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_19": {
+      "drawings": ["HOUSE MODEL 19 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 19 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 19 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_20": {
+      "drawings": ["HOUSE MODEL 20 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 20 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 20 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_21": {
+      "drawings": [
+        "HOUSE MODEL 21 FLOOR PLAN drawing.jpg",
+        "HOUSE MODEL 21 FLOOR PLAN drawing 2.jpg"
+      ],
+      "images": [
+        "HOUSE MODEL 21 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 21 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_22": {
+      "drawings": ["HOUSE MODEL 22 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 22 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 22 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_23": {
+      "drawings": ["HOUSE MODEL 23 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 23 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 23 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_24": {
+      "drawings": ["HOUSE MODEL 24 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 24 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 24 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_25": {
+      "drawings": ["HOUSE MODEL 25 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 25 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 25 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_26": {
+      "drawings": ["HOUSE MODEL 26 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 26 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 26 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_27": {
+      "drawings": ["HOUSE MODEL 27 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 27 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 27 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_28": {
+      "drawings": ["HOUSE MODEL 28 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 28 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 28 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_29": {
+      "drawings": ["HOUSE MODEL 29 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 29 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 29 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_30": {
+      "drawings": [
+        "HOUSE MODEL 30 FLOOR PLAN drawing.jpg",
+        "HOUSE MODEL 30 FLOOR PLAN drawing 2.jpg"
+      ],
+      "images": [
+        "HOUSE MODEL 30 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 30 FLOOR PLAN img 2.jpg"
+      ]
+    },
+    "MODEL_31": {
+      "drawings": ["HOUSE MODEL 31 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 31 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 31 FLOOR PLAN img 2.jpg",
+        "HOUSE MODEL 31 FLOOR PLAN img 3.jpg"
+      ]
+    },
+    "MODEL_32": {
+      "drawings": [
+        "HOUSE MODEL 32 FLOOR PLAN drawing.jpg",
+        "HOUSE MODEL 32 FLOOR PLAN drawing 2.jpg"
+      ],
+      "images": [
+        "HOUSE MODEL 32 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 32 FLOOR PLAN img 2.jpg",
+        "HOUSE MODEL 32 FLOOR PLAN img 3.jpg"
+      ]
+    },
+    "MODEL_33": {
+      "drawings": [
+        "HOUSE MODEL 33 FLOOR PLAN drawing.jpg",
+        "HOUSE MODEL 33 FLOOR PLAN drawing 2.jpg"
+      ],
+      "images": [
+        "HOUSE MODEL 33 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 33 FLOOR PLAN img 2.jpg",
+        "HOUSE MODEL 33 FLOOR PLAN img 3.jpg"
+      ]
+    },
+    "MODEL_34": {
+      "drawings": ["HOUSE MODEL 34 FLOOR PLAN drawing.jpg"],
+      "images": [
+        "HOUSE MODEL 34 FLOOR PLAN img 1.jpg",
+        "HOUSE MODEL 34 FLOOR PLAN img 2.jpg",
+        "HOUSE MODEL 34 FLOOR PLAN img 3.jpg"
+      ]
+    }
+  },
+  "misc_images": ["LinkeHouse woodrange brochure-2.jpg"]
+}

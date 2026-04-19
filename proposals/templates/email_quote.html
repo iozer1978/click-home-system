@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<body style="font-family: Arial, sans-serif; direction: rtl; background-color: #f4f4f4; padding: 20px;">
+    
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; border-top: 5px solid #8B5A2B;">
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #8B5A2B; margin: 0;">Click Home</h1>
+            <p style="color: #666;">בנייה קלה, חיים קלים</p>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee;">
+
+        <h2 style="color: #2A2A2A;">שלום {{ quote.client_name }},</h2>
+        <p style="font-size: 16px; color: #555;">
+            שמחנו לקבל את פנייתך! הנה הצעת המחיר עבור הדגם שבחרת:
+        </p>
+
+        <div style="background-color: #F9F9F9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #8B5A2B;">{{ quote.selected_house.title }}</h3>
+            <p><strong>תיאור:</strong> {{ quote.selected_house.description }}</p>
+            
+            {% if quote.selected_upgrades.all %}
+            <p><strong>שדרוגים שנבחרו:</strong></p>
+            <ul>
+                {% for upgrade in quote.selected_upgrades.all %}
+                <li>{{ upgrade.name }} (+₪{{ upgrade.price }})</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if quote.admin_notes %}
+            <div style="background: #fff8e1; padding: 10px; border-radius: 5px; margin-top: 10px; border: 1px solid #ffe082;">
+                <strong>הערות:</strong> {{ quote.admin_notes }}
+            </div>
+            {% endif %}
+
+            <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">
+                סה"כ לתשלום (משוער): <span style="color: #8B5A2B;">₪{{ quote.final_price }}</span>
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://wa.me/972503439999" style="background-color: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 50px; font-weight: bold;">דברו איתנו בווטסאפ להמשך</a>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #999;">
+            <p>Click Home | התרופה 6, נתניה | 050-3439999</p>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Home - בונים את העתיד שלך | בתים יבילים ובתי קונטיינר</title>
+    <meta name="description" content="קליק הום - פתרונות דיור מתקדמים: בתים יבילים, בתי קונטיינר ובנייה קלה. צפו בקטלוג הדגמים, קבלו הצעת מחיר והתחילו לבנות את הבית שלכם.">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root { --brand-brown: #8B5A2B; --brand-olive: #6B705C; --bg-cream: #F5F1E8; --white: #ffffff; --dark: #2A2A2A; }
+        body { font-family: 'Heebo', sans-serif; margin: 0; padding: 0; background-color: var(--bg-cream); color: var(--dark); }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; z-index: 100; }
+        .logo a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--brand-brown); }
+        .logo img { height: 50px; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: 0.2s; }
+        .nav-links a:hover { color: var(--brand-brown); }
+        
+        .auth-buttons { display: flex; align-items: center; gap: 15px; }
+        .btn-register { background: var(--brand-brown); color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: 0.2s; }
+        .btn-login { color: var(--brand-brown); font-weight: bold; text-decoration: none; border: 2px solid transparent; padding: 8px 15px; border-radius: 50px; }
+        .user-greeting { font-weight: bold; color: var(--brand-olive); margin-left: 10px; }
+        .btn-logout { background: none; border: none; color: #999; cursor: pointer; font-family: 'Heebo'; font-weight: bold; font-size: 15px; text-decoration: underline; }
+
+        .hero { 
+            position: relative; width: 100%; max-width: 1800px; margin: 0 auto; height: 750px; 
+            border-radius: 0 0 50px 50px; overflow: hidden; 
+            background-image: url('/media/main-hero.jpg'); background-size: cover; background-position: center bottom; background-color: #ddd; 
+        }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.5)); border-radius: 0 0 50px 50px; }
+        
+        .hero-content { 
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 90%; z-index: 2; 
+        }
+        .hero h1 { font-size: 48px; font-weight: 900; margin: 0; line-height: 1.1; text-shadow: 0 2px 15px rgba(0,0,0,0.5); }
+        .hero p { font-size: 24px; font-weight: 400; margin-top: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+
+        .about-section { max-width: 1000px; margin: 60px auto 20px auto; text-align: center; padding: 0 20px; }
+        .about-title { font-size: 32px; font-weight: 900; color: var(--brand-brown); margin-bottom: 15px; }
+        .about-text { font-size: 18px; line-height: 1.6; color: #555; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px 40px 20px; }
+        .section-title { text-align: center; margin-bottom: 24px; font-size: 36px; font-weight: 800; color: var(--brand-brown); }
+        .filter-types { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 32px; }
+        .filter-types a { display: inline-block; padding: 10px 20px; border-radius: 50px; background: #fff; color: #555; text-decoration: none; font-weight: 600; font-size: 14px; border: 1px solid #e0e0e0; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .filter-types a:hover { border-color: var(--brand-brown); color: var(--brand-brown); }
+        .filter-types a.active { background: var(--brand-brown); color: #fff; border-color: var(--brand-brown); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 35px; }
+
+        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; position: relative; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,0,0,0.12); }
+        .card-img { width: 100%; height: 260px; object-fit: cover; }
+        .card-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--dark); }
+        .card-types { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .card-type-tag { font-size: 11px; padding: 4px 10px; border-radius: 50px; background: var(--bg-cream); color: var(--brand-olive); font-weight: 600; border: 1px solid #e5e2d9; }
+        .card-desc { color: #777; font-size: 15px; margin-bottom: 20px; height: 44px; overflow: hidden; line-height: 1.5; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 12px; flex-wrap: nowrap; }
+        .card-footer .card-price { font-size: 26px; font-weight: 900; color: var(--dark); min-width: 0; }
+        .card-footer .card-price.contact-msg { font-size: 14px; font-weight: 600; color: var(--brand-brown); }
+        .card-btn { color: var(--brand-brown); font-weight: 700; text-decoration: none; font-size: 15px; border: 2px solid var(--brand-brown); padding: 8px 20px; border-radius: 50px; transition: 0.2s; white-space: nowrap; flex-shrink: 0; }
+        .card-btn:hover { background: var(--brand-brown); color: white; }
+        
+        /* FAQ Section Style */
+        .faq-section { max-width: 800px; margin: 60px auto; padding: 0 20px; }
+        .faq-item { background: white; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .faq-question { padding: 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; background: #fff; transition: 0.2s; }
+        .faq-question:hover { background: #fdfbf7; }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; color: #666; line-height: 1.6; }
+        .faq-answer.open { padding-bottom: 20px; max-height: 300px; }
+        .faq-icon { transition: 0.3s; color: var(--brand-olive); }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+
+        .float-wa { position: fixed; width: 60px; height: 60px; bottom: 40px; left: 40px; background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 3px #999; z-index: 1000; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+
+        .footer { text-align: center; margin-top: 60px; padding: 40px 20px; background: white; border-top: 5px solid var(--brand-brown); font-size: 15px; color: #555; }
+        .footer-logo { height: 60px; opacity: 1; margin-bottom: 20px; }
+        .footer-company { font-weight: 900; font-size: 18px; color: var(--brand-brown); margin-bottom: 10px; display:block; }
+
+        @media (max-width: 768px) {
+            .hero-content { display: none; }
+            .hero { height: 300px; background-position: center; border-radius: 0 0 30px 30px; }
+            .grid { grid-template-columns: 1fr; } 
+            .navbar { padding: 15px; flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home' %}">
+                <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
+                <span style="font-weight:900; font-size:20px; margin-right:5px;">Click Home</span>
+            </a>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{% url 'home' %}">דף הבית</a>
+            <a href="{% url 'catalog' %}">דגמים</a>
+            <a href="{% url 'about' %}">אודות</a>
+            <a href="{% url 'contact' %}">צור קשר</a>
+        </div>
+
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                <span class="user-greeting">שלום, {{ user.first_name|default:user.username }}</span>
+                <a href="{% url 'profile' %}" style="text-decoration:none; color:var(--brand-brown); margin:0 10px;">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+                <a href="{% url 'account_logout' %}" class="btn-logout">יציאה</a>
+            {% else %}
+                <a href="{% url 'account_login' %}" class="btn-login" style="font-size:14px;">התחברות</a>
+                <a href="{% url 'register' %}" class="btn-register" style="font-size:14px; padding: 8px 15px;">הרשמה</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>בנייה קלה, חיים קלים</h1>
+            <p>בחר את הדגם המושלם עבורך מתוך הקטלוג שלנו</p>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <h2 class="about-title">קליק הום - בונים את העתיד שלך</h2>
+        <p class="about-text">
+            אנחנו בקליק הום מאמינים שבית הוא לא רק קירות, הוא מקום שבו חיים נבנים. עם ניסיון עשיר בבנייה מתקדמת ועיצוב מודרני, אנו מציעים פתרונות דיור איכותיים, מהירים ומשתלמים.
+        </p>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">הדגמים שלנו</h2>
+        {% if house_types %}
+        <div class="filter-types">
+            <a href="{% url 'home' %}" class="{% if not active_type_slug %}active{% endif %}">הכל</a>
+            {% for t in house_types %}
+            <a href="{% url 'home' %}?type={{ t.slug }}" class="{% if active_type_slug == t.slug %}active{% endif %}">{{ t.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="grid">
+            {% for house in houses %}
+            <div class="card">
+                {% if house.get_main_image %}
+                    <img src="{{ house.get_main_image.url }}" class="card-img" alt="{{ house.title }}">
+                {% else %}
+                    <div style="width:100%; height:260px; background:#f0f0f0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#999;">
+                        <i class="fas fa-image" style="font-size:40px; margin-bottom:10px;"></i>
+                        <span>אין תמונה</span>
+                    </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="card-title">{{ house.title }}</div>
+                    {% if house.house_types.all %}
+                    <div class="card-types">
+                        {% for t in house.house_types.all %}<span class="card-type-tag">{{ t.name }}</span>{% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="card-desc">{{ house.description|truncatechars:60 }}</div>
+                    
+                    <div class="card-footer">
+                        {% if house.price_estimate > 0 %}
+                        <div class="card-price">₪{{ house.price_estimate }}</div>
+                        {% else %}
+                        <div class="card-price contact-msg">צור קשר להצעת מחיר מותאמת</div>
+                        {% endif %}
+                        <a href="{% url 'house_detail' house.id %}" class="card-btn">פרטים נוספים</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2 class="section-title" style="margin-bottom:30px;">שאלות נפוצות</h2>
+        {% for faq in faqs %}
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                {{ faq.question }}
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                {{ faq.answer }}
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align:center; color:#777;">שאלות ותשובות יופיעו כאן. ניתן להוסיף ולערוך דרך ממשק הניהול.</p>
+        {% endfor %}
+    </div>
+
+    <a href="https://wa.me/972503439999" class="float-wa" target="_blank" title="וואטסאפ"><i class="fab fa-whatsapp"></i></a>
+
+    <div class="footer">
+        <img src="/media/logo.png" alt="Click Home Logo" class="footer-logo" onerror="this.style.display='none'">
+        <div class="footer-info">
+            <span class="footer-company">קליק הום חברה בע"מ</span>
+            <p>050-3439999 | info@click-home.co.il</p>
+        </div>
+        <p style="margin-top:20px; font-size:12px; opacity:0.6;">© כל הזכויות שמורות</p>
+    </div>
+
+    <script>
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            
+            item.classList.toggle('active');
+            if (item.classList.contains('active')) {
+                answer.style.maxHeight = answer.scrollHeight + "px";
+                answer.classList.add('open');
+            } else {
+                answer.style.maxHeight = null;
+                answer.classList.remove('open');
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+================================================================================
+הגדרת התחברות עם Google ו-Facebook (django-allauth)
+================================================================================
+
+כדי שהכפתורים "התחבר עם Google" ו-"התחבר עם Facebook" יעבדו, יש להגדיר
+Site (דומיין) ואז להוסיף Social applications בממשק הניהול.
+
+שלב 0 – הגדרת Site (חשוב לפיתוח מקומי)
+---------------------------------------
+1. באדמין: Sites (תחת SITES) → לחץ על האתר (בדרך כלל "example.com").
+2. Domain name: להחליף ל-  127.0.0.1:8000   (לפיתוח מקומי).
+3. Display name: למשל "Click Home Local".
+4. שמור.
+   כך ההתחברות החברתית תזהה את האתר כשגולשים מ- http://127.0.0.1:8000 .
+   בפרודקשן יש להגדיר כאן את הדומיין האמיתי (למשל www.click-home.co.il).
+
+שלב 1 – הרצת מיגרציות
+---------------------
+  python manage.py migrate
+
+שלב 2 – הוספת אפליקציית Google
+------------------------------
+1. היכנס לאדמין: https://הדומיין-שלך/admin/
+2. עבור ל: "Social applications" (תחת SOCIAL ACCOUNT) → "Social applications" → "Add"
+3. בחר Provider: Google
+4. Name: Google (או כל שם)
+5. Client id ו-Client secret – מקבלים מ:
+   - גלוש ל: https://console.cloud.google.com/
+   - צור פרויקט (או בחר קיים) → APIs & Services → Credentials
+   - צור "OAuth 2.0 Client ID" (סוג: Web application)
+   - ב-Authorized redirect URIs הוסף: https://הדומיין-שלך/accounts/google/login/callback/
+     לפיתוח מקומי: http://127.0.0.1:8000/accounts/google/login/callback/
+6. בשדה "Sites" (חובה!) – בחר את האתר מהרשימה (אחרי שלב 0 זה יהיה 127.0.0.1:8000) ושמור.
+
+שלב 3 – הוספת אפליקציית Facebook
+---------------------------------
+1. באדמין: Social applications → Add
+2. Provider: Facebook
+3. Name: Facebook
+4. App ID ו-App secret – מקבלים מ:
+   - גלוש ל: https://developers.facebook.com/apps/
+   - צור אפליקציה (סוג: Consumer) והוסף "Facebook Login" → Web
+   - ב-Facebook Login → Settings הוסף ב-Valid OAuth Redirect URIs:
+     https://הדומיין-שלך/accounts/facebook/login/callback/
+     לפיתוח: http://127.0.0.1:8000/accounts/facebook/login/callback/
+5. Sites (חובה!): בחר את האתר מהרשימה ושמור.
+
+הערה: אם אחרי ההגדרה ההתחברות נכשלת – וודא ש־Redirect URI ב־Google/Facebook תואם בדיוק:
+  http://127.0.0.1:8000/accounts/google/login/callback/   או
+  http://127.0.0.1:8000/accounts/facebook/login/callback/
+
+אם לא מוסיפים Social applications – ההתחברות עם שם משתמש וסיסמה תמשיך לעבוד;
+רק הכפתורים של Google ו-Facebook לא יפעילו התחברות עד שההגדרה תושלם.

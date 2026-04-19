@@ -1,0 +1,87 @@
+{% load socialaccount %}{% load social_tags %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התחברות - Click Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --brand-brown: #8B5A2B; --brand-olive: #6B705C; --bg-cream: #F5F1E8; }
+        body { font-family: 'Heebo', sans-serif; margin: 0; background-color: var(--bg-cream); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .login-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
+        .logo { height: 50px; margin-bottom: 20px; }
+        h1 { color: var(--brand-brown); font-weight: 900; margin-bottom: 25px; font-size: 26px; }
+        .social-buttons { margin-bottom: 25px; }
+        .social-buttons p { font-size: 14px; color: #666; margin-bottom: 12px; }
+        .btn-social { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px 20px; border-radius: 50px; font-family: 'Heebo'; font-size: 16px; font-weight: bold; text-decoration: none; margin-bottom: 10px; transition: 0.2s; border: none; cursor: pointer; }
+        .btn-google { background: #fff; color: #333; border: 1px solid #ddd; }
+        .btn-google:hover { background: #f5f5f5; border-color: #ccc; }
+        .btn-facebook { background: #1877F2; color: white; }
+        .btn-facebook:hover { background: #166fe5; }
+        .divider { margin: 20px 0; font-size: 14px; color: #999; }
+        .form-group { margin-bottom: 18px; text-align: right; }
+        .form-label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #555; }
+        .form-input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 50px; font-family: 'Heebo'; font-size: 16px; box-sizing: border-box; background: #f9f9f9; }
+        .form-input:focus { border-color: var(--brand-brown); background: white; outline: none; }
+        .btn-submit { background: var(--brand-brown); color: white; border: none; padding: 12px; width: 100%; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 5px; }
+        .btn-submit:hover { background: #6f4721; }
+        .links { margin-top: 22px; font-size: 14px; color: #777; }
+        .links a { color: var(--brand-brown); text-decoration: none; font-weight: bold; }
+        .error-msg { background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 18px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <img src="/media/logo.png" alt="Click Home" class="logo" onerror="this.style.display='none'">
+        <h1>כניסה לאזור האישי</h1>
+
+        {% safe_provider_login_url 'google' as google_url %}
+        {% safe_provider_login_url 'facebook' as facebook_url %}
+        {% if google_url or facebook_url %}
+        <div class="social-buttons">
+            <p>התחבר עם:</p>
+            {% if google_url %}
+            <a href="{{ google_url }}" class="btn-social btn-google">
+                <i class="fab fa-google"></i> Google
+            </a>
+            {% endif %}
+            {% if facebook_url %}
+            <a href="{{ facebook_url }}" class="btn-social btn-facebook">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            {% endif %}
+        </div>
+        <div class="divider">או עם שם משתמש וסיסמה</div>
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="error-msg">
+            <i class="fas fa-exclamation-circle"></i> שם המשתמש או הסיסמה שגויים.
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">שם משתמש או אימייל</label>
+                <input type="text" name="login" class="form-input" placeholder="שם משתמש או אימייל" required autofocus>
+            </div>
+            <div class="form-group">
+                <label class="form-label">סיסמה</label>
+                <input type="password" name="password" class="form-input" required>
+            </div>
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+            <button type="submit" class="btn-submit">התחברות</button>
+        </form>
+
+        <div class="links">
+            עדיין אין לך חשבון? <a href="{% url 'register' %}">הרשמה כאן</a> או <a href="{% url 'account_signup' %}">הרשמה עם Google/Facebook</a><br><br>
+            <a href="{% url 'home' %}" style="color:#999; font-weight:normal;">&larr; חזרה לדף הבית</a>
+        </div>
+    </div>
+</body>
+</html>

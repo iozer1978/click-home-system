@@ -1,0 +1,47 @@
+C:\click_home_system\
+│
+├── manage.py                    (קובץ ניהול השרת)
+├── db.sqlite3                   (בסיס הנתונים - כולל עכשיו גם משתמשים)
+│
+├── click_home_system/           (תיקיית ההגדרות הראשית)
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py              (מעודכן: כולל הגדרות LOGIN_REDIRECT)
+│   ├── urls.py                  (מעודכן: כולל נתיבי profile, login, register)
+│   ├── wsgi.py
+│   └── __pycache__/
+│
+├── media/                       (תיקיית המדיה)
+│   ├── blueprints/              (תיקייה לשרטוטים)
+│   ├── house_images/            (תמונות ראשיות)
+│   ├── house_media/             (גלריות)
+│   ├── upgrades/                (תמונות שדרוגים)
+│   ├── bg-pattern.jpg
+│   ├── logo.png
+│   └── main-hero.jpg
+│
+└── proposals/                   (האפליקציה שלך)
+    │
+    ├── migrations/              (תיקיית מיגרציות)
+    │   ├── __init__.py
+    │   ├── 0001_initial.py
+    │   ├── ... (קבצי מיגרציה קודמים)
+    │   └── 0006_...             (יווצר כשתריץ makemigrations לפרופיל)
+    │
+    ├── templates/               (תיקיית ה-HTML - כל העיצובים כאן)
+    │   ├── home.html            (מעודכן: תפריט עם כניסה/הרשמה/שם משתמש)
+    │   ├── house_detail.html    (מעודכן: כפתור מועדפים ומחיר חכם)
+    │   ├── quote.html           (דף הצעת מחיר)
+    │   ├── login.html           (חדש: דף התחברות)
+    │   ├── register.html        (חדש: דף הרשמה עם הצגת שגיאות)
+    │   └── profile.html         (חדש: אזור אישי ומועדפים)
+    │
+    ├── __init__.py
+    ├── admin.py
+    ├── apps.py
+    ├── forms.py                 (חדש: טופס הרשמה מורחב עם טלפון)
+    ├── models.py                (מעודכן: מודל ClientProfile לטלפון ומועדפים)
+    ├── tests.py
+    ├── urls.py                  (קיים, אך השימוש העיקרי הוא ב-urls הראשי)
+    ├── views.py                 (מעודכן: לוגיקה של הרשמה, פרופיל ומועדפים)
+    └── __pycache__/

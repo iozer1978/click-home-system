@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>הצעת מחיר</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 0cm;
+            @frame content_frame {
+                left: 1.0cm; right: 1.0cm; top: 0cm; bottom: 1.0cm;
+            }
+        }
+
+        body {
+            font-family: 'Arial', sans-serif; /* שימוש ב-Arial */
+            margin: 0; padding: 0;
+            color: #333;
+            font-size: 12px;
+        }
+
+        /* --- באנר עליון --- */
+        .header-wrapper {
+            width: 100%;
+            height: 250px; /* גובה הבאנר */
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .banner-bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: -1;
+        }
+
+        /* --- טקסטים על הבאנר --- */
+        .overlay {
+            position: absolute;
+            font-weight: bold;
+        }
+
+        /* תאריך ושעה - צד שמאל למעלה */
+        .pos-date { 
+            top: 30px; 
+            left: 30px; 
+            color: #cc0000; 
+            font-size: 14px; 
+        }
+
+        /* כותרת מסמך - באמצע */
+        .pos-title { 
+            top: 50px; 
+            width: 100%; 
+            text-align: center; 
+            color: #cc0000; 
+            font-size: 40px; 
+        }
+
+        /* פרטי לקוח - צד ימין למעלה */
+        .pos-client { 
+            top: 30px; 
+            right: 30px; 
+            text-align: right; 
+            font-size: 14px; 
+            color: #cc0000; /* אדום כפי שביקשת */
+            line-height: 1.6;
+        }
+
+        /* --- תוכן --- */
+        .content { padding: 0 40px; }
+
+        /* תמונת הבית הראשית - קטנה יותר */
+        .hero-img { 
+            width: 300px; 
+            height: 200px; 
+            object-fit: contain; 
+            margin: 0 auto; 
+            display: block; 
+            margin-bottom: 20px;
+        }
+
+        /* טבלת מחירים */
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .items-table th { background-color: #f0f0f0; color: #333; padding: 8px; border-bottom: 2px solid #ccc; font-size: 11px; text-align: right; }
+        .items-table td { padding: 10px; border-bottom: 1px solid #eee; }
+
+        .footer-total { background-color: #333; color: white; padding: 15px; margin-top: 20px; }
+
+        /* גלריה בסוף - 4 בשורה */
+        .gallery-section { margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; }
+        .gallery-table { width: 100%; border: none; }
+        .gallery-td { width: 25%; padding: 5px; text-align: center; vertical-align: top; }
+        .gallery-img { width: 140px; height: 100px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-wrapper">
+        <img src="{{ banner_path }}" class="banner-bg">
+
+        <div class="overlay pos-date">
+            תאריך: {{ quote.created_at|date:"d/m/Y" }}
+        </div>
+
+        <div class="overlay pos-title">
+            הצעת מחיר
+        </div>
+
+        <div class="overlay pos-client">
+            <strong>לכבוד:</strong><br>
+            {{ quote.client_name }}<br>
+            {{ quote.client_phone }}<br>
+            מספר הזמנה: #{{ quote.id|slice:":8" }}
+        </div>
+    </div>
+
+    <div class="content">
+        <h2 style="color: #333; margin-bottom: 5px;">{{ quote.selected_house.title }}</h2>
+        <p style="margin-bottom: 20px;">{{ quote.selected_house.description }}</p>
+
+        {% if quote.selected_house.blueprint_image %}
+            <img src="{{ quote.selected_house.blueprint_image.path }}" class="hero-img">
+        {% endif %}
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th width="60%">תיאור הפריט</th>
+                    <th width="20%">סוג</th>
+                    <th width="20%">מחיר</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>{{ quote.selected_house.title }}</strong></td>
+                    <td>דגם בסיס</td>
+                    <td>₪{{ quote.selected_house.price_estimate }}</td>
+                </tr>
+                {% for upgrade in quote.selected_upgrades.all %}
+                <tr>
+                    <td>{{ upgrade.name }}</td>
+                    <td>שדרוג</td>
+                    <td>₪{{ upgrade.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer-total">
+            <table width="100%">
+                <tr>
+                    <td style="color: white; border: none;">המחירים כוללים מע"מ</td>
+                    <td style="color: white; border: none; font-size: 18px; font-weight: bold; text-align: left;">
+                        סה"כ: ₪{{ quote.final_price }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        {% if quote.selected_house.media_files.all %}
+            <div class="gallery-section">
+                <h3 style="text-align: right; color: #555;">תמונות נוספות</h3>
+                <table class="gallery-table">
+                    <tr>
+                    {% for media in quote.selected_house.media_files.all %}
+                        {% if media.media_type == 'image' %}
+                            <td class="gallery-td">
+                                <img src="{{ media.file.path }}" class="gallery-img">
+                            </td>
+                            
+                            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                                </tr><tr>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+
+        <div style="text-align: center; color: #999; margin-top: 30px; font-size: 10px;">
+            Click Home System | www.click-home.co.il
+        </div>
+    </div>
+</body>
+</html>

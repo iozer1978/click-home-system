@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>בניית הצעת מחיר - Click Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --brand-gold: #C0A062; --brand-dark: #333333; }
+        body { font-family: 'Heebo', sans-serif; background-color: #f8f8f8; margin: 0; padding: 0; color: var(--brand-dark); }
+        .top-nav { background: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; }
+        .nav-links a { text-decoration: none; color: var(--brand-dark); font-weight: bold; margin-left: 20px; transition: 0.3s; }
+        .nav-links a:hover { color: var(--brand-gold); }
+        .logo-text { font-size: 20px; font-weight: bold; color: var(--brand-gold); }
+        .page-container { max-width: 1000px; margin: 30px auto; background: white; min-height: 800px; padding-bottom: 120px; border: 1px solid #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        .banner-img { width: 100%; height: auto; display: block; border-bottom: 4px solid var(--brand-gold); }
+        .content { padding: 40px; }
+        .doc-title { text-align: center; font-size: 36px; color: var(--brand-gold); margin-bottom: 10px; font-weight: 700; }
+        .sub-title { text-align: center; color: #777; margin-bottom: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #fdfdfd; padding: 15px; text-align: right; border-bottom: 2px solid var(--brand-gold); font-weight: bold; }
+        td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .total-row { background: var(--brand-dark); color: white; font-size: 22px; font-weight: bold; }
+        .total-row td { border: none; padding: 20px 15px; }
+        .deposit-row { background: #fffcf0; color: var(--brand-gold); font-weight: bold; font-size: 18px; border-bottom: 2px solid var(--brand-gold); }
+        
+        /* הסרגל התחתון */
+        .action-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center; border-top: 1px solid #eee; display: flex; justify-content: center; gap: 20px; z-index: 100; }
+        .btn { padding: 15px 30px; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; color: white; display: flex; align-items: center; gap: 10px; }
+        .btn-email { background-color: var(--brand-dark); }
+        .btn-sign { background-color: var(--brand-gold); font-size: 18px; padding: 15px 50px; }
+        .btn-call { background-color: #17a2b8; } /* כפתור תכלת */
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        /* הודעת אזהרה/הבהרה */
+        .disclaimer-box { margin-top: 30px; padding: 15px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 5px; text-align: center; font-weight: bold; }
+
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--brand-gold); cursor: pointer; }
+        input[type="number"] { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 60px; text-align: center; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="logo-text">Click Home System</div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">🏠 דף הבית</a>
+            <a href="{% url 'profile' %}">👤 האזור האישי שלי</a>
+            <a href="{% url 'account_logout' %}">יציאה</a>
+        </div>
+    </div>
+
+<form method="POST" id="quoteForm">
+    {% csrf_token %}
+    
+    <div class="page-container">
+        <img src="{% static 'images/banner.jpg' %}" class="banner-img">
+
+        <div class="content">
+            <h1 class="doc-title">בניית הצעת מחיר</h1>
+            <p class="sub-title">התאם את המפרט לצרכים שלך וקבל מחיר בזמן אמת</p>
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <table>
+                <thead>
+                    <tr><th width="10%">בחר</th><th width="50%">תיאור הפריט</th><th width="20%">סוג</th><th width="20%">מחיר</th></tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: #fafafa;">
+                        <td><input type="checkbox" checked disabled></td>
+                        <td><strong>{{ quote.selected_house.title }}</strong><br><small>{{ quote.selected_house.area_sqm }} מ"ר</small></td>
+                        <td>דגם בסיס</td>
+                        <td>₪<span id="base-price">{{ quote.selected_house.price_estimate }}</span></td>
+                    </tr>
+                    {% for upgrade in all_upgrades %}
+                    <tr>
+                        <td><input type="checkbox" name="upgrades" value="{{ upgrade.id }}" class="upgrade-cb" data-price="{{ upgrade.price }}" {% if upgrade in quote.selected_upgrades.all %}checked{% endif %}></td>
+                        <td>{{ upgrade.name }}</td><td>שדרוג</td><td>₪{{ upgrade.price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr><td></td><td colspan="2" style="text-align: left; font-weight: bold;">כמות יחידות:</td><td><input type="number" name="quantity" id="quantity-input" value="{{ quote.quantity }}" min="1"></td></tr>
+                    <tr class="total-row"><td colspan="3">סה"כ לתשלום (כולל מע"מ)</td><td id="total-display">₪{{ quote.final_price }}</td></tr>
+                    <tr class="deposit-row"><td colspan="3">מקדמה לחתימה ({{ quote.deposit_percentage }}%)</td><td id="deposit-display">₪{{ quote.get_deposit }}</td></tr>
+                </tbody>
+            </table>
+
+            <div class="disclaimer-box">
+                ⚠ הצעת מחיר זו אינה מאושרת סופית עד לתשלום המקדמה ושיחת אימות עם נציג החברה.
+            </div>
+        </div>
+    </div>
+
+    <div class="action-bar">
+        <button type="submit" name="request_callback" class="btn btn-call">📞 מבקש שנציג יחזור אלי</button>
+        <button type="submit" name="send_email" class="btn btn-email">📧 שלח הצעת מחיר למייל</button>
+        <button type="submit" name="go_to_sign" class="btn btn-sign">✍️ עבור לחתימה</button>
+    </div>
+
+</form>
+
+<script>
+    const basePrice = parseInt(document.getElementById('base-price').innerText);
+    const checkboxes = document.querySelectorAll('.upgrade-cb');
+    const quantityInput = document.getElementById('quantity-input');
+    const totalDisplay = document.getElementById('total-display');
+    const depositDisplay = document.getElementById('deposit-display');
+
+    function calculateTotal() {
+        let currentTotal = basePrice;
+        checkboxes.forEach(cb => { if (cb.checked) currentTotal += parseInt(cb.getAttribute('data-price')); });
+        let qty = parseInt(quantityInput.value) || 1;
+        let finalTotal = currentTotal * qty;
+        totalDisplay.innerText = '₪' + finalTotal.toLocaleString();
+        
+        let depositPercent = {{ quote.deposit_percentage }} / 100;
+        let deposit = Math.round(finalTotal * depositPercent);
+        depositDisplay.innerText = '₪' + deposit.toLocaleString();
+    }
+    checkboxes.forEach(cb => cb.addEventListener('change', calculateTotal));
+    quantityInput.addEventListener('input', calculateTotal);
+</script>
+</body>
+</html>
