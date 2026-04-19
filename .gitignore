@@ -20,6 +20,7 @@ db.sqlite3
 # Build / local clutter
 _landing_extract/
 *.bak
+/python
 
 # Legacy / duplicate trees in this workspace (remove these lines if you need them in Git)
 /V2.2/
