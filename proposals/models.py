@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -38,6 +39,50 @@ class HouseType(models.Model):
         ordering = ['order', 'name']
 
 
+class HouseMedia(models.Model):
+    """מדיה של דגם — סדר התצוגה ותמונת הכרטיס בדף הבית מוגדרים כאן."""
+    MEDIA_TYPES = (("image", "תמונה"), ("video", "וידאו"))
+    house = models.ForeignKey(
+        "HouseModel", on_delete=models.CASCADE, related_name="media_files"
+    )
+    file = models.FileField(upload_to="house_media/", verbose_name="קובץ")
+    media_type = models.CharField(
+        max_length=10, choices=MEDIA_TYPES, default="image", verbose_name="סוג קובץ"
+    )
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="סדר בתצוגה",
+        help_text="מספר נמוך יותר = מוצג ראשון בגלריה ובעמוד הבית.",
+    )
+    is_homepage_card = models.BooleanField(
+        default=False,
+        verbose_name="תמונת כרטיס בדף הבית",
+        help_text="רק תמונה אחת לכל בית — זו שתופיע ברשימת הדגמים בדף הראשי.",
+    )
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "מדיה לבית"
+        verbose_name_plural = "מדיה לבית"
+
+    def clean(self):
+        super().clean()
+        if self.is_homepage_card and self.media_type != "image":
+            raise ValidationError(
+                {"is_homepage_card": "תמונת כרטיס לדף הבית זמינה רק לקבצי תמונה, לא לווידאו."}
+            )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.is_homepage_card:
+            type(self).objects.filter(house_id=self.house_id).exclude(pk=self.pk).update(
+                is_homepage_card=False
+            )
+
+    def __str__(self):
+        return f"{self.house_id}: {self.file.name if self.file else '—'}"
+
+
 class HouseModel(models.Model):
     config_key = models.CharField(max_length=30, unique=True, blank=True, null=True, verbose_name="מזהה סנכרון (MODEL_01...)")
     title = models.CharField(max_length=100, verbose_name="שם הדגם")
@@ -53,17 +98,14 @@ class HouseModel(models.Model):
     def __str__(self): return self.title
 
     def get_main_image(self):
-        """פונקציית עזר להצגת תמונה ראשית"""
-        first_media = self.media_files.filter(media_type='image').first()
-        if first_media:
-            return first_media.file
-        return None
+        """תמונה לכרטיס בדף הבית: נבחרת ידנית; אחרת התמונה הראשונה לפי סדר."""
+        images = self.media_files.filter(media_type="image")
+        chosen = images.filter(is_homepage_card=True).first()
+        if chosen:
+            return chosen.file
+        first_img = images.first()
+        return first_img.file if first_img else None
 
-class HouseMedia(models.Model):
-    MEDIA_TYPES = (('image', 'תמונה'), ('video', 'וידאו'))
-    house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name='media_files')
-    file = models.FileField(upload_to='house_media/', verbose_name="קובץ")
-    media_type = models.CharField(max_length=10, choices=MEDIA_TYPES, default='image', verbose_name="סוג קובץ")
 
 class HouseUpgrade(models.Model):
     house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name='upgrades')
