@@ -31,9 +31,10 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 # שינינו לכוכבית (*) כדי לאפשר כניסה מכל כתובת (בפרודקשן צמצם לדומיינים אמיתיים)
 ALLOWED_HOSTS = ["*"]
 
-# הוסף את כתובת pythonanywhere שלך + הדומיין הציבורי
+# דומיין עם www ובלי www + pythonanywhere (חובה ל־CSRF ב־HTTPS)
 CSRF_TRUSTED_ORIGINS = [
     "https://www.click-home.co.il",
+    "https://click-home.co.il",
     "https://clickhome.pythonanywhere.com",
 ]
 
