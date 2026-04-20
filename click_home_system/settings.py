@@ -20,48 +20,58 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-82qu((whv70nk)x2p@j7tk7&d(zr%pqpnt%!u$sr$q*b6kaqqk"
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-82qu((whv70nk)x2p@j7tk7&d(zr%pqpnt%!u$sr$q*b6kaqqk",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 
-# שינינו לכוכבית (*) כדי לאפשר כניסה מכל כתובת
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://www.click-home.co.il']
+# שינינו לכוכבית (*) כדי לאפשר כניסה מכל כתובת (בפרודקשן צמצם לדומיינים אמיתיים)
+ALLOWED_HOSTS = ["*"]
+
+# הוסף את כתובת pythonanywhere שלך + הדומיין הציבורי
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.click-home.co.il",
+    "https://clickhome.pythonanywhere.com",
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'proposals',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
+    "proposals",
 ]
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 # הגדרות allauth – התחברות רגילה וחברתית
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = False
@@ -71,14 +81,14 @@ SOCIALACCOUNT_STORE_TOKENS = False
 # מפתחות רשתות חברתיות – להגדיר ב־Admin או כאן (מומלץ משתני סביבה)
 # Admin: /admin/socialaccount/socialapp/
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
     },
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    "facebook": {
+        "METHOD": "oauth2",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
     },
 }
 
@@ -97,15 +107,15 @@ ROOT_URLCONF = "click_home_system.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
@@ -148,7 +158,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = 'Asia/Jerusalem'
+TIME_ZONE = "Asia/Jerusalem"
 USE_TZ = True
 USE_I18N = True
 
@@ -157,25 +167,26 @@ USE_I18N = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# --- הוספתי את החלק הזה כדי שהבאנר יעבוד ---
-# זה אומר לג'נגו לחפש קבצים גם בתיקייה C:\click_home_system\Static
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'Static'),
-]
+# רק אם התיקייה קיימת — בלינוקס אם חסרה, Django זורק שגיאה בטעינה
+STATICFILES_DIRS = []
+_static_extra = BASE_DIR / "Static"
+if _static_extra.is_dir():
+    STATICFILES_DIRS.append(str(_static_extra))
 
 # הגדרות לשמירת תמונות ומדיה
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # --- הגדרות התחברות (משולב עם allauth למעלה) ---
 
 # --- הגדרות שליחת מייל (Microsoft 365) ---
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
+# סיסמה: הגדר ב־PythonAnywhere → Web → Environment variables: EMAIL_HOST_PASSWORD
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.office365.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'info@click-home.co.il'
-EMAIL_HOST_PASSWORD = '@Cs22o8!' 
-DEFAULT_FROM_EMAIL = 'Click Home <info@click-home.co.il>'
+EMAIL_HOST_USER = "info@click-home.co.il"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = "Click Home <info@click-home.co.il>"

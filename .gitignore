@@ -21,6 +21,7 @@ db.sqlite3
 _landing_extract/
 *.bak
 /python
+/git
 
 # Legacy / duplicate trees in this workspace (remove these lines if you need them in Git)
 /V2.2/
