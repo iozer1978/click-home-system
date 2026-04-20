@@ -11,6 +11,35 @@ admin.site.site_header = "Click Home Admin V2.0"
 class HouseMediaInline(admin.TabularInline):
     model = HouseMedia
     extra = 1
+    fields = (
+        "thumbnail_preview",
+        "file",
+        "media_type",
+        "sort_order",
+        "is_homepage_card",
+    )
+    readonly_fields = ("thumbnail_preview",)
+    ordering = ("sort_order", "id")
+
+    @admin.display(description="תצוגה")
+    def thumbnail_preview(self, obj):
+        if not obj.file:
+            return "—"
+        try:
+            url = obj.file.url
+        except Exception:
+            return "—"
+        if obj.media_type == "video":
+            return format_html(
+                '<video src="{}" muted playsinline style="max-height:72px;max-width:100px;'
+                'object-fit:cover;border-radius:4px;vertical-align:middle;"></video>',
+                url,
+            )
+        return format_html(
+            '<img src="{}" alt="" style="max-height:72px;max-width:100px;object-fit:cover;'
+            'border-radius:4px;vertical-align:middle;" />',
+            url,
+        )
 
 class HouseUpgradeInline(admin.TabularInline):
     model = HouseUpgrade
