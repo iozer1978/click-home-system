@@ -81,6 +81,7 @@
         .footer { text-align: center; margin-top: 60px; padding: 40px 20px; background: white; border-top: 5px solid var(--brand-brown); font-size: 15px; color: #555; }
         .footer-logo { height: 60px; opacity: 1; margin-bottom: 20px; }
         .footer-company { font-weight: 900; font-size: 18px; color: var(--brand-brown); margin-bottom: 10px; display:block; }
+        .footer-copy { margin-top:20px; font-size:12px; opacity:0.6; }
 
         @media (max-width: 768px) {
             .hero-content { display: none; }
@@ -92,34 +93,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">
-            <a href="{% url 'home' %}">
-                <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
-                <span style="font-weight:900; font-size:20px; margin-right:5px;">Click Home</span>
-            </a>
-        </div>
-        
-        <div class="nav-links">
-            <a href="{% url 'home' %}">דף הבית</a>
-            <a href="{% url 'catalog' %}">דגמים</a>
-            <a href="{% url 'about' %}">אודות</a>
-            <a href="{% url 'contact' %}">צור קשר</a>
-        </div>
-
-        <div class="auth-buttons">
-            {% if user.is_authenticated %}
-                <span class="user-greeting">שלום, {{ user.first_name|default:user.username }}</span>
-                <a href="{% url 'profile' %}" style="text-decoration:none; color:var(--brand-brown); margin:0 10px;">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-                <a href="{% url 'account_logout' %}" class="btn-logout">יציאה</a>
-            {% else %}
-                <a href="{% url 'account_login' %}" class="btn-login" style="font-size:14px;">התחברות</a>
-                <a href="{% url 'register' %}" class="btn-register" style="font-size:14px; padding: 8px 15px;">הרשמה</a>
-            {% endif %}
-        </div>
-    </nav>
+    {% include "partials/site_nav.html" with show_auth=True %}
 
     <div class="hero">
         <div class="hero-content">
@@ -199,14 +173,7 @@
 
     <a href="https://wa.me/972503439999" class="float-wa" target="_blank" title="וואטסאפ"><i class="fab fa-whatsapp"></i></a>
 
-    <div class="footer">
-        <img src="/media/logo.png" alt="Click Home Logo" class="footer-logo" onerror="this.style.display='none'">
-        <div class="footer-info">
-            <span class="footer-company">קליק הום חברה בע"מ</span>
-            <p>050-3439999 | info@click-home.co.il</p>
-        </div>
-        <p style="margin-top:20px; font-size:12px; opacity:0.6;">© כל הזכויות שמורות</p>
-    </div>
+    {% include "partials/site_footer.html" %}
 
     <script>
         function toggleFaq(element) {

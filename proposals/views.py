@@ -180,7 +180,7 @@ def tab_page(request):
         for model in all_models
     ]
 
-    return render(request, "tab_swipe.html", {
+    return render(request, "tab_tinder.html", {
         "all_models_json": json.dumps(public_models_for_json, ensure_ascii=False),
         "categories": TAB_CATEGORY_OPTIONS,
         "initial_filters": {

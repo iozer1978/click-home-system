@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>קטלוג טאבלט אינטראקטיבי | Click Home</title>
+    <meta name="description" content="קטלוג דגמים אינטראקטיבי בסגנון Tinder של Click Home.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/tab_tinder.css' %}">
+</head>
+<body>
+    {% include "partials/site_nav.html" with show_auth=False %}
+
+    <main class="swipe-shell">
+        <section class="filter-bar">
+            <div class="filter-line compact">
+            <select id="filterCategory">
+                {% for category in categories %}
+                    <option value="{{ category.value }}" {% if initial_filters.category == category.value %}selected{% endif %}>{{ category.label }}</option>
+                {% endfor %}
+            </select>
+            <input id="filterSearch" type="search" placeholder="חיפוש דגם" value="{{ initial_filters.q }}">
+            <select id="filterBedrooms">
+                <option value="">חדרי שינה</option>
+                {% for i in "12345"|make_list %}<option value="{{ i }}" {% if initial_filters.bedrooms|stringformat:"s" == i %}selected{% endif %}>לפחות {{ i }}</option>{% endfor %}
+            </select>
+            <select id="filterBathrooms">
+                <option value="">רחצה</option>
+                {% for i in "12345"|make_list %}<option value="{{ i }}" {% if initial_filters.bathrooms|stringformat:"s" == i %}selected{% endif %}>לפחות {{ i }}</option>{% endfor %}
+            </select>
+            <button id="clearFilters" type="button">ניקוי</button>
+            </div>
+        </section>
+
+        <section class="deck">
+            <article class="card" id="houseCard">
+                <div class="swipe-badge like" id="likeBadge">הבא</div>
+                <div class="swipe-badge nope" id="nopeBadge">הקודם</div>
+
+                <div class="hero">
+                    <img id="heroImage" src="" alt="">
+                    <div class="overlay">
+                        <h1 id="modelName"></h1>
+                        <p id="modelSubtitle"></p>
+                    </div>
+                </div>
+
+                <div class="meta-grid" id="specGrid"></div>
+
+                <div class="gallery">
+                    <button id="galleryPrevBtn" type="button">‹</button>
+                    <img id="galleryMain" src="" alt="">
+                    <button id="galleryNextBtn" type="button">›</button>
+                </div>
+                <div class="dots" id="galleryDots"></div>
+
+                <button class="toggle" id="toggleDetailsBtn" type="button">הצג מידע מלא</button>
+                <section class="details" id="detailsPanel" hidden>
+                    <h3>תיאור הדגם</h3>
+                    <p id="modelDescription"></p>
+                    <h3>יתרונות מרכזיים</h3>
+                    <div class="features" id="featureGrid"></div>
+                    <h3>תכנון הבית</h3>
+                    <div class="floorplan" id="floorplanWrap"></div>
+                </section>
+            </article>
+        </section>
+
+        <section class="actions">
+            <button id="prevHouseBtn" type="button">‹ הקודם</button>
+            <button id="nextHouseBtn" type="button">הבא ›</button>
+        </section>
+
+        <section class="lead" id="leadFormSection">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="model_name" id="leadModelName" value="{{ lead_form.model_name|default:'' }}">
+                <input type="text" name="full_name" placeholder="שם מלא" value="{{ lead_form.full_name }}" required>
+                <input type="tel" name="phone" placeholder="טלפון" value="{{ lead_form.phone }}" required>
+                <input type="email" name="email" placeholder="אימייל" value="{{ lead_form.email }}">
+                <select name="interest_type" required>
+                    <option value="">סוג נכס מעניין אותי</option>
+                    <option value="בתים פרטיים" {% if lead_form.interest_type == "בתים פרטיים" %}selected{% endif %}>בתים פרטיים</option>
+                    <option value="בתים מודולריים" {% if lead_form.interest_type == "בתים מודולריים" %}selected{% endif %}>בתים מודולריים</option>
+                    <option value="ADU" {% if lead_form.interest_type == "ADU" %}selected{% endif %}>ADU</option>
+                </select>
+                <textarea name="message" rows="3" placeholder="הודעה" required>{{ lead_form.message }}</textarea>
+                <button type="submit">שלחו לי פרטים</button>
+            </form>
+        </section>
+    </main>
+
+    {% include "partials/site_footer.html" %}
+
+    <script id="tabModelsData" type="application/json">{{ all_models_json|safe }}</script>
+    <script src="{% static 'js/tab_tinder.js' %}" defer></script>
+</body>
+</html>

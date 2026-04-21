@@ -1,0 +1,30 @@
+<nav class="navbar" aria-label="ניווט עליון">
+    <div class="logo">
+        <a href="{% url 'home' %}" class="brand-inline">
+            <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
+            <span>Click Home</span>
+        </a>
+    </div>
+
+    <div class="nav-links" aria-label="ניווט ראשי">
+        <a href="{% url 'home' %}">דף הבית</a>
+        <a href="{% url 'catalog' %}">דגמים</a>
+        <a href="{% url 'about' %}">אודות</a>
+        <a href="{% url 'contact' %}">צור קשר</a>
+    </div>
+
+    {% if show_auth %}
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                <span class="user-greeting">שלום, {{ user.first_name|default:user.username }}</span>
+                <a href="{% url 'profile' %}" style="text-decoration:none; color:var(--brand-brown); margin:0 10px;">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+                <a href="{% url 'account_logout' %}" class="btn-logout">יציאה</a>
+            {% else %}
+                <a href="{% url 'account_login' %}" class="btn-login" style="font-size:14px;">התחברות</a>
+                <a href="{% url 'register' %}" class="btn-register" style="font-size:14px; padding: 8px 15px;">הרשמה</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</nav>
