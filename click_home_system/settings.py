@@ -32,11 +32,21 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 ALLOWED_HOSTS = ["*"]
 
 # דומיין עם www ובלי www + pythonanywhere (חובה ל־CSRF ב־HTTPS)
+# פיתוח מקומי: Django 4+ דורש גם http://host:port אם לא משתמשים ב־8000 ברירת מחדל
 CSRF_TRUSTED_ORIGINS = [
     "https://www.click-home.co.il",
     "https://click-home.co.il",
     "https://clickhome.pythonanywhere.com",
+    "http://127.0.0.1:8001",
+    "http://localhost:8001",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
 ]
+
+# PythonAnywhere / nginx מעבירים HTTPS ב־X-Forwarded-Proto — בלי זה Django עלול
+# לחשוב שהבקשה HTTP ולשבור עוגיות CSRF/Session מאובטחות
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition
@@ -191,3 +201,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "info@click-home.co.il"
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = "Click Home <info@click-home.co.il>"
+
+# ממשק אדמין: עיצוב מותאם ב־templates/admin/base_site.html + static/admin/css/click_admin.css
+# (django-jazzmin הוסר — לא תואם Python 3.14 + Django 5.1 בצורה יציבה; בשרת Python 3.10 אפשר לשקול שוב בעתיד)

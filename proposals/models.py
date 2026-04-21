@@ -97,6 +97,10 @@ class HouseModel(models.Model):
     
     def __str__(self): return self.title
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("house_detail", kwargs={"pk": self.pk})
+
     def get_main_image(self):
         """תמונה לכרטיס בדף הבית: נבחרת ידנית; אחרת התמונה הראשונה לפי סדר."""
         images = self.media_files.filter(media_type="image")
@@ -105,6 +109,72 @@ class HouseModel(models.Model):
             return chosen.file
         first_img = images.first()
         return first_img.file if first_img else None
+
+
+class TabHouse(models.Model):
+    CATEGORY_CHOICES = (
+        ("single-family", "בתים פרטיים"),
+        ("modular", "בתים מודולריים"),
+        ("adu", "ADU"),
+    )
+
+    slug = models.SlugField(max_length=160, unique=True, verbose_name="Slug")
+    model_name = models.CharField(max_length=180, verbose_name="שם הדגם")
+    subtitle_he = models.CharField(max_length=255, blank=True, verbose_name="כותרת משנה")
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default="single-family", verbose_name="קטגוריה ראשית")
+    house_types = models.ManyToManyField(HouseType, blank=True, related_name="tab_houses", verbose_name="קטגוריות נוספות")
+
+    bedrooms = models.PositiveIntegerField(default=0, verbose_name="חדרי שינה")
+    bathrooms = models.PositiveIntegerField(default=0, verbose_name="חדרי רחצה")
+    living_rooms = models.PositiveIntegerField(default=1, verbose_name="סלונים")
+    kitchen_count = models.PositiveIntegerField(default=1, verbose_name="מטבחים")
+    garages = models.PositiveIntegerField(default=0, verbose_name="חניות")
+    floors = models.PositiveIntegerField(default=1, verbose_name="קומות")
+    area_m2 = models.FloatField(default=0, verbose_name="שטח מ\"ר")
+    length_m = models.FloatField(blank=True, null=True, verbose_name="אורך (מ')")
+    width_m = models.FloatField(blank=True, null=True, verbose_name="רוחב (מ')")
+
+    description_he = models.TextField(blank=True, verbose_name="תיאור מלא")
+    features_he = models.TextField(
+        blank=True,
+        verbose_name="פיצ'רים (שורה לכל פיצ'ר)",
+        help_text="כל שורה תוצג כיתרון נפרד בכרטיסים.",
+    )
+    inquiry_cta_label = models.CharField(max_length=80, default="אני רוצה פרטים", verbose_name="טקסט כפתור פנייה")
+    is_published = models.BooleanField(default=True, verbose_name="מפורסם ב-/tab")
+    sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר תצוגה")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "דגם /tab"
+        verbose_name_plural = "דגמי /tab"
+
+    def __str__(self):
+        return self.model_name
+
+
+class TabHouseImage(models.Model):
+    IMAGE_TYPES = (
+        ("hero", "תמונה ראשית"),
+        ("gallery", "גלריה"),
+        ("floorplan", "שרטוט"),
+        ("lifestyle", "תמונת אווירה"),
+    )
+    tab_house = models.ForeignKey(TabHouse, on_delete=models.CASCADE, related_name="images", verbose_name="דגם")
+    image = models.ImageField(upload_to="tab_houses/", verbose_name="תמונה")
+    image_type = models.CharField(max_length=20, choices=IMAGE_TYPES, default="gallery", verbose_name="סוג תמונה")
+    sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר")
+
+    class Meta:
+        ordering = ["image_type", "sort_order", "id"]
+        verbose_name = "תמונת דגם /tab"
+        verbose_name_plural = "תמונות דגמי /tab"
+
+    def __str__(self):
+        return f"{self.tab_house.model_name} - {self.get_image_type_display()}"
 
 
 class HouseUpgrade(models.Model):

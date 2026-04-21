@@ -3,12 +3,19 @@ from django.utils.html import format_html
 from django.urls import path, reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.core.management import call_command
+from django.conf import settings
+from pathlib import Path
+import runpy
 from .models import HouseModel, HouseMedia, Quote, HouseUpgrade, UsageType, HouseType, ClientProfile, FAQ, EmailLog, ScheduledEmail
 from .utils import queue_email, send_email_from_queue
+from .models import TabHouse, TabHouseImage
 
-admin.site.site_header = "Click Home Admin V2.0"
+admin.site.site_header = "Click Home Admin"
+admin.site.site_title = "Click Home"
+admin.site.index_title = "ניהול אתר"
 
-class HouseMediaInline(admin.TabularInline):
+class HouseMediaStackedInline(admin.StackedInline):
     model = HouseMedia
     extra = 1
     fields = (
@@ -20,7 +27,6 @@ class HouseMediaInline(admin.TabularInline):
     )
     readonly_fields = ("thumbnail_preview",)
     ordering = ("sort_order", "id")
-
     @admin.display(description="תצוגה")
     def thumbnail_preview(self, obj):
         if not obj.file:
@@ -31,13 +37,12 @@ class HouseMediaInline(admin.TabularInline):
             return "—"
         if obj.media_type == "video":
             return format_html(
-                '<video src="{}" muted playsinline style="max-height:72px;max-width:100px;'
-                'object-fit:cover;border-radius:4px;vertical-align:middle;"></video>',
+                '<div class="house-media-thumb-lg">'
+                '<video src="{}" muted playsinline></video></div>',
                 url,
             )
         return format_html(
-            '<img src="{}" alt="" style="max-height:72px;max-width:100px;object-fit:cover;'
-            'border-radius:4px;vertical-align:middle;" />',
+            '<div class="house-media-thumb-lg"><img src="{}" alt="" /></div>',
             url,
         )
 
@@ -45,16 +50,133 @@ class HouseUpgradeInline(admin.TabularInline):
     model = HouseUpgrade
     extra = 1
 
+
+class TabHouseImageInline(admin.TabularInline):
+    model = TabHouseImage
+    extra = 1
+    fields = ("preview", "image", "image_type", "sort_order")
+    readonly_fields = ("preview",)
+    ordering = ("image_type", "sort_order", "id")
+
+    @admin.display(description="תצוגה")
+    def preview(self, obj):
+        if not obj.image:
+            return "—"
+        return format_html('<img src="{}" style="height:60px;border-radius:8px;border:1px solid #ddd;" />', obj.image.url)
+
+
 @admin.register(HouseModel)
 class HouseAdmin(admin.ModelAdmin):
-    list_display = ('config_key', 'title', 'get_house_types', 'get_usages', 'area_sqm', 'price_estimate')
-    list_filter = ('house_types',)
-    search_fields = ('title', 'config_key')
-    inlines = [HouseMediaInline, HouseUpgradeInline]
-    filter_horizontal = ('house_types', 'usage_types')
-    def get_usages(self, obj): return ", ".join([u.name for u in obj.usage_types.all()])
-    def get_house_types(self, obj): return ", ".join([t.name for t in obj.house_types.all()])
+    save_on_top = True
+    view_on_site = True
+    change_form_template = "admin/proposals/housemodel/change_form.html"
+    list_display = (
+        "title",
+        "config_key",
+        "get_house_types",
+        "get_usages",
+        "area_sqm",
+        "price_estimate",
+    )
+    list_filter = ("house_types", "usage_types")
+    search_fields = ("title", "config_key", "description")
+    ordering = ("title",)
+    inlines = [HouseMediaStackedInline, HouseUpgradeInline]
+    filter_horizontal = ("house_types", "usage_types")
+    fieldsets = (
+        (
+            "פרטים כלליים",
+            {
+                "fields": ("title", "config_key"),
+            },
+        ),
+        (
+            "תיאור ושיוך",
+            {
+                "fields": ("description", "house_types", "usage_types"),
+            },
+        ),
+        (
+            "מחיר ושטח",
+            {
+                "fields": ("area_sqm", "price_estimate"),
+            },
+        ),
+        (
+            "תוכן טכני",
+            {
+                "classes": ("wide",),
+                "fields": ("specs", "internal_layout"),
+            },
+        ),
+        (
+            "שרטוט",
+            {
+                "fields": ("blueprint_image",),
+            },
+        ),
+    )
+
+    def get_usages(self, obj):
+        return ", ".join([u.name for u in obj.usage_types.all()])
+
+    def get_house_types(self, obj):
+        return ", ".join([t.name for t in obj.house_types.all()])
+
     get_house_types.short_description = "סוגי בית"
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        extra_context = extra_context or {}
+        obj = self.get_object(request, object_id)
+        if obj is not None:
+            extra_context["house_public_url"] = request.build_absolute_uri(
+                reverse("house_detail", args=[obj.pk])
+            )
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+
+
+@admin.register(TabHouse)
+class TabHouseAdmin(admin.ModelAdmin):
+    list_display = ("model_name", "category", "bedrooms", "bathrooms", "floors", "area_m2", "is_published", "sort_order")
+    list_filter = ("category", "is_published", "house_types")
+    search_fields = ("model_name", "slug", "description_he")
+    ordering = ("sort_order", "model_name")
+    filter_horizontal = ("house_types",)
+    inlines = [TabHouseImageInline]
+    prepopulated_fields = {"slug": ("model_name",)}
+    change_list_template = "admin/proposals/tabhouse/change_list.html"
+    fieldsets = (
+        ("פרטים כלליים", {"fields": ("model_name", "slug", "subtitle_he", "category", "house_types", "is_published", "sort_order")}),
+        ("מידע מהיר", {"fields": ("bedrooms", "bathrooms", "living_rooms", "kitchen_count", "garages", "floors", "area_m2", "length_m", "width_m")}),
+        ("תוכן ותצוגה", {"fields": ("description_he", "features_he", "inquiry_cta_label")}),
+    )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "refresh-from-source/",
+                self.admin_site.admin_view(self.refresh_from_source_view),
+                name="tabhouse-refresh-from-source",
+            )
+        ]
+        return custom_urls + urls
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["refresh_from_source_url"] = reverse("admin:tabhouse-refresh-from-source")
+        return super().changelist_view(request, extra_context=extra_context)
+
+    def refresh_from_source_view(self, request):
+        script_path = Path(settings.BASE_DIR) / "scripts" / "import_home_models.py"
+        try:
+            runpy.run_path(str(script_path), run_name="__main__")
+            call_command("sync_tab_houses_from_json")
+            self.message_user(request, "בוצע רענון מלא מהמקור וסנכרון לאדמין.", messages.SUCCESS)
+        except Exception as exc:
+            self.message_user(request, f"שגיאה ברענון מהמקור: {exc}", messages.ERROR)
+        return HttpResponseRedirect("../")
+
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):

@@ -1,0 +1,32 @@
+/* Click Home brand — aligned with public site (house_detail) */
+:root {
+    --ch-brand-brown: #8b5a2b;
+    --ch-brand-olive: #6b705c;
+}
+
+/* Jazzmin / AdminLTE primary → brand brown */
+.navbar-dark.bg-primary,
+.bg-primary,
+.btn-primary,
+.btn-primary:focus {
+    background-color: var(--ch-brand-brown) !important;
+    border-color: var(--ch-brand-brown) !important;
+}
+
+.btn-primary:hover {
+    background-color: #6d4520 !important;
+    border-color: #6d4520 !important;
+}
+
+a,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    color: var(--ch-brand-brown);
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: rgba(139, 90, 43, 0.15);
+}
+
+.brand-link .brand-text {
+    font-weight: 700;
+}

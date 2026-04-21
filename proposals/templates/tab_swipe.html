@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>קטלוג טאבלט אינטראקטיבי | Click Home</title>
+    <meta name="description" content="קטלוג דגמים אינטראקטיבי של Click Home: דגם אחד בכל רגע, החלקה בין דגמים, סינון מהיר ופרטי דגם מלאים.">
+    <meta property="og:title" content="קטלוג דגמים אינטראקטיבי - Click Home">
+    <meta property="og:description" content="מציגים דגם אחד בכל רגע עם החלקה אופקית וחוויית טאבלט פרימיום בעברית.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/tab_swipe.css' %}">
+</head>
+<body>
+    <header class="app-topbar">
+        <a href="{% url 'home' %}" class="brand-inline">
+            <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
+            <span>Click Home</span>
+        </a>
+        <button class="menu-icon" type="button" aria-label="תפריט">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+    <div class="desktop-update-note">אנחנו מעדכנים את האתר שיהיה כמו במחשב</div>
+
+    <main class="swipe-shell">
+        <section class="filter-bar" aria-label="סינון דגמים">
+            <div class="filter-line compact">
+                <select id="filterCategory" aria-label="קטגוריה">
+                    {% for category in categories %}
+                        <option value="{{ category.value }}" {% if initial_filters.category == category.value %}selected{% endif %}>{{ category.label }}</option>
+                    {% endfor %}
+                </select>
+                <input id="filterSearch" type="search" placeholder="חיפוש דגם" value="{{ initial_filters.q }}" aria-label="חיפוש לפי שם דגם">
+                <select id="filterBedrooms" aria-label="חדרי שינה">
+                    <option value="">חדרי שינה</option>
+                    {% for i in "12345"|make_list %}<option value="{{ i }}" {% if initial_filters.bedrooms|stringformat:"s" == i %}selected{% endif %}>לפחות {{ i }}</option>{% endfor %}
+                </select>
+                <select id="filterBathrooms" aria-label="חדרי רחצה">
+                    <option value="">רחצה</option>
+                    {% for i in "12345"|make_list %}<option value="{{ i }}" {% if initial_filters.bathrooms|stringformat:"s" == i %}selected{% endif %}>לפחות {{ i }}</option>{% endfor %}
+                </select>
+                <select id="filterFloors" aria-label="קומות">
+                    <option value="">קומות</option>
+                    <option value="1" {% if initial_filters.floors|stringformat:"s" == "1" %}selected{% endif %}>לפחות 1</option>
+                    <option value="2" {% if initial_filters.floors|stringformat:"s" == "2" %}selected{% endif %}>לפחות 2</option>
+                    <option value="3" {% if initial_filters.floors|stringformat:"s" == "3" %}selected{% endif %}>לפחות 3</option>
+                </select>
+                <select id="filterArea" aria-label="שטח">
+                    <option value="">שטח</option>
+                    <option value="40" {% if initial_filters.area_min|stringformat:"s" == "40" %}selected{% endif %}>מ-40 מ"ר</option>
+                    <option value="70" {% if initial_filters.area_min|stringformat:"s" == "70" %}selected{% endif %}>מ-70 מ"ר</option>
+                    <option value="100" {% if initial_filters.area_min|stringformat:"s" == "100" %}selected{% endif %}>מ-100 מ"ר</option>
+                    <option value="140" {% if initial_filters.area_min|stringformat:"s" == "140" %}selected{% endif %}>מ-140 מ"ר</option>
+                </select>
+                <button id="clearFilters" type="button">ניקוי</button>
+            </div>
+        </section>
+
+        <section class="swipe-viewport" id="swipeViewport" aria-live="polite">
+            <article class="house-slide" id="houseSlide">
+                <div class="house-nav">
+                    <button type="button" id="prevHouseBtn" aria-label="דגם קודם">‹</button>
+                    <button type="button" id="nextHouseBtn" aria-label="דגם הבא">›</button>
+                </div>
+                <header class="hero-block">
+                    <img id="heroImage" src="" alt="">
+                    <div class="hero-overlay">
+                        <h1 id="modelName"></h1>
+                        <p id="modelSubtitle"></p>
+                        <div class="hero-cta">
+                            <button type="button" id="detailsBtn">לפרטים על הדגם</button>
+                            <button type="button" id="quoteBtn">קבלת הצעת מחיר</button>
+                        </div>
+                    </div>
+                </header>
+
+                <section class="specs-strip">
+                    <h2>מפרט מהיר</h2>
+                    <div class="spec-tags" id="specTags"></div>
+                </section>
+
+                <section class="gallery-section">
+                    <div class="gallery-main-wrap">
+                        <button type="button" class="gallery-arrow gallery-prev" id="galleryPrevBtn" aria-label="תמונה קודמת">‹</button>
+                        <img id="galleryMain" src="" alt="">
+                        <button type="button" class="gallery-arrow gallery-next" id="galleryNextBtn" aria-label="תמונה הבאה">›</button>
+                    </div>
+                    <div class="gallery-mini" id="galleryMini"></div>
+                    <div class="dots" id="galleryDots"></div>
+                </section>
+
+                <section class="desc-section">
+                    <h3>תיאור הדגם</h3>
+                    <p id="modelDescription"></p>
+                </section>
+
+                <section class="params-section">
+                    <h3>נתוני הדגם</h3>
+                    <div class="param-grid" id="paramGrid"></div>
+                </section>
+
+                <section class="features-section">
+                    <h3>יתרונות מרכזיים</h3>
+                    <div class="feature-grid" id="featureGrid"></div>
+                </section>
+
+                <section class="floorplan-section">
+                    <h3>תכנון הבית</h3>
+                    <div class="floorplan-wrap" id="floorplanWrap"></div>
+                </section>
+
+                <section class="lifestyle-banner">
+                    <img id="lifestyleImage" src="" alt="">
+                    <div class="lifestyle-copy">
+                        <p>חוויית מגורים שמחברת בין פנים לחוץ</p>
+                    </div>
+                </section>
+
+                <section class="cta-section">
+                    <h3>רוצים לשמוע עוד על הדגם?</h3>
+                    <div class="cta-actions">
+                        <button type="button" class="lead-trigger">אני רוצה פרטים</button>
+                        <a href="https://wa.me/972503439999" target="_blank" rel="noopener">WhatsApp</a>
+                    </div>
+                </section>
+            </article>
+        </section>
+
+        <section id="leadFormSection" class="lead-form-area">
+            {% if messages %}
+                <div class="form-messages">
+                    {% for message in messages %}
+                        <p class="message {{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="POST" class="lead-form">
+                {% csrf_token %}
+                <input type="hidden" name="model_name" id="leadModelName" value="{{ lead_form.model_name|default:'' }}">
+                <input type="text" name="full_name" placeholder="שם מלא" value="{{ lead_form.full_name }}" required>
+                <input type="tel" name="phone" placeholder="טלפון" value="{{ lead_form.phone }}" required>
+                <input type="email" name="email" placeholder="אימייל" value="{{ lead_form.email }}">
+                <select name="interest_type" required>
+                    <option value="">סוג נכס מעניין אותי</option>
+                    <option value="בתים פרטיים" {% if lead_form.interest_type == "בתים פרטיים" %}selected{% endif %}>בתים פרטיים</option>
+                    <option value="בתים מודולריים" {% if lead_form.interest_type == "בתים מודולריים" %}selected{% endif %}>בתים מודולריים</option>
+                    <option value="ADU" {% if lead_form.interest_type == "ADU" %}selected{% endif %}>ADU</option>
+                </select>
+                <textarea name="message" placeholder="הודעה" rows="3" required>{{ lead_form.message }}</textarea>
+                <button type="submit">שלחו לי פרטים</button>
+            </form>
+        </section>
+    </main>
+
+    <div class="sticky-mobile-cta">
+        <button type="button" class="lead-trigger">קבל הצעת מחיר</button>
+        <a href="https://wa.me/972503439999" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+
+    <script id="tabModelsData" type="application/json">{{ all_models_json|safe }}</script>
+    <script type="application/ld+json">{{ structured_data_json|safe }}</script>
+    <script src="{% static 'js/tab_swipe.js' %}" defer></script>
+</body>
+</html>

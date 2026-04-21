@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קטלוג טאבלט פרימיום | Click Home</title>
+    <meta name="description" content="קטלוג פרימיום של Click Home לדפדוף טאבלט ומובייל: דגמים, מפרטים, סינון חכם וטופס התעניינות מהיר.">
+    <meta property="og:title" content="קטלוג דגמים פרימיום - Click Home">
+    <meta property="og:description" content="גלו דגמי בתים פרטיים, מודולריים ו-ADU בחוויית טאבלט מתקדמת בעברית.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/tab.css' %}">
+</head>
+<body class="tab-v2">
+    <header class="tab-header">
+        <nav class="tab-nav" aria-label="ניווט ראשי">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <img src="/media/logo.png" alt="Click Home" loading="lazy" onerror="this.style.display='none'">
+                <span>Click Home</span>
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">דף הבית</a>
+                <a href="{% url 'catalog' %}">דגמים</a>
+                <a href="{% url 'contact' %}">צור קשר</a>
+                <a href="{% url 'tab' %}" class="active">קטלוג טאבלט</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section page-intro" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="hero-kicker">Click Home Showcase</p>
+                <h1 id="hero-title">קטלוג דגמים בסגנון טאבלט - דגם אחרי דגם</h1>
+                <p class="hero-subtitle">גלילה אנכית עשירה עם תמונת פתיחה, מפרט מהיר, גלריה, יתרונות ולחצני פעולה בכל דגם.</p>
+                <div class="hero-cta-group">
+                    <a href="#catalog" class="btn btn-primary">צפייה בקטלוג</a>
+                    <a href="#filters" class="btn btn-secondary">סינון דגמים</a>
+                    <a href="#lead-form" class="btn btn-ghost">השאירו פרטים</a>
+                </div>
+            </div>
+            <div class="hero-grid-art" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </section>
+
+        <section class="sticky-category-section" aria-label="סינון לפי קטגוריה">
+            <div class="category-track">
+                {% for category in categories %}
+                    <a
+                        href="?category={{ category.value }}{% if filters.q %}&q={{ filters.q|urlencode }}{% endif %}{% if filters.bedrooms %}&bedrooms={{ filters.bedrooms }}{% endif %}{% if filters.bathrooms %}&bathrooms={{ filters.bathrooms }}{% endif %}{% if filters.floors %}&floors={{ filters.floors }}{% endif %}{% if filters.area_min %}&area_min={{ filters.area_min }}{% endif %}{% if filters.area_max %}&area_max={{ filters.area_max }}{% endif %}"
+                        class="category-chip {% if selected_category == category.value %}active{% endif %}">
+                        {{ category.label }}
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="filters" class="filters-section" aria-labelledby="filters-title">
+            <h2 id="filters-title">חיפוש וסינון מהיר</h2>
+            <form method="GET" class="filters-form">
+                <input type="hidden" name="category" value="{{ selected_category }}">
+                <div class="field"><label for="q">שם דגם</label><input id="q" name="q" type="search" value="{{ filters.q }}" placeholder="חיפוש לפי שם דגם"></div>
+                <div class="field"><label for="bedrooms">חדרי שינה</label><input id="bedrooms" name="bedrooms" type="number" min="1" value="{{ filters.bedrooms }}"></div>
+                <div class="field"><label for="bathrooms">חדרי רחצה</label><input id="bathrooms" name="bathrooms" type="number" min="1" value="{{ filters.bathrooms }}"></div>
+                <div class="field"><label for="floors">קומות</label><input id="floors" name="floors" type="number" min="1" value="{{ filters.floors }}"></div>
+                <div class="field"><label for="area_min">שטח מינימום (מ&quot;ר)</label><input id="area_min" name="area_min" type="number" min="0" value="{{ filters.area_min }}"></div>
+                <div class="field"><label for="area_max">שטח מקסימום (מ&quot;ר)</label><input id="area_max" name="area_max" type="number" min="0" value="{{ filters.area_max }}"></div>
+                <div class="filters-actions">
+                    <button type="submit" class="btn btn-primary">הפעל סינון</button>
+                    <a href="{% url 'tab' %}" class="btn btn-link">ניקוי סינונים</a>
+                </div>
+            </form>
+        </section>
+
+        <section id="catalog" class="catalog-section" aria-labelledby="catalog-title">
+            <div class="catalog-head">
+                <h2 id="catalog-title">קטלוג השואוקייס של Click Home</h2>
+                <p>{{ catalog_count }} דגמים זמינים לתצוגה</p>
+            </div>
+
+            <div class="catalog-stack" id="catalogTrack" aria-label="דפדוף דגמים אנכי">
+                {% for model in models %}
+                    <article class="showcase-card" data-model-id="{{ model.id }}">
+                        <header class="showcase-hero">
+                            <img src="{{ model.main_image }}" alt="תמונה ראשית של דגם {{ model.model_name }}" class="showcase-main-image" loading="lazy" decoding="async">
+                            <div class="hero-overlay">
+                                <p class="category-badge">{{ model.category_label_he }}</p>
+                                <h3>{{ model.model_name }}</h3>
+                                <p>{{ model.short_description_he }}</p>
+                                <div class="hero-actions">
+                                    <button type="button" class="btn btn-primary card-lead-btn" data-model-name="{{ model.model_name }}">לפרטים על הדגם</button>
+                                    <a class="btn btn-ghost" href="https://wa.me/972503439999" target="_blank" rel="noopener">קבלת הצעת מחיר</a>
+                                </div>
+                            </div>
+                        </header>
+
+                        <section class="showcase-section">
+                            <h4>Quick Specs Strip</h4>
+                            <div class="quick-specs">
+                                <span>{{ model.bedrooms }} חדרי שינה</span>
+                                <span>{{ model.bathrooms }} חדרי רחצה</span>
+                                <span>{{ model.area_m2 }} מ&quot;ר</span>
+                                <span>{{ model.floors }} קומות</span>
+                                <span>{{ model.kitchens }} מטבחים</span>
+                                <span>{{ model.living_rooms }} סלון</span>
+                            </div>
+                        </section>
+
+                        <section class="showcase-section media-layout">
+                            <img src="{{ model.gallery_images.0|default:model.main_image }}" alt="גלריית דגם {{ model.model_name }}" class="gallery-main" loading="lazy" decoding="async">
+                            <div class="gallery-thumbs">
+                                {% for image in model.gallery_images %}
+                                    <button type="button" class="thumb-switch" data-image="{{ image }}" aria-label="תמונה נוספת של {{ model.model_name }}">
+                                        <img src="{{ image }}" alt="תמונה ממוזערת {{ forloop.counter }} עבור {{ model.model_name }}" loading="lazy" decoding="async">
+                                    </button>
+                                {% endfor %}
+                            </div>
+                        </section>
+
+                        <section class="showcase-section">
+                            <h4>תיאור הדגם</h4>
+                            <p class="long-copy">{{ model.full_description_he }}</p>
+                        </section>
+
+                        <section class="showcase-section">
+                            <h4>יתרונות מרכזיים</h4>
+                            <div class="features-grid">
+                                {% for feature in model.features_he %}
+                                    <article><p>{{ feature }}</p></article>
+                                {% endfor %}
+                            </div>
+                        </section>
+
+                        {% if model.floorplan_images %}
+                            <section class="showcase-section">
+                                <h4>תכנון הבית</h4>
+                                <div class="floorplan-strip">
+                                    {% for floorplan in model.floorplan_images %}
+                                        <img src="{{ floorplan }}" alt="תכנית דגם {{ model.model_name }} {{ forloop.counter }}" loading="lazy" decoding="async">
+                                    {% endfor %}
+                                </div>
+                            </section>
+                        {% endif %}
+
+                        <footer class="sticky-card-bar">
+                            <button type="button" class="btn btn-primary card-lead-btn" data-model-name="{{ model.model_name }}">אני רוצה פרטים</button>
+                            <a class="btn btn-secondary" href="https://wa.me/972503439999" target="_blank" rel="noopener">WhatsApp</a>
+                            <a class="btn btn-link" href="#catalog-title">חזרה לקטלוג</a>
+                        </footer>
+                    </article>
+                {% empty %}
+                    <div class="empty-state">
+                        <h3>לא נמצאו דגמים עבור הסינון שבחרתם</h3>
+                        <p>נסו להרחיב את טווח הסינון או לנקות את ההגדרות.</p>
+                        <a class="btn btn-secondary" href="{% url 'tab' %}">הצגת כל הדגמים</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="lead-form" class="lead-section" aria-labelledby="lead-title">
+            <div class="lead-content">
+                <h2 id="lead-title">רוצים לקבל התאמה אישית לדגם?</h2>
+                <p>השאירו פרטים ונחזור אליכם עם הצעה מדויקת, מפרט מקצועי וליווי מלא.</p>
+            </div>
+            <div class="lead-form-wrap">
+                {% if messages %}
+                    <div class="form-messages" aria-live="polite">
+                        {% for message in messages %}
+                            <p class="message {{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" class="lead-form" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="model_name" id="lead_model_name" value="{{ lead_form.model_name|default:'' }}">
+                    <div class="field"><label for="full_name">שם מלא</label><input id="full_name" name="full_name" type="text" required value="{{ lead_form.full_name }}"></div>
+                    <div class="field"><label for="phone">טלפון</label><input id="phone" name="phone" type="tel" required value="{{ lead_form.phone }}"></div>
+                    <div class="field"><label for="email">אימייל</label><input id="email" name="email" type="email" value="{{ lead_form.email }}"></div>
+                    <div class="field">
+                        <label for="interest_type">סוג נכס מעניין אותי</label>
+                        <select id="interest_type" name="interest_type" required>
+                            <option value="">בחרו סוג נכס</option>
+                            <option value="בתים פרטיים" {% if lead_form.interest_type == "בתים פרטיים" %}selected{% endif %}>בתים פרטיים</option>
+                            <option value="בתים מודולריים" {% if lead_form.interest_type == "בתים מודולריים" %}selected{% endif %}>בתים מודולריים</option>
+                            <option value="ADU" {% if lead_form.interest_type == "ADU" %}selected{% endif %}>ADU</option>
+                            <option value="פגישה עם יועץ" {% if lead_form.interest_type == "פגישה עם יועץ" %}selected{% endif %}>פגישה עם יועץ</option>
+                        </select>
+                    </div>
+                    <div class="field field-full"><label for="message">הודעה</label><textarea id="message" name="message" rows="4" required>{{ lead_form.message }}</textarea></div>
+                    <button type="submit" class="btn btn-primary">שלחו לי פרטים</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="tab-footer">
+        <img src="/media/logo.png" alt="Click Home Logo" loading="lazy" onerror="this.style.display='none'">
+        <p>Click Home | BUILDING YOUR DREAMS</p>
+    </footer>
+
+    <script id="tabModelsData" type="application/json">{{ all_models_json|safe }}</script>
+    <script type="application/ld+json">{{ structured_data_json|safe }}</script>
+    <script src="{% static 'js/tab_v2.js' %}" defer></script>
+</body>
+</html>

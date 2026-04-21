@@ -163,6 +163,7 @@ class Command(BaseCommand):
 
             # שאר שרטוטים + כל התמונות -> HouseMedia
             other_drawings = drawings[1:] if len(drawings) > 1 else []
+            media_order = 0
             for filename in other_drawings + images:
                 src = source_dir / filename
                 if not src.exists():
@@ -181,8 +182,11 @@ class Command(BaseCommand):
                     HouseMedia.objects.create(
                         house=house,
                         media_type='image',
-                        file=File(f, name=filename)
+                        file=File(f, name=filename),
+                        sort_order=media_order * 10,
+                        is_homepage_card=(media_order == 0),
                     )
+                    media_order += 1
                 media_ok += 1
 
         self.stdout.write('')

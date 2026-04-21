@@ -60,5 +60,5 @@ python manage.py createsuperuser
 
 Bash
 
-python manage.py runserver
+python manage.py runserver 127.0.0.1:8001
 זהו! עכשיו יש לך את המערכת עובדת מושלם גם במחשב השני. 🚀

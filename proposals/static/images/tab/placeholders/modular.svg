@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Modular placeholder">
+  <defs>
+    <linearGradient id="bgm" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ece7d7" />
+      <stop offset="100%" stop-color="#cfd5c1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bgm)" />
+  <rect x="170" y="280" width="380" height="220" rx="14" fill="#f7f3ea" />
+  <rect x="560" y="280" width="430" height="220" rx="14" fill="#e6dcc8" />
+  <rect x="260" y="510" width="430" height="170" rx="14" fill="#8b5a2b" opacity="0.9" />
+  <rect x="720" y="510" width="270" height="170" rx="14" fill="#6b705c" opacity="0.9" />
+  <text x="60" y="96" fill="#2f2f2f" font-family="Arial, sans-serif" font-size="58">Click Home</text>
+  <text x="60" y="150" fill="#6b705c" font-family="Arial, sans-serif" font-size="28">Modular Collection Placeholder</text>
+</svg>

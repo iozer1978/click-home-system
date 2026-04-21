@@ -19,7 +19,7 @@ def send_email_from_queue(scheduled_email_id):
     from .models import ScheduledEmail
     try:
         email_obj = ScheduledEmail.objects.get(id=scheduled_email_id)
-        domain = "http://127.0.0.1:8000" 
+        domain = "http://127.0.0.1:8001"
         quote_url = f"{domain}/quote/web/{email_obj.quote.id}/"
         quote = email_obj.quote
 

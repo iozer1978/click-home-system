@@ -1,0 +1,27 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin/css/house_editor.css' %}">
+{% endblock %}
+
+{% block form_top %}
+    {% if house_public_url %}
+        <div class="house-admin-preview">
+            <h3>תצוגה כמו באתר</h3>
+            <div class="house-admin-preview-actions">
+                <a class="house-admin-btn" href="{{ house_public_url }}" target="_blank" rel="noopener">
+                    פתיחת דף הציבורי בטאב חדש
+                </a>
+            </div>
+            <p class="house-admin-preview-meta">{{ house_public_url }}</p>
+            <div class="house-admin-iframe-wrap">
+                <iframe src="{{ house_public_url }}" title="תצוגה מקדימה" loading="lazy"></iframe>
+            </div>
+            <p class="house-admin-preview-meta" style="margin-top:0.5rem;font-size:0.85rem;color:#888;">
+                אם ה־iframe ריק: ייתכן חסימת iframe בדפדפן — השתמש בקישור “פתיחה בטאב חדש”.
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

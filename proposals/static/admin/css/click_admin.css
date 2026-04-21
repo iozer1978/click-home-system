@@ -1,0 +1,68 @@
+/* Click Home — Django admin branding (replaces Jazzmin; works on all Python versions) */
+:root {
+    --ch-brand-brown: #8b5a2b;
+    --ch-brand-brown-dark: #6d4520;
+    --ch-brand-olive: #6b705c;
+}
+
+/* Header (Django 5 default admin) */
+#header {
+    background: var(--ch-brand-brown);
+    color: #fff;
+}
+
+#header a:link,
+#header a:visited {
+    color: #fff;
+}
+
+#user-tools a:link,
+#user-tools a:visited,
+#user-tools button {
+    color: #f5f0e8;
+}
+
+#branding h1,
+#site-name a {
+    font-weight: 700;
+}
+
+/* Modules */
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: var(--ch-brand-olive);
+    color: #fff;
+}
+
+.button,
+input[type="submit"],
+.submit-row input,
+a.button {
+    background: var(--ch-brand-brown);
+}
+
+.button:hover,
+input[type="submit"]:hover,
+.submit-row input:hover,
+a.button:hover {
+    background: var(--ch-brand-brown-dark);
+}
+
+.object-tools a {
+    background: var(--ch-brand-olive);
+}
+
+.object-tools a:hover {
+    background: #555a4d;
+}
+
+/* Breadcrumbs */
+div.breadcrumbs {
+    background: #f2efe4;
+    color: #333;
+}
+
+div.breadcrumbs a {
+    color: var(--ch-brand-brown);
+}

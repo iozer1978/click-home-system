@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.http import JsonResponse
 from django.core.files.base import ContentFile
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import send_mail
@@ -8,10 +11,81 @@ from django.conf import settings
 from django.db.models import Q, Count, Sum
 from django.contrib import messages
 from django.utils import timezone
+from django.urls import reverse
+import json
 import base64
 from .models import Quote, HouseModel, HouseUpgrade, UsageType, HouseType, FAQ
 from .forms import ClientRegisterForm
 from .utils import queue_email, send_email_from_queue
+from .data.home_models import get_tab_catalog, CATEGORY_LABELS
+
+
+TAB_CATEGORY_OPTIONS = [
+    {"value": "all", "label": CATEGORY_LABELS["all"]},
+    {"value": "single-family", "label": CATEGORY_LABELS["single-family"]},
+    {"value": "modular", "label": CATEGORY_LABELS["modular"]},
+    {"value": "adu", "label": CATEGORY_LABELS["adu"]},
+]
+
+
+def _to_int(value):
+    try:
+        return int(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def _validate_lead_payload(post_data):
+    full_name = (post_data.get("full_name") or post_data.get("name") or "").strip()
+    phone = (post_data.get("phone") or "").strip()
+    email = (post_data.get("email") or "").strip()
+    interest_type = (post_data.get("interest_type") or post_data.get("subject") or "").strip()
+    message_text = (post_data.get("message") or "").strip()
+    model_name = (post_data.get("model_name") or "").strip()
+
+    errors = {}
+    if not full_name:
+        errors["full_name"] = "יש להזין שם מלא."
+    if not phone or len(phone) < 9:
+        errors["phone"] = "יש להזין מספר טלפון תקין."
+    if email:
+        try:
+            validate_email(email)
+        except ValidationError:
+            errors["email"] = "כתובת המייל אינה תקינה."
+    if not interest_type:
+        errors["interest_type"] = "יש לבחור סוג נכס."
+    if not message_text:
+        errors["message"] = "יש להזין הודעה."
+
+    cleaned = {
+        "full_name": full_name[:100],
+        "phone": phone[:30],
+        "email": email[:255],
+        "interest_type": interest_type[:120],
+        "message": message_text[:1500],
+        "model_name": model_name[:120],
+    }
+    return cleaned, errors
+
+
+def _send_lead_email(cleaned_data, source_label):
+    subject = f"פנייה חדשה - Click Home ({source_label})"
+    body = (
+        f"שם מלא: {cleaned_data['full_name']}\n"
+        f"טלפון: {cleaned_data['phone']}\n"
+        f"מייל: {cleaned_data['email'] or 'לא הוזן'}\n"
+        f"סוג נכס: {cleaned_data['interest_type']}\n"
+        f"דגם נבחר: {cleaned_data['model_name'] or 'לא נבחר'}\n\n"
+        f"הודעה:\n{cleaned_data['message']}\n"
+    )
+    send_mail(
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        ["info@click-home.co.il"],
+        fail_silently=False,
+    )
 
 def home_page(request):
     houses = HouseModel.objects.all()
@@ -33,10 +107,98 @@ def contact_page(request):
     faqs = FAQ.objects.filter(is_visible=True).order_by('order')
     success = False
     if request.method == 'POST':
-        # TODO: חיבור לשליחת מייל או שמירת פנייה
-        messages.success(request, "ההודעה נשלחה בהצלחה! נחזור אליך בהקדם.")
-        success = True
+        cleaned_data, errors = _validate_lead_payload(request.POST)
+        if errors:
+            for msg in errors.values():
+                messages.error(request, msg)
+        else:
+            try:
+                _send_lead_email(cleaned_data, source_label="עמוד צור קשר")
+                messages.success(request, "ההודעה נשלחה בהצלחה! נחזור אליך בהקדם.")
+                success = True
+            except Exception:
+                messages.error(request, "הפנייה נשמרה אך הייתה בעיה בשליחה. ננסה ליצור קשר בהקדם.")
     return render(request, 'contact.html', {'faqs': faqs, 'success': success})
+
+
+def tab_page(request):
+    houses_qs = HouseModel.objects.prefetch_related("house_types", "media_files").all()
+    all_models = sorted(get_tab_catalog(houses_qs), key=lambda item: ((item.get("area_m2") or 0), item["model_name"]))
+
+    selected_category = (request.GET.get("category") or "all").strip()
+    search_term = (request.GET.get("q") or "").strip()
+    bedrooms = _to_int(request.GET.get("bedrooms")) or ""
+    bathrooms = _to_int(request.GET.get("bathrooms")) or ""
+    floors = _to_int(request.GET.get("floors")) or ""
+    area_min = _to_int(request.GET.get("area_min")) if request.GET.get("area_min") else ""
+    area_max = _to_int(request.GET.get("area_max")) if request.GET.get("area_max") else ""
+
+    lead_success = False
+    lead_form = {
+        "full_name": "",
+        "phone": "",
+        "email": "",
+        "interest_type": "",
+        "message": "",
+        "model_name": "",
+    }
+    if request.method == "POST":
+        cleaned_data, errors = _validate_lead_payload(request.POST)
+        lead_form.update(cleaned_data)
+        if errors:
+            for msg in errors.values():
+                messages.error(request, msg)
+        else:
+            try:
+                _send_lead_email(cleaned_data, source_label="קטלוג טאבלט")
+                messages.success(request, "תודה! קיבלנו את הפרטים וניצור איתכם קשר בהקדם.")
+                lead_success = True
+                lead_form = {k: "" for k in lead_form}
+            except Exception:
+                messages.error(request, "הבקשה התקבלה אך הייתה תקלה רגעית בשליחה. ניצור קשר בהקדם.")
+
+    canonical_url = request.build_absolute_uri(reverse("tab"))
+    og_image = request.build_absolute_uri(all_models[0]["main_image"]) if all_models else ""
+
+    structured_data = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "קטלוג דגמי Click Home",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": idx + 1,
+                "name": model["model_name"],
+                "url": f"{canonical_url}#{model['slug']}",
+            }
+            for idx, model in enumerate(all_models[:24])
+        ],
+    }
+
+    public_models_for_json = [
+        {key: value for key, value in model.items() if key != "internal_source_reference"}
+        for model in all_models
+    ]
+
+    return render(request, "tab_swipe.html", {
+        "all_models_json": json.dumps(public_models_for_json, ensure_ascii=False),
+        "categories": TAB_CATEGORY_OPTIONS,
+        "initial_filters": {
+            "category": selected_category,
+            "q": search_term,
+            "bedrooms": bedrooms,
+            "bathrooms": bathrooms,
+            "floors": floors,
+            "area_min": area_min,
+            "area_max": area_max,
+        },
+        "lead_form": lead_form,
+        "lead_success": lead_success,
+        "canonical_url": canonical_url,
+        "og_image": og_image,
+        "structured_data_json": json.dumps(structured_data, ensure_ascii=False),
+        "catalog_count": len(all_models),
+    })
 
 def catalog_page(request):
     houses = HouseModel.objects.all()
@@ -50,6 +212,7 @@ def catalog_page(request):
         'active_type_slug': type_slug,
     })
 
+@xframe_options_sameorigin
 def house_detail(request, pk):
     house = get_object_or_404(HouseModel, pk=pk)
     related_houses = HouseModel.objects.filter(~Q(pk=pk))[:3]

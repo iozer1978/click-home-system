@@ -14,6 +14,8 @@ urlpatterns = [
     path('about/', views.about_page, name='about'),
     path('contact/', views.contact_page, name='contact'),
     path('models/', views.catalog_page, name='catalog'),
+    path('tab/', views.tab_page, name='tab'),
+    path('TAB/', views.tab_page, name='tab_upper'),
     path('register/', views.register, name='register'),
     
     # דפי מוצר
