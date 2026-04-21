@@ -16,7 +16,10 @@
 
     <main class="swipe-shell">
         <section class="filter-bar">
-            <div class="filter-line compact">
+            <button id="filterToggleBtn" class="filter-toggle" type="button" aria-expanded="false" aria-controls="filterPanel">
+                סינון וחיפוש
+            </button>
+            <div class="filter-line compact" id="filterPanel" hidden>
             <select id="filterCategory">
                 {% for category in categories %}
                     <option value="{{ category.value }}" {% if initial_filters.category == category.value %}selected{% endif %}>{{ category.label }}</option>

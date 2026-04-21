@@ -22,23 +22,38 @@
     const filterSearch = document.getElementById("filterSearch");
     const filterBedrooms = document.getElementById("filterBedrooms");
     const filterBathrooms = document.getElementById("filterBathrooms");
+    const filterToggleBtn = document.getElementById("filterToggleBtn");
+    const filterPanel = document.getElementById("filterPanel");
 
     let filtered = models.slice();
     let activeIndex = 0;
     let galleryIndex = 0;
+    let isAnimating = false;
+    let gestureMode = null;
 
     function firstAvailableImage(model) {
         return model.hero_image || (model.gallery_images || [])[0] || model.floorplan_image || "/media/no-house.jpg";
     }
 
+    function normalizeImageKey(src) {
+        if (!src) return "";
+        return String(src).trim().toLowerCase().split("#")[0].split("?")[0];
+    }
+
     function cleanImages(model) {
-        const list = [model.hero_image, ...(model.gallery_images || [])].filter(Boolean);
+        const heroKey = normalizeImageKey(model.hero_image);
+        const list = (model.gallery_images || [])
+            .filter(Boolean)
+            .filter((src) => normalizeImageKey(src) !== heroKey);
         const seen = new Set();
-        return list.filter((src) => {
-            if (seen.has(src)) return false;
-            seen.add(src);
+        const deduped = list.filter((src) => {
+            const key = normalizeImageKey(src);
+            if (!key || seen.has(key)) return false;
+            seen.add(key);
             return true;
         });
+        if (deduped.length) return deduped;
+        return model.hero_image ? [model.hero_image] : [];
     }
 
     function modelSpecs(model) {
@@ -104,15 +119,21 @@
     }
 
     function animateSwipe(direction) {
+        if (isAnimating || !filtered.length) return;
+        isAnimating = true;
         const x = direction === "next" ? -420 : 420;
         card.style.transition = "transform .22s ease, opacity .22s ease";
         card.style.transform = `translateX(${x}px) rotate(${direction === "next" ? "-10deg" : "10deg"})`;
         card.style.opacity = "0";
         setTimeout(() => {
-            if (!filtered.length) return;
+            if (!filtered.length) {
+                isAnimating = false;
+                return;
+            }
             activeIndex = direction === "next"
                 ? (activeIndex + 1) % filtered.length
                 : (activeIndex - 1 + filtered.length) % filtered.length;
+            galleryIndex = 0;
             card.style.transition = "none";
             card.style.transform = `translateX(${direction === "next" ? "300px" : "-300px"})`;
             renderCard();
@@ -120,6 +141,9 @@
                 card.style.transition = "transform .2s ease, opacity .2s ease";
                 card.style.transform = "translateX(0) rotate(0)";
                 card.style.opacity = "1";
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 220);
             });
         }, 210);
     }
@@ -149,6 +173,19 @@
         activeIndex = 0;
         galleryIndex = 0;
         renderCard();
+        if (window.matchMedia("(max-width: 979px)").matches && filterPanel && !filterPanel.hasAttribute("hidden")) {
+            filterPanel.setAttribute("hidden", "");
+            if (filterToggleBtn) filterToggleBtn.setAttribute("aria-expanded", "false");
+        }
+    }
+
+    function syncStickyOffsets() {
+        const navbar = document.querySelector(".navbar");
+        const actions = document.querySelector(".actions");
+        const navHeight = navbar ? navbar.offsetHeight : 94;
+        const actionsHeight = actions ? actions.offsetHeight + 16 : 96;
+        document.documentElement.style.setProperty("--nav-height", `${navHeight}px`);
+        document.documentElement.style.setProperty("--actions-height", `${actionsHeight}px`);
     }
 
     document.getElementById("nextHouseBtn").addEventListener("click", () => animateSwipe("next"));
@@ -183,6 +220,20 @@
         applyFilters();
     });
 
+    if (filterToggleBtn && filterPanel) {
+        filterToggleBtn.addEventListener("click", () => {
+            const isHidden = filterPanel.hasAttribute("hidden");
+            if (isHidden) {
+                filterPanel.removeAttribute("hidden");
+                filterToggleBtn.setAttribute("aria-expanded", "true");
+            } else {
+                filterPanel.setAttribute("hidden", "");
+                filterToggleBtn.setAttribute("aria-expanded", "false");
+            }
+            syncStickyOffsets();
+        });
+    }
+
     toggleBtn.addEventListener("click", () => {
         const hidden = details.hasAttribute("hidden");
         if (hidden) {
@@ -199,23 +250,35 @@
     let currentX = 0;
 
     function onStart(x) {
+        if (isAnimating) return;
         dragging = true;
         startX = x;
         currentX = x;
+        gestureMode = null;
         card.style.transition = "none";
     }
 
-    function onMove(x) {
+    function onMove(x, yDelta) {
         if (!dragging) return;
         currentX = x;
         const delta = currentX - startX;
+        if (!gestureMode) {
+            const absX = Math.abs(delta);
+            const absY = Math.abs(yDelta || 0);
+            gestureMode = absX > absY ? "horizontal" : "vertical";
+        }
+        if (gestureMode !== "horizontal") return;
         card.style.transform = `translateX(${delta}px) rotate(${delta / 22}deg)`;
         setBadges(delta);
     }
 
     function onEnd() {
-        if (!dragging) return;
+        if (!dragging || isAnimating) return;
         dragging = false;
+        if (gestureMode === "vertical") {
+            gestureMode = null;
+            return;
+        }
         const delta = currentX - startX;
         likeBadge.style.opacity = "0";
         nopeBadge.style.opacity = "0";
@@ -225,14 +288,28 @@
         }
         card.style.transition = "transform .2s ease";
         card.style.transform = "translateX(0) rotate(0)";
+        gestureMode = null;
     }
 
-    card.addEventListener("touchstart", (e) => onStart(e.touches[0].clientX), { passive: true });
-    card.addEventListener("touchmove", (e) => onMove(e.touches[0].clientX), { passive: true });
-    card.addEventListener("touchend", onEnd, { passive: true });
-    card.addEventListener("mousedown", (e) => onStart(e.clientX));
-    window.addEventListener("mousemove", (e) => onMove(e.clientX));
+    const swipeTarget = document.querySelector(".hero") || card;
+    let startY = 0;
+    swipeTarget.addEventListener("touchstart", (e) => {
+        startY = e.touches[0].clientY;
+        onStart(e.touches[0].clientX);
+    }, { passive: true });
+    swipeTarget.addEventListener("touchmove", (e) => {
+        onMove(e.touches[0].clientX, e.touches[0].clientY - startY);
+    }, { passive: true });
+    swipeTarget.addEventListener("touchend", onEnd, { passive: true });
+    swipeTarget.addEventListener("mousedown", (e) => onStart(e.clientX));
+    window.addEventListener("mousemove", (e) => onMove(e.clientX, 0));
     window.addEventListener("mouseup", onEnd);
+    window.addEventListener("resize", syncStickyOffsets);
 
     renderCard();
+    syncStickyOffsets();
+    if (filterPanel && window.matchMedia("(min-width: 980px)").matches) {
+        filterPanel.removeAttribute("hidden");
+        if (filterToggleBtn) filterToggleBtn.setAttribute("aria-expanded", "true");
+    }
 })();
