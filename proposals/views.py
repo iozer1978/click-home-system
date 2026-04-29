@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.urls import reverse
 import json
 import base64
+from urllib.parse import quote_plus
 from .models import Quote, HouseModel, HouseUpgrade, UsageType, HouseType, FAQ
 from .forms import ClientRegisterForm
 from .utils import queue_email, send_email_from_queue
@@ -26,6 +27,53 @@ TAB_CATEGORY_OPTIONS = [
     {"value": "modular", "label": CATEGORY_LABELS["modular"]},
     {"value": "adu", "label": CATEGORY_LABELS["adu"]},
 ]
+
+CONTACT_CARD_BASE = {
+    "brand_name": "Click Home",
+    "brand_tagline": "Building Your Dream",
+    "company": "Click Home",
+    "website": "https://www.click-home.co.il/en",
+    "address_lines": [
+        "4 Mordechai Kostelitz St.",
+        "Sha'ar Hadera Towers, Israel",
+        "3852901",
+    ],
+    "address_query": "4 Mordechai Kostelitz St, Sha'ar Hadera Towers, Israel 3852901",
+    "company_section_title": "Smart & Advanced Construction Solutions",
+    "company_points": [
+        "Light Gauge Steel (LGS) Solutions",
+        "Modular & Container Structures",
+        "Residential, Hospitality & Public Sector Projects",
+        "Extensions & Structural Additions",
+    ],
+}
+
+CONTACT_CARD_PROFILES = {
+    "itzik": {
+        "slug": "itzik",
+        "name": "Itzik Ozer",
+        "title": "Founder & Director of Global Supplier Partnerships",
+        "mobile_label": "Mobile",
+        "mobile_tel": "+972542082082",
+        "phone_label": "Phone",
+        "phone_tel": "+97297902727",
+        "whatsapp_url": "https://wa.me/972542082082",
+        "wechat_id": "Itzik1903",
+        "save_vcf_url": "/api/vcf/itzik",
+    },
+    "hagit": {
+        "slug": "hagit",
+        "name": "Hagit Mor Elmalan",
+        "title": "Founder & CEO",
+        "mobile_label": "Mobile",
+        "mobile_tel": "+972503439999",
+        "phone_label": "Phone",
+        "phone_tel": "+97297902727",
+        "whatsapp_url": "https://wa.me/972503439999",
+        "wechat_id": "wxid_qrptybbvsg0kt22",
+        "save_vcf_url": "/api/vcf/hagit",
+    },
+}
 
 
 def _to_int(value):
@@ -394,3 +442,52 @@ def en_landing_v2(request):
 
 def en_landing_v3(request):
     return render(request, 'en/v3_china.html')
+
+
+def _build_contact_card_context(profile_slug):
+    profile = CONTACT_CARD_PROFILES[profile_slug].copy()
+    context = {**CONTACT_CARD_BASE, **profile}
+    context["maps_url"] = f"https://www.google.com/maps/search/?api=1&query={quote_plus(context['address_query'])}"
+    return context
+
+
+def en_itzik_card(request):
+    return render(request, "en/contact_card.html", _build_contact_card_context("itzik"))
+
+
+def en_hagit_card(request):
+    return render(request, "en/contact_card.html", _build_contact_card_context("hagit"))
+
+
+def _build_vcf_payload(profile_slug):
+    profile = _build_contact_card_context(profile_slug)
+    first_name, last_name = profile["name"].split(" ", 1)
+    lines = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        f"N:{last_name};{first_name};;;",
+        f"FN:{profile['name']}",
+        f"ORG:{profile['company']}",
+        f"TITLE:{profile['title']}",
+        f"TEL;TYPE=CELL:{profile['mobile_tel']}",
+        f"TEL;TYPE=WORK,VOICE:{profile['phone_tel']}",
+        f"URL:{profile['website']}",
+        "END:VCARD",
+    ]
+    return "\r\n".join(lines) + "\r\n", profile
+
+
+def _vcf_response(profile_slug):
+    payload, profile = _build_vcf_payload(profile_slug)
+    response = HttpResponse(payload, content_type="text/vcard; charset=utf-8")
+    response["Content-Disposition"] = f'attachment; filename="{profile_slug}.vcf"'
+    response["Cache-Control"] = "no-store"
+    return response
+
+
+def vcf_itzik(request):
+    return _vcf_response("itzik")
+
+
+def vcf_hagit(request):
+    return _vcf_response("hagit")

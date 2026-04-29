@@ -8,6 +8,10 @@ urlpatterns = [
     path('en/v1/', views.en_landing_v1, name='en_landing_v1'),
     path('en/v2/', views.en_landing_v2, name='en_landing_v2'),
     path('en/v3/', views.en_landing_v3, name='en_landing_v3'),
+    path('en/itzik', views.en_itzik_card, name='en_itzik_card'),
+    path('en/hagit', views.en_hagit_card, name='en_hagit_card'),
+    path('api/vcf/itzik', views.vcf_itzik, name='vcf_itzik'),
+    path('api/vcf/hagit', views.vcf_hagit, name='vcf_hagit'),
 
     # דפים ראשיים
     path('', views.home_page, name='home'),

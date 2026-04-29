@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{{ name }} | {{ company }}</title>
+    <meta name="description" content="{{ name }} - {{ title }} at {{ company }}">
+    <link rel="preload" href="{% static 'assets/logo.png' %}" as="image">
+    <link rel="preload" href="{% static 'assets/Contact_Bg.png' %}" as="image">
+    <link rel="stylesheet" href="{% static 'css/contact_card.css' %}">
+</head>
+<body>
+    <div class="page-overlay">
+        <main class="card-page">
+            <header class="brand-header">
+                <img src="/assets/logo.png" alt="Click Home logo" class="brand-logo">
+            </header>
+
+            <section class="panel profile-panel">
+                <h2 class="profile-name">{{ name }}</h2>
+                <p class="profile-title">{{ title }}</p>
+                <a class="btn btn-primary save-btn" href="{{ save_vcf_url }}">Save Contact</a>
+            </section>
+
+            <section class="panel actions-panel">
+                <a class="btn btn-action" href="tel:{{ mobile_tel }}">{{ mobile_label }}</a>
+                <a class="btn btn-action" href="tel:{{ phone_tel }}">{{ phone_label }}</a>
+                <a class="btn btn-action" href="{{ whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>
+                <div class="btn btn-static wechat-card">
+                    <span class="static-label">WeChat ID</span>
+                    <strong class="static-value" id="wechat-id">{{ wechat_id }}</strong>
+                    <div class="wechat-actions">
+                        <a class="btn-compact" href="weixin://dl/chat">Open WeChat</a>
+                        <button class="btn-compact btn-copy" type="button" data-wechat-id="{{ wechat_id }}">Copy ID</button>
+                    </div>
+                    <small class="copy-feedback" id="copy-feedback" aria-live="polite"></small>
+                </div>
+                <a class="btn btn-action" href="{{ website }}" target="_blank" rel="noopener">Web</a>
+            </section>
+
+            <section class="panel address-panel">
+                <h3 class="section-title">Address</h3>
+                <p class="address-text">
+                    {{ address_lines.0 }}<br>
+                    {{ address_lines.1 }}<br>
+                    {{ address_lines.2 }}
+                </p>
+                <a class="btn btn-action" href="{{ maps_url }}" target="_blank" rel="noopener">Open in Google Maps</a>
+            </section>
+
+            <section class="panel company-panel">
+                <h3 class="section-title">{{ company_section_title }}</h3>
+                <ul class="company-list">
+                    {% for point in company_points %}
+                        <li>{{ point }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <nav class="sticky-bar" aria-label="Quick actions">
+        <a class="sticky-btn" href="tel:{{ mobile_tel }}">Call</a>
+        <a class="sticky-btn" href="{{ whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="sticky-btn sticky-primary" href="{{ save_vcf_url }}">Save Contact</a>
+    </nav>
+    <script>
+        (function () {
+            const copyButton = document.querySelector(".btn-copy");
+            const feedback = document.getElementById("copy-feedback");
+            if (!copyButton || !feedback) return;
+
+            copyButton.addEventListener("click", async function () {
+                const wechatId = copyButton.getAttribute("data-wechat-id") || "";
+                if (!wechatId) return;
+
+                try {
+                    await navigator.clipboard.writeText(wechatId);
+                    feedback.textContent = "WeChat ID copied";
+                } catch (e) {
+                    feedback.textContent = "Copy failed - long press to copy";
+                }
+
+                window.setTimeout(function () {
+                    feedback.textContent = "";
+                }, 1800);
+            });
+        })();
+    </script>
+</body>
+</html>
