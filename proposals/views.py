@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -14,7 +14,6 @@ from django.utils import timezone
 from django.urls import reverse
 import json
 import base64
-from urllib.parse import quote_plus
 from .models import Quote, HouseModel, HouseUpgrade, UsageType, HouseType, FAQ
 from .forms import ClientRegisterForm
 from .utils import queue_email, send_email_from_queue
@@ -39,6 +38,7 @@ CONTACT_CARD_BASE = {
         "3852901",
     ],
     "address_query": "4 Mordechai Kostelitz St, Sha'ar Hadera Towers, Israel 3852901",
+    "maps_url": "https://maps.app.goo.gl/yzxENvM2A4Xq1qhy8",
     "company_section_title": "Smart & Advanced Construction Solutions",
     "company_points": [
         "Light Gauge Steel (LGS) Solutions",
@@ -447,7 +447,6 @@ def en_landing_v3(request):
 def _build_contact_card_context(profile_slug):
     profile = CONTACT_CARD_PROFILES[profile_slug].copy()
     context = {**CONTACT_CARD_BASE, **profile}
-    context["maps_url"] = f"https://www.google.com/maps/search/?api=1&query={quote_plus(context['address_query'])}"
     return context
 
 
@@ -457,6 +456,13 @@ def en_itzik_card(request):
 
 def en_hagit_card(request):
     return render(request, "en/contact_card.html", _build_contact_card_context("hagit"))
+
+
+def en_contact_card_redirect(request, profile_slug):
+    slug = (profile_slug or "").lower()
+    if slug in CONTACT_CARD_PROFILES:
+        return redirect(f"/en/{slug}", permanent=True)
+    raise Http404("Profile not found")
 
 
 def _build_vcf_payload(profile_slug):
@@ -491,3 +497,10 @@ def vcf_itzik(request):
 
 def vcf_hagit(request):
     return _vcf_response("hagit")
+
+
+def vcf_redirect(request, profile_slug):
+    slug = (profile_slug or "").lower()
+    if slug in CONTACT_CARD_PROFILES:
+        return redirect(f"/api/vcf/{slug}", permanent=True)
+    raise Http404("Profile not found")

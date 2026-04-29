@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views 
 
 urlpatterns = [
@@ -10,8 +10,10 @@ urlpatterns = [
     path('en/v3/', views.en_landing_v3, name='en_landing_v3'),
     path('en/itzik', views.en_itzik_card, name='en_itzik_card'),
     path('en/hagit', views.en_hagit_card, name='en_hagit_card'),
+    re_path(r'^en/(?P<profile_slug>[A-Za-z]+)/?$', views.en_contact_card_redirect, name='en_contact_card_redirect'),
     path('api/vcf/itzik', views.vcf_itzik, name='vcf_itzik'),
     path('api/vcf/hagit', views.vcf_hagit, name='vcf_hagit'),
+    re_path(r'^api/vcf/(?P<profile_slug>[A-Za-z]+)/?$', views.vcf_redirect, name='vcf_redirect'),
 
     # דפים ראשיים
     path('', views.home_page, name='home'),
