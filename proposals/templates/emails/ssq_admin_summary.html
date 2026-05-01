@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; color: #1f2b37; }
+        .wrap { max-width: 760px; margin: 0 auto; background: #fff; border: 1px solid #dfe6ed; border-radius: 12px; overflow: hidden; }
+        .head { padding: 16px 20px; background: #8b5a2b; color: #fff; }
+        .body { padding: 16px 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 14px; }
+        td, th { border: 1px solid #e8edf2; padding: 8px; text-align: left; vertical-align: top; }
+        th { background: #f7fafc; }
+        .muted { color: #5f6c79; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="head">
+            <h2 style="margin:0;">Click Home - Supplier Qualification Submission</h2>
+            <p style="margin:6px 0 0;">New supplier evaluation received</p>
+        </div>
+        <div class="body">
+            <table>
+                <tr><th>Company</th><td>{{ submission.companyName }}</td></tr>
+                <tr><th>Country</th><td>{{ submission.country }}</td></tr>
+                <tr><th>Contact person</th><td>{{ submission.contactName }}</td></tr>
+                <tr><th>Email</th><td>{{ submission.email }}</td></tr>
+                <tr><th>Product type</th><td>{{ submission.productType }}</td></tr>
+                <tr><th>Final score</th><td>{{ submission.score }}</td></tr>
+                <tr><th>Risk level</th><td>{{ submission.riskLevel }}</td></tr>
+                <tr><th>Status</th><td>{{ submission.get_status_display }}</td></tr>
+            </table>
+
+            <h3>Score breakdown</h3>
+            <table>
+                <tr><th>Section</th><th>Score</th></tr>
+                {% for section, score in score_breakdown.items %}
+                    <tr><td>{{ section }}</td><td>{{ score }}</td></tr>
+                {% empty %}
+                    <tr><td colspan="2">No section breakdown available.</td></tr>
+                {% endfor %}
+            </table>
+
+            <h3>Critical missing items / flags</h3>
+            <ul>
+                {% for flag in critical_flags %}
+                    <li>{{ flag }}</li>
+                {% empty %}
+                    <li>No critical flags.</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Uploaded documents</h3>
+            {% for key, items in files.items %}
+                <p><strong>{{ key }}</strong></p>
+                <ul>
+                    {% for file in items %}
+                        <li>{{ file.name }} - {{ file.admin_url }}</li>
+                    {% endfor %}
+                </ul>
+            {% empty %}
+                <p>No files uploaded.</p>
+            {% endfor %}
+
+            <h3>All answers</h3>
+            <table>
+                <tr><th>Question</th><th>Answer</th></tr>
+                {% for row in display_answers %}
+                    <tr><td>{{ row.question }}</td><td>{{ row.answer }}</td></tr>
+                {% endfor %}
+            </table>
+
+            <p class="muted">Recommended next action: Review technical files, validate mandatory certifications, and move status to Under Review if data is complete.</p>
+        </div>
+    </div>
+</body>
+</html>

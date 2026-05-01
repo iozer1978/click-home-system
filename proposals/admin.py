@@ -7,7 +7,19 @@ from django.core.management import call_command
 from django.conf import settings
 from pathlib import Path
 import runpy
-from .models import HouseModel, HouseMedia, Quote, HouseUpgrade, UsageType, HouseType, ClientProfile, FAQ, EmailLog, ScheduledEmail
+from .models import (
+    HouseModel,
+    HouseMedia,
+    Quote,
+    HouseUpgrade,
+    UsageType,
+    HouseType,
+    ClientProfile,
+    FAQ,
+    EmailLog,
+    ScheduledEmail,
+    SupplierSubmission,
+)
 from .utils import queue_email, send_email_from_queue
 from .models import TabHouse, TabHouseImage
 
@@ -276,6 +288,45 @@ class ScheduledEmailAdmin(admin.ModelAdmin):
 class ClientProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_email', 'phone')
     def get_email(self, obj): return obj.user.email
+
+
+@admin.register(SupplierSubmission)
+class SupplierSubmissionAdmin(admin.ModelAdmin):
+    list_display = (
+        "companyName",
+        "country",
+        "contactName",
+        "email",
+        "productType",
+        "score",
+        "riskLevel",
+        "status",
+        "createdAt",
+    )
+    list_filter = ("riskLevel", "status", "country", "productType", "createdAt")
+    search_fields = ("companyName", "contactName", "email")
+    readonly_fields = ("id", "createdAt", "updatedAt")
+    fields = (
+        "id",
+        "companyName",
+        "country",
+        "contactName",
+        "email",
+        "phone",
+        "website",
+        "productType",
+        "score",
+        "riskLevel",
+        "scoreBreakdown",
+        "criticalFlags",
+        "status",
+        "adminNotes",
+        "answers",
+        "files",
+        "language",
+        "createdAt",
+        "updatedAt",
+    )
 
 admin.site.register(UsageType)
 admin.site.register(HouseType)

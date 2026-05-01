@@ -1,5 +1,6 @@
 from django.urls import path, include, re_path
 from . import views 
+from . import ssq_views
 
 urlpatterns = [
     # English landing (www.click-home.co.il/en)
@@ -41,4 +42,10 @@ urlpatterns = [
     # אזור אישי וניהול
     path('profile/', views.profile_dashboard, name='profile'),
     path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
+
+    # Supplier qualification (public)
+    path("supplier-form/", ssq_views.supplier_form, name="supplier_form"),
+    path("supplier-form/thank-you/", ssq_views.supplier_form_thank_you, name="supplier_form_thank_you"),
+    path("ssq/", ssq_views.supplier_form, name="ssq_form"),
+    path("ssq/thank-you/", ssq_views.supplier_form_thank_you, name="ssq_thank_you"),
 ]

@@ -195,12 +195,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # --- הגדרות שליחת מייל (Microsoft 365) ---
 # סיסמה: הגדר ב־PythonAnywhere → Web → Environment variables: EMAIL_HOST_PASSWORD
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.office365.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "info@click-home.co.il"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = "Click Home <info@click-home.co.il>"
+EMAIL_HOST = os.environ.get("SMTP_HOST", "smtp.office365.com")
+EMAIL_PORT = int(os.environ.get("SMTP_PORT", "587"))
+EMAIL_USE_TLS = os.environ.get("SMTP_USE_TLS", "True").lower() in ("1", "true", "yes")
+EMAIL_HOST_USER = os.environ.get("SMTP_USER", "info@click-home.co.il")
+EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASS", os.environ.get("EMAIL_HOST_PASSWORD", ""))
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", f"Click Home <{EMAIL_HOST_USER}>")
+
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "info@click-home.co.il")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+SSQ_STORAGE_PATH = os.environ.get("STORAGE_PATH", str(BASE_DIR / "private_uploads" / "ssq"))
 
 # ממשק אדמין: עיצוב מותאם ב־templates/admin/base_site.html + static/admin/css/click_admin.css
 # (django-jazzmin הוסר — לא תואם Python 3.14 + Django 5.1 בצורה יציבה; בשרת Python 3.10 אפשר לשקול שוב בעתיד)

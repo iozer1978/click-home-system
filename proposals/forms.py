@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+from .models import SupplierSubmission
 
 # תרגום הודעות אימות סיסמה לעברית
 PASSWORD_ERROR_MESSAGES = {
@@ -97,3 +98,31 @@ class ClientRegisterForm(UserCreationForm):
             user.profile.phone = self.cleaned_data['phone']
             user.profile.save()
         return user
+
+
+class SSQAdminLoginForm(forms.Form):
+    password = forms.CharField(
+        label="Admin password",
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Enter admin password",
+                "autocomplete": "current-password",
+            }
+        ),
+    )
+
+
+class SupplierSubmissionStatusForm(forms.ModelForm):
+    class Meta:
+        model = SupplierSubmission
+        fields = ["status", "adminNotes"]
+        widgets = {
+            "status": forms.Select(attrs={"class": "ssq-select"}),
+            "adminNotes": forms.Textarea(
+                attrs={
+                    "rows": 6,
+                    "placeholder": "Add technical review notes, missing details, or follow-up requests.",
+                    "class": "ssq-textarea",
+                }
+            ),
+        }

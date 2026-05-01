@@ -299,3 +299,41 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     try: instance.profile.save()
     except: ClientProfile.objects.create(user=instance)
+
+
+class SupplierSubmission(models.Model):
+    STATUS_CHOICES = [
+        ("new", "New"),
+        ("under_review", "Under Review"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
+        ("need_more_info", "Need More Info"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    companyName = models.CharField(max_length=255)
+    country = models.CharField(max_length=100)
+    contactName = models.CharField(max_length=150)
+    email = models.EmailField()
+    phone = models.CharField(max_length=50, blank=True)
+    website = models.URLField(blank=True)
+    productType = models.CharField(max_length=120, blank=True)
+    answers = models.JSONField(default=dict, blank=True)
+    files = models.JSONField(default=dict, blank=True)
+    score = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    riskLevel = models.CharField(max_length=120, default="Not recommended")
+    scoreBreakdown = models.JSONField(default=dict, blank=True)
+    criticalFlags = models.JSONField(default=list, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
+    adminNotes = models.TextField(blank=True)
+    language = models.CharField(max_length=10, default="en")
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Supplier Submission"
+        verbose_name_plural = "Supplier Submissions"
+        ordering = ["-createdAt"]
+
+    def __str__(self):
+        return f"{self.companyName} ({self.score})"

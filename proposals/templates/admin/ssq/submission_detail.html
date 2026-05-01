@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ submission.companyName }} | Submission</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f8; color: #1f2b37; }
+        .shell { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; }
+        .top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .btn { border: 1px solid #8b5a2b; color: #8b5a2b; border-radius: 8px; padding: 8px 12px; text-decoration: none; background: #fff; }
+        .card { background: #fff; border: 1px solid #dbe2e8; border-radius: 12px; padding: 14px; margin-top: 12px; }
+        .grid { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        dt { font-size: 0.85rem; color: #5f6d7b; }
+        dd { margin: 0 0 8px; font-weight: 600; }
+        textarea, select { width: 100%; border: 1px solid #d8e0e8; border-radius: 8px; padding: 8px 10px; font: inherit; }
+        .files li { margin-bottom: 6px; }
+        .mono { font-family: Consolas, monospace; white-space: pre-wrap; font-size: 0.88rem; }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <div class="top">
+            <h1>{{ submission.companyName }}</h1>
+            <div>
+                <a class="btn" href="{% url 'ssq_admin_submissions' %}">Back to list</a>
+                <a class="btn" href="{% url 'ssq_admin_export_pdf' submission.id %}">Export PDF</a>
+            </div>
+        </div>
+
+        {% if messages %}
+            <div class="card">
+                {% for message in messages %}<div>{{ message }}</div>{% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="card">
+            <h2>Company profile</h2>
+            <div class="grid">
+                <dl><dt>Country</dt><dd>{{ submission.country }}</dd></dl>
+                <dl><dt>Contact person</dt><dd>{{ submission.contactName }}</dd></dl>
+                <dl><dt>Email</dt><dd>{{ submission.email }}</dd></dl>
+                <dl><dt>Phone</dt><dd>{{ submission.phone|default:"-" }}</dd></dl>
+                <dl><dt>Website</dt><dd>{{ submission.website|default:"-" }}</dd></dl>
+                <dl><dt>Product type</dt><dd>{{ submission.productType|default:"-" }}</dd></dl>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Weighted score breakdown</h2>
+            <p><strong>Final score:</strong> {{ submission.score }} / 100</p>
+            <p><strong>Risk level:</strong> {{ submission.riskLevel }}</p>
+            <ul>
+                {% for section, score in submission.scoreBreakdown.items %}
+                    <li>{{ section }}: {{ score }}</li>
+                {% empty %}
+                    <li>No section breakdown available.</li>
+                {% endfor %}
+            </ul>
+            <h3>Critical flags</h3>
+            <ul>
+                {% for flag in submission.criticalFlags %}
+                    <li>{{ flag }}</li>
+                {% empty %}
+                    <li>No critical flags.</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>Uploaded documents</h2>
+            {% for file_key, items in submission.files.items %}
+                <h4>{{ file_key }}</h4>
+                <ul class="files">
+                    {% for file_item in items %}
+                        <li>
+                            <a href="{% url 'ssq_admin_file' submission.id file_key forloop.counter0 %}" target="_blank" rel="noopener">
+                                {{ file_item.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% empty %}
+                <p>No files uploaded.</p>
+            {% endfor %}
+        </section>
+
+        <section class="card">
+            <h2>All answers</h2>
+            <table>
+                <thead>
+                    <tr><th style="text-align:left;">Question</th><th style="text-align:left;">Answer</th></tr>
+                </thead>
+                <tbody>
+                    {% for row in display_answers %}
+                        <tr>
+                            <td>{{ row.question }}</td>
+                            <td>{{ row.answer }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="2">No answers found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>Admin review</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label for="{{ form.status.id_for_label }}">Status</label>
+                {{ form.status }}
+                <label for="{{ form.adminNotes.id_for_label }}">Admin notes</label>
+                {{ form.adminNotes }}
+                <p><button class="btn" type="submit">Save</button></p>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

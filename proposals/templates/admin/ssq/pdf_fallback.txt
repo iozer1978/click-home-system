@@ -1,0 +1,17 @@
+Supplier Qualification Summary
+==============================
+Company: {{ submission.companyName }}
+Country: {{ submission.country }}
+Contact: {{ submission.contactName }}
+Email: {{ submission.email }}
+Product Type: {{ submission.productType }}
+Score: {{ submission.score }}
+Risk Level: {{ submission.riskLevel }}
+Status: {{ submission.get_status_display }}
+
+Critical Flags:
+{% for flag in submission.criticalFlags %}
+- {{ flag }}
+{% empty %}
+- None
+{% endfor %}

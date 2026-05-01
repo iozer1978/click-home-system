@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Submissions</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f8; color: #1f2b37; }
+        .shell { max-width: 1400px; margin: 0 auto; padding: 24px 16px; }
+        .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .btn { border: 1px solid #8b5a2b; background: #fff; color: #8b5a2b; border-radius: 8px; padding: 8px 12px; text-decoration: none; }
+        .btn.primary { background: #8b5a2b; color: #fff; }
+        form.filters { margin-top: 14px; background: #fff; border: 1px solid #dbe2e8; border-radius: 12px; padding: 12px; display: grid; gap: 10px; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+        form.filters input, form.filters select { width: 100%; border: 1px solid #d8e0e8; border-radius: 8px; padding: 8px 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 14px; background: #fff; border: 1px solid #dbe2e8; }
+        th, td { border-bottom: 1px solid #edf2f7; padding: 10px 8px; text-align: left; font-size: 0.9rem; }
+        th { background: #f9fbfd; }
+        .status { text-transform: capitalize; }
+        .pager { margin-top: 12px; display: flex; gap: 8px; align-items: center; }
+        @media (max-width: 1200px) { form.filters { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <div class="top">
+            <h1>Supplier Qualification Submissions</h1>
+            <div>
+                <a class="btn" href="{% url 'ssq_admin_export_csv' %}">Export CSV</a>
+                <a class="btn" href="{% url 'ssq_admin_logout' %}">Logout</a>
+            </div>
+        </div>
+
+        <form class="filters" method="get">
+            <input type="text" name="q" placeholder="Search company/contact/email" value="{{ filters.q }}">
+            <input type="number" step="0.01" name="score_min" placeholder="Min score" value="{{ filters.score_min }}">
+            <input type="number" step="0.01" name="score_max" placeholder="Max score" value="{{ filters.score_max }}">
+            <input type="text" name="country" placeholder="Country" value="{{ filters.country }}">
+            <input type="text" name="product_type" placeholder="Product type" value="{{ filters.product_type }}">
+            <select name="risk_level">
+                <option value="">Risk level</option>
+                {% for risk in risk_levels %}
+                    <option value="{{ risk }}" {% if filters.risk_level == risk %}selected{% endif %}>{{ risk }}</option>
+                {% endfor %}
+            </select>
+            <select name="status">
+                <option value="">Status</option>
+                {% for key, label in statuses %}
+                    <option value="{{ key }}" {% if filters.status == key %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn primary" type="submit">Apply filters</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Company name</th>
+                    <th>Country</th>
+                    <th>Contact person</th>
+                    <th>Email</th>
+                    <th>Product type</th>
+                    <th>Final score</th>
+                    <th>Risk level</th>
+                    <th>Submission date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in page_obj %}
+                    <tr>
+                        <td><a href="{% url 'ssq_admin_submission_detail' item.id %}">{{ item.companyName }}</a></td>
+                        <td>{{ item.country }}</td>
+                        <td>{{ item.contactName }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.productType }}</td>
+                        <td>{{ item.score }}</td>
+                        <td>{{ item.riskLevel }}</td>
+                        <td>{{ item.createdAt|date:"Y-m-d H:i" }}</td>
+                        <td class="status">{{ item.get_status_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="9">No submissions found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pager">
+            {% if page_obj.has_previous %}
+                <a class="btn" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a class="btn" href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

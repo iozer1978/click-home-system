@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | Supplier Qualification</title>
+    <link rel="stylesheet" href="{% static 'css/ssq.css' %}">
+</head>
+<body>
+    <main class="ssq-shell">
+        <section class="ssq-header">
+            <div class="brand">
+                <img src="/assets/logo.png" alt="Click Home logo" class="brand-logo">
+                <div>
+                    <h1>Thank you for your submission</h1>
+                    <p>Our technical team will review your supplier qualification details and contact you if additional documentation is required.</p>
+                </div>
+            </div>
+        </section>
+        <section id="ssq-form">
+            <p>Your form has been received successfully.</p>
+            <p><a class="btn btn-primary" href="/supplier-form/">Submit another response</a></p>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; color: #1f2b37; }
+        .wrap { max-width: 640px; margin: 0 auto; background: #fff; border: 1px solid #dfe6ed; border-radius: 12px; overflow: hidden; }
+        .head { background: #8b5a2b; color: #fff; padding: 16px 20px; }
+        .body { padding: 16px 20px; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="head">
+            <h2 style="margin:0;">Click Home - Supplier Qualification</h2>
+        </div>
+        <div class="body">
+            <p>{{ greeting }} {{ submission.contactName|default:submission.companyName }},</p>
+            <p>{{ message_line }}</p>
+            <p>{{ closing|linebreaksbr }}</p>
+        </div>
+    </div>
+</body>
+</html>

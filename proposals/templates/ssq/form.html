@@ -1,0 +1,343 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Qualification Form | Click Home</title>
+    <link rel="stylesheet" href="{% static 'css/ssq.css' %}">
+</head>
+<body>
+    <main class="ssq-shell">
+        <header class="ssq-header">
+            <div class="brand">
+                <img src="/assets/logo.png" alt="Click Home logo" class="brand-logo">
+                <div>
+                    <h1 data-i18n="title">Supplier Qualification Form</h1>
+                    <p data-i18n="subtitle">Advanced construction systems and modular solutions supplier evaluation.</p>
+                </div>
+            </div>
+            <div class="brand-meta">
+                <button class="lang-btn is-active" type="button" data-lang="en">English</button>
+                <button class="lang-btn" type="button" data-lang="zh">中文</button>
+            </div>
+        </header>
+
+        {% if messages %}
+            <section class="alerts">
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        <div class="progress-wrap">
+            <div class="progress-info">
+                <span data-i18n="stepLabel">Step</span>
+                <strong id="step-counter">1 / 15</strong>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-value"></div>
+            </div>
+        </div>
+
+        <form id="ssq-form" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="answers_json" id="answers-json">
+            <input type="hidden" name="_language" id="language-input" value="en">
+
+            <section class="step is-active" data-step="1">
+                <h2 data-i18n="step1Title">Step 1: Company Details</h2>
+                <div class="grid">
+                    <label><span>Company name *</span><input name="company_name" required></label>
+                    <label><span>Country *</span><input name="country" required></label>
+                    <label><span>City</span><input name="city"></label>
+                    <label><span>Website</span><input name="website" type="url"></label>
+                    <label><span>Contact person *</span><input name="contact_person" required></label>
+                    <label><span>Job title</span><input name="job_title"></label>
+                    <label><span>Email *</span><input name="email" type="email" required></label>
+                    <label><span>Phone / WhatsApp *</span><input name="phone_whatsapp" required></label>
+                    <label><span>WeChat ID</span><input name="wechat_id"></label>
+                    <label><span>Years in business</span><input name="years_in_business"></label>
+                    <label><span>Number of employees</span><input name="employees_count"></label>
+                    <label class="full"><span>Factory address</span><input name="factory_address"></label>
+                    <label><span>Company type *</span>
+                        <select name="company_type" required>
+                            <option value="">Select</option>
+                            <option value="manufacturer">Manufacturer</option>
+                            <option value="trading_company">Trading company</option>
+                            <option value="both">Both</option>
+                        </select>
+                    </label>
+                    <label class="full"><span>Main products *</span><textarea name="main_products" required></textarea></label>
+                    <label class="full"><span>Annual production capacity</span><textarea name="annual_capacity"></textarea></label>
+                    <label class="full"><span>Export markets</span><textarea name="export_markets"></textarea></label>
+                    <label class="full"><span>Main countries currently supplied</span><textarea name="main_supply_countries"></textarea></label>
+                    <label class="full"><span>Experience exporting to Israel or Middle East?</span><textarea name="israel_middle_east_experience"></textarea></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="2">
+                <h2>Step 2: Product / Construction System</h2>
+                <div class="grid">
+                    <label><span>Product type *</span>
+                        <select name="product_type" required>
+                            <option value="">Select</option>
+                            <option value="lgs_cfs">LGS / CFS structure</option>
+                            <option value="modular_house">Modular house</option>
+                            <option value="container_house">Container house</option>
+                            <option value="hybrid_construction">Hybrid construction</option>
+                            <option value="wall_panels">Wall panels</option>
+                            <option value="roofing_system">Roofing system</option>
+                            <option value="insulation_system">Insulation system</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label><span>Complete system or components only?</span><input name="complete_system_or_components"></label>
+                    <label><span>Full architectural drawings?</span><input name="architectural_drawings"></label>
+                    <label><span>Structural drawings?</span><input name="structural_drawings"></label>
+                    <label><span>Shop drawings?</span><input name="shop_drawings"></label>
+                    <label><span>Adaptation to Israeli engineer requirements?</span><input name="adapt_israeli_requirements"></label>
+                    <label><span>Typical building size range</span><input name="building_size_range"></label>
+                    <label><span>Number of floors supported</span><input name="floors_supported"></label>
+                    <label><span>Suitable for permanent residential use?</span><input name="permanent_residential_use"></label>
+                    <label><span>Suitable for 45-50C hot climate?</span><input name="hot_climate_50"></label>
+                    <label><span>Suitable for coastal humidity/corrosion?</span><input name="coastal_suitability"></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="3">
+                <h2>Step 3: Standards & Certifications</h2>
+                <p class="hint">Israeli references: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.</p>
+                <div class="grid">
+                    <label class="full"><span>International standards (EN/ASTM/ISO/CE/GB/Other)</span><textarea name="standards_compliance"></textarea></label>
+                    <label><span>ISO 9001</span><input name="iso_9001"></label>
+                    <label><span>ISO 14001</span><input name="iso_14001"></label>
+                    <label><span>CE certificates</span><input name="ce_certificates"></label>
+                    <label><span>Third-party lab test reports</span><input name="third_party_lab_reports"></label>
+                    <label><span>Certificates scope (full system/material only)</span><input name="cert_scope"></label>
+                    <label class="full"><span>Original test reports with lab/date/report no.</span><textarea name="original_test_reports"></textarea></label>
+                    <label><span>System can be reviewed by Israeli engineer</span><input name="israeli_engineer_review"></label>
+                    <label><span>Documentation adaptable to Israeli standards</span><input name="israeli_standard_adaptation"></label>
+                    <label class="full"><span>Upload certificates *</span><input type="file" name="certificates_uploads" multiple></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="4">
+                <h2>Step 4: Structural Steel / LGS Quality</h2>
+                <div class="grid">
+                    <label><span>Steel type (LGS/CFS/Other)</span><input name="steel_type"></label>
+                    <label><span>Steel grade</span><input name="steel_grade"></label>
+                    <label><span>Yield strength (MPa)</span><input name="yield_strength_mpa" data-tooltip-term="yield_strength"></label>
+                    <label><span>Profile thickness (mm)</span><input name="profile_thickness_mm"></label>
+                    <label><span>Galvanization (Z200/Z275/Other)</span><input name="galvanization_level" data-tooltip-term="galvanization"></label>
+                    <label><span>Profile width</span><input name="profile_width"></label>
+                    <label><span>Stud spacing (400/600/Other)</span><input name="stud_spacing"></label>
+                    <label class="full"><span>Window and door reinforcement method</span><textarea name="openings_reinforcement"></textarea></label>
+                    <label><span>Pre-punched profiles for MEP routing</span><input name="pre_punched_profiles"></label>
+                    <label><span>Service hole size/spacing</span><input name="service_hole_spec"></label>
+                    <label><span>Screw type/diameter</span><input name="screw_type_diameter"></label>
+                    <label><span>Anti-corrosion protection</span><input name="anti_corrosion_protection"></label>
+                    <label><span>Expected design life</span><input name="expected_design_life"></label>
+                    <label><span>Upload steel certificate *</span><input type="file" name="steel_certificate_upload" multiple></label>
+                    <label><span>Upload structural calculation example</span><input type="file" name="structural_calculation_example_upload" multiple></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="5">
+                <h2>Step 5: Fire Resistance</h2>
+                <div class="grid">
+                    <label><span>Wall fire rating (minutes)</span><input name="wall_fire_rating_min" data-tooltip-term="fire_rating"></label>
+                    <label><span>Ceiling/roof fire rating</span><input name="roof_fire_rating_min"></label>
+                    <label><span>Floor fire rating (if applicable)</span><input name="floor_fire_rating_min"></label>
+                    <label><span>Complete wall assembly tested?</span><input name="assembly_tested"></label>
+                    <label><span>Standard used (EN 13501/ASTM E119/BS/GB/Other)</span><input name="fire_test_standard"></label>
+                    <label class="full"><span>Boards used for fire resistance</span><textarea name="fire_resistance_boards"></textarea></label>
+                    <label><span>Number of board layers</span><input name="board_layers_count"></label>
+                    <label><span>Materials non-combustible?</span><input name="non_combustible_materials"></label>
+                    <label><span>Toxic smoke tests?</span><input name="toxic_smoke_tests"></label>
+                    <label class="full"><span>Upload fire test reports *</span><input type="file" name="fire_test_reports_upload" multiple></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="6">
+                <h2>Step 6: Thermal Insulation</h2>
+                <div class="grid">
+                    <label><span>Wall R-value</span><input name="wall_r_value" data-tooltip-term="r_value"></label>
+                    <label><span>Roof R-value</span><input name="roof_r_value" data-tooltip-term="r_value"></label>
+                    <label><span>Floor R-value</span><input name="floor_r_value" data-tooltip-term="r_value"></label>
+                    <label><span>U-value</span><input name="u_value"></label>
+                    <label><span>Insulation type</span><input name="insulation_type"></label>
+                    <label><span>Insulation thickness</span><input name="insulation_thickness"></label>
+                    <label><span>Insulation density (kg/m3)</span><input name="insulation_density"></label>
+                    <label class="full"><span>How thermal bridges are prevented</span><textarea name="thermal_bridge_prevention"></textarea></label>
+                    <label><span>Suitable for very hot climate?</span><input name="hot_climate_suitability"></label>
+                    <label><span>Supports external insulation layers?</span><input name="external_insulation_support"></label>
+                    <label><span>Insulation can be upgraded?</span><input name="insulation_upgrade_support"></label>
+                    <label class="full"><span>Upload thermal report</span><input type="file" name="thermal_report_upload" multiple></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="7">
+                <h2>Step 7: Acoustic Insulation</h2>
+                <div class="grid">
+                    <label><span>Wall STC rating</span><input name="wall_stc_rating" data-tooltip-term="stc"></label>
+                    <label><span>Floor acoustic rating</span><input name="floor_acoustic_rating"></label>
+                    <label><span>Roof acoustic performance</span><input name="roof_acoustic_performance"></label>
+                    <label><span>Acoustic test report available?</span><input name="acoustic_test_report_available"></label>
+                    <label><span>Number of internal board layers</span><input name="internal_board_layers"></label>
+                    <label class="full"><span>Insulation type and density</span><textarea name="acoustic_insulation_type_density"></textarea></label>
+                    <label class="full"><span>Upload acoustic report</span><input type="file" name="acoustic_report_upload" multiple></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="8">
+                <h2>Step 8: Moisture, Water, Mold & Weather Resistance</h2>
+                <div class="grid">
+                    <label><span>Exterior boards resistant to rain/humidity/UV?</span><input name="exterior_board_weather_resistance"></label>
+                    <label><span>Materials mold-resistant?</span><input name="mold_resistant_materials"></label>
+                    <label><span>Suitable for wet rooms?</span><input name="wet_room_suitability"></label>
+                    <label><span>External board type</span><input name="external_board_type"></label>
+                    <label><span>Internal board type</span><input name="internal_board_type"></label>
+                    <label><span>Board behavior under moisture</span><input name="board_moisture_behavior"></label>
+                    <label><span>Waterproof membrane included?</span><input name="waterproof_membrane_included"></label>
+                    <label><span>Vapor barrier included?</span><input name="vapor_barrier_included"></label>
+                    <label class="full"><span>How condensation is prevented</span><textarea name="condensation_prevention_method"></textarea></label>
+                    <label><span>Suitable for coastal environment?</span><input name="coastal_environment_suitability"></label>
+                    <label class="full"><span>Upload water/moisture reports</span><input type="file" name="water_moisture_report_upload" multiple></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="9">
+                <h2>Step 9: Full Wall / Roof / Floor Assembly</h2>
+                <p class="hint critical">Full wall section upload is mandatory and critical for qualification.</p>
+                <div class="grid">
+                    <label><span>Upload full wall section drawing *</span><input type="file" name="wall_section_upload" multiple></label>
+                    <label><span>Upload roof section drawing</span><input type="file" name="roof_section_upload" multiple></label>
+                    <label><span>Upload floor section drawing</span><input type="file" name="floor_section_upload" multiple></label>
+                    <label><span>Total wall thickness</span><input name="total_wall_thickness"></label>
+                    <label><span>Weight per m2</span><input name="wall_weight_per_m2"></label>
+                    <label><span>External cladding type</span><input name="external_cladding_type"></label>
+                    <label><span>Internal board type</span><input name="internal_board_type_assembly"></label>
+                    <label><span>Insulation type</span><input name="insulation_type_assembly"></label>
+                    <label><span>Waterproof layer</span><input name="waterproof_layer"></label>
+                    <label><span>Vapor barrier</span><input name="vapor_barrier_assembly"></label>
+                    <label><span>Air gap / ventilation layer</span><input name="air_gap_layer"></label>
+                    <label><span>Finishing options</span><input name="finishing_options"></label>
+                    <label><span>Tiles / stone cladding possible?</span><input name="tile_stone_support"></label>
+                    <label><span>Max external cladding weight per m2</span><input name="max_cladding_weight_per_m2"></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="10">
+                <h2>Step 10: Manufacturing & Quality Control</h2>
+                <div class="grid">
+                    <label><span>Factory ownership</span><input name="factory_ownership"></label>
+                    <label><span>Factory size</span><input name="factory_size"></label>
+                    <label><span>Production capacity per month</span><input name="monthly_production_capacity"></label>
+                    <label class="full"><span>QA process</span><textarea name="qa_process"></textarea></label>
+                    <label><span>Incoming material inspection</span><input name="incoming_material_inspection"></label>
+                    <label><span>In-process inspection</span><input name="in_process_inspection"></label>
+                    <label><span>Final inspection</span><input name="final_inspection"></label>
+                    <label><span>Third-party inspection option (SGS/BV)</span><input name="third_party_inspection_available"></label>
+                    <label><span>Can provide production photos/videos</span><input name="production_photos_videos"></label>
+                    <label><span>Packing list before shipment</span><input name="packing_list_before_shipment"></label>
+                    <label><span>Components labeled</span><input name="component_labeling"></label>
+                    <label><span>Installation manual provided</span><input name="installation_manual_available"></label>
+                    <label><span>Spare parts list provided</span><input name="spare_parts_list_available"></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="11">
+                <h2>Step 11: Installation & Engineering Support</h2>
+                <div class="grid">
+                    <label><span>Installation drawings provided</span><input name="installation_drawings"></label>
+                    <label><span>Installation manual</span><input name="installation_manual"></label>
+                    <label><span>Online training</span><input name="online_training"></label>
+                    <label><span>Site supervisor can be sent</span><input name="site_supervisor"></label>
+                    <label><span>Local Israeli team can install after training</span><input name="local_team_install_after_training"></label>
+                    <label><span>Installation time for 100-120 sqm</span><input name="install_time_100_120sqm"></label>
+                    <label><span>Workers required</span><input name="workers_required"></label>
+                    <label><span>Required tools/equipment</span><input name="required_tools_equipment"></label>
+                    <label><span>Foundation requirements provided</span><input name="foundation_requirements"></label>
+                    <label><span>MEP coordination support</span><input name="mep_coordination_support"></label>
+                    <label><span>Future extension support</span><input name="future_extension_support"></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="12">
+                <h2>Step 12: Logistics & Packaging</h2>
+                <div class="grid">
+                    <label><span>Production lead time</span><input name="production_lead_time"></label>
+                    <label><span>Shipping port in China</span><input name="shipping_port_china"></label>
+                    <label><span>Packing method</span><input name="packing_method"></label>
+                    <label><span>Anti-rust protection during shipping</span><input name="shipping_anti_rust_protection"></label>
+                    <label><span>Moisture protection during shipping</span><input name="shipping_moisture_protection"></label>
+                    <label><span>sqm per 40HQ container</span><input name="sqm_per_40hq"></label>
+                    <label><span>Packing optimization per project</span><input name="packing_optimization_per_project"></label>
+                    <label><span>Packed by construction sequence</span><input name="sequence_based_packing"></label>
+                    <label><span>Full packing list provided</span><input name="full_packing_list"></label>
+                    <label><span>HS codes provided</span><input name="hs_codes_provided"></label>
+                    <label><span>Invoice & certificate of origin</span><input name="invoice_origin_certificate"></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="13">
+                <h2>Step 13: Commercial Terms</h2>
+                <div class="grid">
+                    <label><span>Price per sqm</span><input name="price_per_sqm"></label>
+                    <label class="full"><span>What is included in price</span><textarea name="price_includes"></textarea></label>
+                    <label class="full"><span>What is not included</span><textarea name="price_excludes"></textarea></label>
+                    <label><span>MOQ</span><input name="moq"></label>
+                    <label><span>Payment terms</span><input name="payment_terms"></label>
+                    <label><span>Warranty period</span><input name="warranty_period"></label>
+                    <label class="full"><span>Warranty coverage</span><textarea name="warranty_coverage"></textarea></label>
+                    <label><span>Incoterms</span><select name="incoterms"><option value="">Select</option><option value="EXW">EXW</option><option value="FOB">FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></label>
+                    <label><span>Quotation validity</span><input name="quotation_validity"></label>
+                    <label><span>Installation cost separately</span><input name="installation_cost_separate"></label>
+                    <label><span>Spare parts cost</span><input name="spare_parts_cost"></label>
+                    <label><span>Sample cost</span><input name="sample_cost"></label>
+                    <label><span>Engineering/design cost</span><input name="engineering_design_cost"></label>
+                    <label><span>Mold/tooling cost</span><input name="mold_tooling_cost"></label>
+                    <label><span>Exclusive distribution support in Israel</span><input name="exclusive_distribution_support"></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="14">
+                <h2>Step 14: Experience & References</h2>
+                <div class="grid">
+                    <label><span>Number of completed projects</span><input name="completed_projects_count"></label>
+                    <label class="full"><span>Countries exported to</span><textarea name="exported_countries"></textarea></label>
+                    <label class="full"><span>Residential project references</span><textarea name="residential_references"></textarea></label>
+                    <label class="full"><span>Hotel/public project references</span><textarea name="hotel_public_references"></textarea></label>
+                    <label><span>Upload photos of real projects</span><input type="file" name="project_photos_upload" multiple></label>
+                    <label><span>Upload videos of completed projects</span><input type="file" name="project_videos_upload" multiple></label>
+                    <label class="full"><span>Customer references</span><textarea name="customer_references"></textarea></label>
+                    <label class="full"><span>Projects in Middle East / hot climate</span><textarea name="middle_east_hot_climate_projects"></textarea></label>
+                    <label class="full"><span>Past failures/claims and solutions</span><textarea name="past_failures_and_resolution"></textarea></label>
+                </div>
+            </section>
+
+            <section class="step" data-step="15">
+                <h2>Step 15: Final Declarations</h2>
+                <div class="declarations">
+                    <label><input type="checkbox" name="declaration_accuracy" value="yes" required> We confirm all answers are accurate.</label>
+                    <label><input type="checkbox" name="declaration_missing_docs" value="yes" required> We understand that missing documents may disqualify us.</label>
+                    <label><input type="checkbox" name="declaration_engineer_review" value="yes" required> We agree the documentation may be reviewed by engineers and consultants.</label>
+                    <label><input type="checkbox" name="declaration_more_docs" value="yes" required> We can provide additional documentation upon request.</label>
+                </div>
+                <div class="hint">By submitting, you allow our technical team to review this data for qualification purposes.</div>
+            </section>
+
+            <footer class="actions">
+                <button type="button" id="prev-btn" class="btn btn-ghost">Previous</button>
+                <button type="button" id="next-btn" class="btn">Next</button>
+                <button type="submit" id="submit-btn" class="btn btn-primary">Submit Qualification</button>
+            </footer>
+        </form>
+    </main>
+
+    <script id="ssq-meta" type="application/json">{{ form_payload|safe }}</script>
+    <script src="{% static 'js/ssq_form.js' %}"></script>
+</body>
+</html>
