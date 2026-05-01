@@ -4,81 +4,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>קטלוג טאבלט אינטראקטיבי | Click Home</title>
-    <meta name="description" content="קטלוג דגמים אינטראקטיבי בסגנון Tinder של Click Home.">
+    <title>קטלוג טאבלט | Click Home</title>
+    <meta name="description" content="קטלוג טאבלט יוקרתי של Click Home">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/tab_tinder.css' %}">
 </head>
-<body>
-    {% include "partials/site_nav.html" with show_auth=False %}
+<body {% if messages or lead_form.full_name or lead_form.phone or lead_form.email or lead_form.message %}data-open-quote-modal="true"{% endif %}>
 
-    <main class="swipe-shell">
-        <section class="filter-bar">
-            <button id="filterToggleBtn" class="filter-toggle" type="button" aria-expanded="false" aria-controls="filterPanel">
-                סינון וחיפוש
-            </button>
-            <div class="filter-line compact" id="filterPanel" hidden>
-            <select id="filterCategory">
-                {% for category in categories %}
-                    <option value="{{ category.value }}" {% if initial_filters.category == category.value %}selected{% endif %}>{{ category.label }}</option>
-                {% endfor %}
-            </select>
-            <input id="filterSearch" type="search" placeholder="חיפוש דגם" value="{{ initial_filters.q }}">
-            <select id="filterBedrooms">
-                <option value="">חדרי שינה</option>
-                {% for i in "12345"|make_list %}<option value="{{ i }}" {% if initial_filters.bedrooms|stringformat:"s" == i %}selected{% endif %}>לפחות {{ i }}</option>{% endfor %}
-            </select>
-            <select id="filterBathrooms">
-                <option value="">רחצה</option>
-                {% for i in "12345"|make_list %}<option value="{{ i }}" {% if initial_filters.bathrooms|stringformat:"s" == i %}selected{% endif %}>לפחות {{ i }}</option>{% endfor %}
-            </select>
-            <button id="clearFilters" type="button">ניקוי</button>
-            </div>
-        </section>
+    <main class="tab-page" id="tabletCatalogPage">
+        <section class="tablet-shell">
+            <header class="tablet-header">
+                <div class="tablet-logo">
+                    <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
+                </div>
+                <h1 id="currentHouseTitle">בית מודולרי יוקרתי - דגם כרמל</h1>
+                <div class="tablet-header-spacer"></div>
+            </header>
 
-        <section class="deck">
-            <article class="card" id="houseCard">
-                <div class="swipe-badge like" id="likeBadge">הבא</div>
-                <div class="swipe-badge nope" id="nopeBadge">הקודם</div>
+            <section class="gallery-section hero-wrapper">
+                <div class="hero-stage hero" id="heroStage">
+                    <button type="button" class="hero-arrow hero-prev" id="heroPrevBtn" aria-label="תמונה קודמת">‹</button>
+                    <img id="heroImage" class="hero-image" src="" alt="">
+                    <div class="thumb-strip" id="heroThumbs"></div>
+                    <button type="button" class="hero-arrow hero-next" id="heroNextBtn" aria-label="תמונה הבאה">›</button>
+                    <div class="hero-dots" id="heroDots"></div>
+                </div>
+            </section>
 
-                <div class="hero">
-                    <img id="heroImage" src="" alt="">
-                    <div class="overlay">
-                        <h1 id="modelName"></h1>
-                        <p id="modelSubtitle"></p>
+            <section class="specs-actions-row">
+                <article class="dimensions-card" id="houseDimensionsCard">
+                    <h3>מפרט ומידות</h3>
+                    <div class="dim-lines">
+                        <p id="dimArea">שטח בנוי: -- מ"ר</p>
+                        <p id="dimLength">אורך: -- מ'</p>
+                        <p id="dimWidth">רוחב: -- מ'</p>
                     </div>
-                </div>
+                    <button type="button" class="floorplan-link" id="floorplanQuickBtn">שרטוט הבית</button>
+                </article>
 
-                <div class="meta-grid" id="specGrid"></div>
+                <div class="spec-icons-row" id="specIconsRow"></div>
 
-                <div class="gallery">
-                    <button id="galleryPrevBtn" type="button">‹</button>
-                    <img id="galleryMain" src="" alt="">
-                    <button id="galleryNextBtn" type="button">›</button>
-                </div>
-                <div class="dots" id="galleryDots"></div>
+                <aside class="action-buttons">
+                    <button type="button" id="requestQuoteBtn" class="btn btn-primary">קבל הצעת מחיר</button>
+                    <button type="button" id="openDetailsBtn" class="btn btn-secondary">פרטים מלאים</button>
+                    <button type="button" id="openFloorplanBtn" class="btn btn-outline">שרטוט הבית</button>
+                </aside>
+            </section>
 
-                <button class="toggle" id="toggleDetailsBtn" type="button">הצג מידע מלא</button>
-                <section class="details" id="detailsPanel" hidden>
-                    <h3>תיאור הדגם</h3>
-                    <p id="modelDescription"></p>
-                    <h3>יתרונות מרכזיים</h3>
-                    <div class="features" id="featureGrid"></div>
-                    <h3>תכנון הבית</h3>
-                    <div class="floorplan" id="floorplanWrap"></div>
-                </section>
-            </article>
+            <section class="house-selector-wrap">
+                <div class="house-selector-track" id="houseSelectorTrack"></div>
+            </section>
         </section>
 
-        <section class="actions">
-            <button id="prevHouseBtn" type="button">‹ הקודם</button>
-            <button id="nextHouseBtn" type="button">הבא ›</button>
-        </section>
+    </main>
 
-        <section class="lead" id="leadFormSection">
-            <form method="POST">
+    <button id="filterDrawerTrigger" class="filter-fab" type="button" aria-expanded="false" aria-controls="sideFilterPanel">סינון</button>
+    <div id="filterOverlay" class="filter-overlay" hidden></div>
+    <aside id="sideFilterPanel" class="side-filter-panel" aria-hidden="true">
+        <header class="panel-header">
+            <h2>סינון בתים</h2>
+            <button type="button" id="closeFilterPanelBtn" aria-label="סגור סינון">✕</button>
+        </header>
+        <div class="panel-body">
+            <label>סוג בית
+                <select id="filterType"></select>
+            </label>
+            <label>חדרי שינה
+                <select id="filterBedrooms"></select>
+            </label>
+            <label>חדר מגורים
+                <select id="filterLivingRoom"></select>
+            </label>
+            <label>חדרי רחצה
+                <select id="filterBathrooms"></select>
+            </label>
+            <label>שירותים
+                <select id="filterToilets"></select>
+            </label>
+            <label>חניה
+                <select id="filterParking"></select>
+            </label>
+            <label>מטבח
+                <select id="filterKitchen"></select>
+            </label>
+            <label>מדרגות
+                <select id="filterStairs"></select>
+            </label>
+            <div class="range-wrap">
+                <label>שטח מינימום (מ"ר)
+                    <input id="filterAreaMin" type="range" min="0" max="300" step="5" value="0">
+                </label>
+                <output id="filterAreaMinOut">0</output>
+            </div>
+            <div class="range-wrap">
+                <label>שטח מקסימום (מ"ר)
+                    <input id="filterAreaMax" type="range" min="0" max="300" step="5" value="300">
+                </label>
+                <output id="filterAreaMaxOut">300</output>
+            </div>
+        </div>
+        <footer class="panel-footer">
+            <button type="button" id="resetFiltersBtn" class="btn btn-outline">אפס סינון</button>
+            <button type="button" id="applyAndCloseFiltersBtn" class="btn btn-primary">סגור</button>
+        </footer>
+    </aside>
+
+    <div id="houseDetailsModal" class="details-modal" hidden>
+        <div class="details-backdrop" data-close-details></div>
+        <section class="details-dialog" role="dialog" aria-modal="true" aria-labelledby="detailsModalTitle">
+            <button type="button" class="details-close" id="detailsModalCloseBtn" aria-label="סגור">✕</button>
+            <h3 id="detailsModalTitle"></h3>
+            <img id="detailsModalImage" src="" alt="">
+            <p id="detailsModalDescription"></p>
+            <div id="detailsModalSpecs" class="details-specs"></div>
+            <div id="detailsModalFeatures" class="details-features"></div>
+            <button type="button" id="detailsModalCtaBtn" class="btn btn-primary">קבל הצעת מחיר</button>
+        </section>
+    </div>
+
+    <div id="floorplanModal" class="details-modal" hidden>
+        <div class="details-backdrop" data-close-floorplan></div>
+        <section class="details-dialog floorplan-only-dialog" role="dialog" aria-modal="true" aria-labelledby="floorplanModalTitle">
+            <button type="button" class="details-close" id="floorplanModalCloseBtn" aria-label="סגור">✕</button>
+            <h3 id="floorplanModalTitle">שרטוט הבית</h3>
+            <img id="floorplanModalImage" src="" alt="שרטוט הבית">
+        </section>
+    </div>
+
+    <div id="quoteModal" class="details-modal" hidden>
+        <div class="details-backdrop" data-close-quote></div>
+        <section class="details-dialog quote-dialog" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
+            <button type="button" class="details-close" id="quoteModalCloseBtn" aria-label="סגור">✕</button>
+            <h3 id="quoteModalTitle">קבל הצעת מחיר</h3>
+            {% if messages %}
+                <div class="form-messages">
+                    {% for message in messages %}
+                        <p class="message {{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="POST" class="lead-form-grid">
                 {% csrf_token %}
                 <input type="hidden" name="model_name" id="leadModelName" value="{{ lead_form.model_name|default:'' }}">
                 <input type="text" name="full_name" placeholder="שם מלא" value="{{ lead_form.full_name }}" required>
@@ -94,9 +161,7 @@
                 <button type="submit">שלחו לי פרטים</button>
             </form>
         </section>
-    </main>
-
-    {% include "partials/site_footer.html" %}
+    </div>
 
     <script id="tabModelsData" type="application/json">{{ all_models_json|safe }}</script>
     <script src="{% static 'js/tab_tinder.js' %}" defer></script>

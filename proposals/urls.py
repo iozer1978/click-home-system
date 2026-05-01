@@ -23,6 +23,7 @@ urlpatterns = [
     path('models/', views.catalog_page, name='catalog'),
     path('tab/', views.tab_page, name='tab'),
     path('TAB/', views.tab_page, name='tab_upper'),
+    path('tab/icons/<str:icon_name>/', views.tab_icon_asset, name='tab_icon_asset'),
     path('register/', views.register, name='register'),
     
     # דפי מוצר

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-from django.http import JsonResponse, HttpResponse, Http404
+from django.http import JsonResponse, HttpResponse, Http404, FileResponse
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.urls import reverse
 import json
 import base64
+from pathlib import Path
 from .models import Quote, HouseModel, HouseUpgrade, UsageType, HouseType, FAQ
 from .forms import ClientRegisterForm
 from .utils import queue_email, send_email_from_queue
@@ -26,6 +27,16 @@ TAB_CATEGORY_OPTIONS = [
     {"value": "modular", "label": CATEGORY_LABELS["modular"]},
     {"value": "adu", "label": CATEGORY_LABELS["adu"]},
 ]
+
+TAB_ICON_FILES = {
+    "toilets.jpg": "Toilets.jpg",
+    "bathrooms.jpg": "Bathrooms.jpg",
+    "bedrooms.jpg": "Bedrooms.jpg",
+    "kitchen.jpg": "Kitchen.jpg",
+    "living-room.jpg": "Living room.jpg",
+    "parking.jpg": "Parking.jpg",
+    "stairs.jpg": "Stairs.jpg",
+}
 
 CONTACT_CARD_BASE = {
     "brand_name": "Click Home",
@@ -247,6 +258,16 @@ def tab_page(request):
         "structured_data_json": json.dumps(structured_data, ensure_ascii=False),
         "catalog_count": len(all_models),
     })
+
+
+def tab_icon_asset(request, icon_name):
+    safe_key = (icon_name or "").strip().lower()
+    if safe_key not in TAB_ICON_FILES:
+        raise Http404("Icon not found")
+    icon_path = Path(settings.BASE_DIR) / "tab" / TAB_ICON_FILES[safe_key]
+    if not icon_path.exists():
+        raise Http404("Icon file missing")
+    return FileResponse(icon_path.open("rb"), content_type="image/jpeg")
 
 def catalog_page(request):
     houses = HouseModel.objects.all()
