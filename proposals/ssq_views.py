@@ -68,30 +68,220 @@ SERVER_MESSAGES = {
     "unsupported_file_type": {
         "en": "Unsupported file type: {filename}",
         "zh": "不支持的文件类型：{filename}",
+        "he": "סוג קובץ לא נתמך: {filename}",
     },
     "file_too_large": {
         "en": "File too large (max 20MB): {filename}",
         "zh": "文件过大（最大 20MB）：{filename}",
+        "he": "הקובץ גדול מדי (מקסימום 20MB): {filename}",
     },
     "submission_saved_email_failed": {
         "en": "Submission saved, but admin email could not be sent.",
         "zh": "提交已保存，但管理员邮件发送失败。",
+        "he": "הטופס נשמר, אך שליחת המייל למנהל נכשלה.",
     },
     "missing_mandatory_uploads": {
         "en": "Missing mandatory documents: {items}",
         "zh": "缺少必填文件：{items}",
+        "he": "חסרים מסמכים חובה: {items}",
     },
 }
 
 MANDATORY_UPLOAD_LABELS = {
-    "certificates_uploads": {"en": "Certificates", "zh": "认证证书"},
-    "steel_certificate_upload": {"en": "Steel certificate", "zh": "钢材证书"},
-    "structural_calculation_example_upload": {"en": "Structural calculation example", "zh": "结构计算示例"},
-    "fire_test_reports_upload": {"en": "Fire test reports", "zh": "防火测试报告"},
-    "thermal_report_upload": {"en": "Thermal report", "zh": "热工性能报告"},
-    "acoustic_report_upload": {"en": "Acoustic report", "zh": "隔音性能报告"},
-    "water_moisture_report_upload": {"en": "Water/moisture report", "zh": "防水防潮报告"},
-    "wall_section_upload": {"en": "Full wall section drawing", "zh": "完整墙体构造图"},
+    "certificates_uploads": {"en": "Certificates", "zh": "认证证书", "he": "תעודות"},
+    "steel_certificate_upload": {"en": "Steel certificate", "zh": "钢材证书", "he": "תעודת פלדה"},
+    "structural_calculation_example_upload": {"en": "Structural calculation example", "zh": "结构计算示例", "he": "דוגמת חישוב קונסטרוקטיבי"},
+    "fire_test_reports_upload": {"en": "Fire test reports", "zh": "防火测试报告", "he": "דוחות בדיקת אש"},
+    "thermal_report_upload": {"en": "Thermal report", "zh": "热工性能报告", "he": "דוח תרמי"},
+    "acoustic_report_upload": {"en": "Acoustic report", "zh": "隔音性能报告", "he": "דוח אקוסטי"},
+    "water_moisture_report_upload": {"en": "Water/moisture report", "zh": "防水防潮报告", "he": "דוח מים/לחות"},
+    "wall_section_upload": {"en": "Full wall section drawing", "zh": "完整墙体构造图", "he": "שרטוט חתך קיר מלא"},
+}
+
+HEBREW_QUESTION_LABELS = {
+    "company_name": "שם החברה",
+    "country": "מדינה",
+    "city": "עיר",
+    "website": "אתר אינטרנט",
+    "contact_person": "איש קשר",
+    "job_title": "תפקיד",
+    "email": "אימייל",
+    "phone_whatsapp": "טלפון / WhatsApp",
+    "wechat_id": "מזהה WeChat",
+    "years_in_business": "שנות פעילות",
+    "employees_count": "מספר עובדים",
+    "factory_address": "כתובת מפעל",
+    "company_type": "סוג חברה",
+    "main_products": "מוצרים עיקריים",
+    "annual_capacity": "כושר ייצור שנתי",
+    "export_markets": "שווקי יצוא",
+    "main_supply_countries": "מדינות אספקה עיקריות",
+    "israel_middle_east_experience": "ניסיון יצוא לישראל/מזרח תיכון",
+    "product_type": "סוג מוצר",
+    "complete_system_or_components": "מערכת מלאה או רכיבים בלבד",
+    "architectural_drawings": "שרטוטים אדריכליים מלאים",
+    "structural_drawings": "שרטוטים קונסטרוקטיביים",
+    "shop_drawings": "שרטוטי ייצור",
+    "adapt_israeli_requirements": "התאמה לדרישות מהנדס ישראלי",
+    "building_size_range": "טווח גדלי מבנה",
+    "floors_supported": "מספר קומות נתמך",
+    "permanent_residential_use": "מתאים למגורים קבועים",
+    "hot_climate_50": "מתאים לאקלים חם 45-50 מעלות",
+    "coastal_suitability": "מתאים ללחות/קורוזיה ימית",
+    "standards_compliance": "תקנים בינלאומיים",
+    "iso_9001": "ISO 9001",
+    "iso_14001": "ISO 14001",
+    "ce_certificates": "תעודות CE",
+    "third_party_lab_reports": "דוחות מעבדה צד ג'",
+    "cert_scope": "היקף התעודות",
+    "original_test_reports": "דוחות בדיקה מקוריים",
+    "israeli_engineer_review": "ניתן לבדיקה על ידי מהנדס ישראלי",
+    "israeli_standard_adaptation": "התאמה לתקנים ישראליים",
+    "steel_type": "סוג פלדה",
+    "steel_grade": "דרגת פלדה",
+    "yield_strength_mpa": "חוזק Yield (MPa)",
+    "profile_thickness_mm": "עובי פרופיל (מ\"מ)",
+    "galvanization_level": "רמת גלוון",
+    "profile_width": "רוחב פרופיל",
+    "stud_spacing": "מרווח סטאדים",
+    "openings_reinforcement": "חיזוק פתחים",
+    "pre_punched_profiles": "פרופילים עם חורים מוכנים",
+    "service_hole_spec": "מפרט חורי שירות",
+    "screw_type_diameter": "סוג/קוטר ברגים",
+    "anti_corrosion_protection": "הגנה מקורוזיה",
+    "expected_design_life": "חיי תכנון צפויים",
+    "wall_fire_rating_min": "דירוג אש לקיר (דקות)",
+    "roof_fire_rating_min": "דירוג אש לגג",
+    "floor_fire_rating_min": "דירוג אש לרצפה",
+    "assembly_tested": "האם המכלול נבדק",
+    "fire_test_standard": "תקן בדיקת אש",
+    "fire_resistance_boards": "לוחות עמידות אש",
+    "board_layers_count": "מספר שכבות לוחות",
+    "non_combustible_materials": "חומרים בלתי דליקים",
+    "toxic_smoke_tests": "בדיקות עשן רעיל",
+    "wall_r_value": "R-value לקיר",
+    "roof_r_value": "R-value לגג",
+    "floor_r_value": "R-value לרצפה",
+    "u_value": "U-value",
+    "insulation_type": "סוג בידוד",
+    "insulation_thickness": "עובי בידוד",
+    "insulation_density": "צפיפות בידוד",
+    "thermal_bridge_prevention": "מניעת גשרים תרמיים",
+    "hot_climate_suitability": "התאמה לאקלים חם",
+    "external_insulation_support": "תמיכה בבידוד חיצוני",
+    "insulation_upgrade_support": "אפשרות שדרוג בידוד",
+    "wall_stc_rating": "דירוג STC לקיר",
+    "floor_acoustic_rating": "דירוג אקוסטי לרצפה",
+    "roof_acoustic_performance": "ביצועים אקוסטיים לגג",
+    "acoustic_test_report_available": "קיים דוח בדיקה אקוסטי",
+    "internal_board_layers": "שכבות לוח פנימיות",
+    "acoustic_insulation_type_density": "סוג/צפיפות בידוד אקוסטי",
+    "exterior_board_weather_resistance": "עמידות לוחות חוץ למזג אוויר",
+    "mold_resistant_materials": "עמידות לעובש",
+    "wet_room_suitability": "התאמה לחדרים רטובים",
+    "external_board_type": "סוג לוח חיצוני",
+    "internal_board_type": "סוג לוח פנימי",
+    "board_moisture_behavior": "התנהגות לוחות בלחות",
+    "waterproof_membrane_included": "כולל ממברנת איטום",
+    "vapor_barrier_included": "כולל מחסום אדים",
+    "condensation_prevention_method": "שיטת מניעת עיבוי",
+    "coastal_environment_suitability": "התאמה לסביבה ימית",
+    "total_wall_thickness": "עובי קיר כולל",
+    "wall_weight_per_m2": "משקל קיר למ\"ר",
+    "external_cladding_type": "סוג חיפוי חוץ",
+    "internal_board_type_assembly": "סוג לוח פנימי במכלול",
+    "insulation_type_assembly": "סוג בידוד במכלול",
+    "waterproof_layer": "שכבת איטום",
+    "vapor_barrier_assembly": "מחסום אדים במכלול",
+    "air_gap_layer": "שכבת אוויר/אוורור",
+    "finishing_options": "אפשרויות גמר",
+    "tile_stone_support": "תמיכה באריחים/אבן",
+    "max_cladding_weight_per_m2": "משקל חיפוי מקסימלי למ\"ר",
+    "factory_ownership": "בעלות על המפעל",
+    "factory_size": "גודל מפעל",
+    "monthly_production_capacity": "כושר ייצור חודשי",
+    "qa_process": "תהליך בקרת איכות",
+    "incoming_material_inspection": "בדיקת חומרים נכנסים",
+    "in_process_inspection": "בדיקות במהלך הייצור",
+    "final_inspection": "בדיקת איכות סופית",
+    "third_party_inspection_available": "אפשרות בדיקת צד ג'",
+    "production_photos_videos": "תמונות/סרטוני ייצור",
+    "packing_list_before_shipment": "רשימת אריזה לפני משלוח",
+    "component_labeling": "סימון רכיבים",
+    "installation_manual_available": "חוברת התקנה זמינה",
+    "spare_parts_list_available": "רשימת חלקי חילוף זמינה",
+    "installation_drawings": "שרטוטי התקנה",
+    "installation_manual": "מדריך התקנה",
+    "online_training": "הדרכה אונליין",
+    "site_supervisor": "אפשרות מפקח באתר",
+    "local_team_install_after_training": "התקנת צוות מקומי לאחר הדרכה",
+    "install_time_100_120sqm": "זמן התקנה ל-100-120 מ\"ר",
+    "workers_required": "מספר עובדים נדרש",
+    "required_tools_equipment": "כלים/ציוד נדרש",
+    "foundation_requirements": "דרישות יסוד",
+    "mep_coordination_support": "תמיכת תיאום מערכות",
+    "future_extension_support": "תמיכה בהרחבות עתידיות",
+    "production_lead_time": "זמן ייצור",
+    "shipping_port_china": "נמל משלוח בסין",
+    "packing_method": "שיטת אריזה",
+    "shipping_anti_rust_protection": "הגנה נגד חלודה במשלוח",
+    "shipping_moisture_protection": "הגנה מלחות במשלוח",
+    "sqm_per_40hq": "מ\"ר למכולת 40HQ",
+    "packing_optimization_per_project": "אופטימיזציית אריזה לפי פרויקט",
+    "sequence_based_packing": "אריזה לפי סדר בנייה",
+    "full_packing_list": "רשימת אריזה מלאה",
+    "hs_codes_provided": "קודי HS מסופקים",
+    "invoice_origin_certificate": "חשבונית ותעודת מקור",
+    "price_per_sqm": "מחיר למ\"ר",
+    "price_includes": "מה כלול במחיר",
+    "price_excludes": "מה לא כלול במחיר",
+    "moq": "MOQ",
+    "payment_terms": "תנאי תשלום",
+    "warranty_period": "תקופת אחריות",
+    "warranty_coverage": "כיסוי אחריות",
+    "incoterms": "Incoterms",
+    "quotation_validity": "תוקף הצעת מחיר",
+    "installation_cost_separate": "עלות התקנה בנפרד",
+    "spare_parts_cost": "עלות חלקי חילוף",
+    "sample_cost": "עלות דוגמית",
+    "engineering_design_cost": "עלות הנדסה/תכנון",
+    "mold_tooling_cost": "עלות תבניות/Tooling",
+    "exclusive_distribution_support": "תמיכה בבלעדיות בישראל",
+    "completed_projects_count": "מספר פרויקטים שהושלמו",
+    "exported_countries": "מדינות יצוא",
+    "residential_references": "רפרנסים למגורים",
+    "hotel_public_references": "רפרנסים למלונאות/ציבורי",
+    "customer_references": "המלצות לקוחות",
+    "middle_east_hot_climate_projects": "פרויקטים במזרח התיכון/אקלים חם",
+    "past_failures_and_resolution": "כשלים קודמים ופתרונות",
+    "declaration_accuracy": "הצהרה: המידע מדויק",
+    "declaration_missing_docs": "הצהרה: חוסר מסמכים עלול לפסול",
+    "declaration_engineer_review": "הצהרה: מסכים לבדיקת מהנדסים",
+    "declaration_more_docs": "הצהרה: ניתן לספק מסמכים נוספים",
+}
+
+HEBREW_CHOICE_LABELS = {
+    "company_type": {
+        "manufacturer": "יצרן",
+        "trading_company": "חברת סחר",
+        "both": "שניהם",
+    },
+    "product_type": {
+        "lgs_cfs": "מערכת LGS / CFS",
+        "modular_house": "בית מודולרי",
+        "container_house": "בית קונטיינר",
+        "hybrid_construction": "בנייה היברידית",
+        "wall_panels": "פאנלים לקירות",
+        "roofing_system": "מערכת גג",
+        "insulation_system": "מערכת בידוד",
+        "other": "אחר",
+    },
+    "incoterms": {
+        "EXW": "EXW",
+        "FOB": "FOB",
+        "CIF": "CIF",
+        "DDP": "DDP",
+    },
 }
 
 
@@ -120,7 +310,12 @@ def _safe_filename(name: str) -> str:
 
 
 def _normalized_language(value: str | None) -> str:
-    return "zh" if str(value or "").lower().startswith("zh") else "en"
+    text = str(value or "").lower()
+    if text.startswith("zh"):
+        return "zh"
+    if text.startswith("he"):
+        return "he"
+    return "en"
 
 
 def _message(key: str, language: str, **kwargs) -> str:
@@ -218,6 +413,8 @@ def _question_label(field_name: str, language: str) -> str:
     entry = QUESTION_LABELS.get(field_name, {})
     if language == "zh":
         return entry.get("zh") or entry.get("en") or field_name.replace("_", " ").title()
+    if language == "he":
+        return HEBREW_QUESTION_LABELS.get(field_name) or entry.get("en") or field_name.replace("_", " ").title()
     return entry.get("en") or field_name.replace("_", " ").title()
 
 
@@ -226,9 +423,13 @@ def _choice_label(field_name: str, value: Any, language: str) -> str:
     choices = CHOICE_VALUE_LABELS.get(field_name, {})
     choice = choices.get(value_str)
     if not choice:
+        if language == "he":
+            return HEBREW_CHOICE_LABELS.get(field_name, {}).get(value_str, value_str)
         return value_str
     if language == "zh":
         return choice.get("zh") or choice.get("en") or value_str
+    if language == "he":
+        return HEBREW_CHOICE_LABELS.get(field_name, {}).get(value_str, choice.get("en") or value_str)
     return choice.get("en") or value_str
 
 
@@ -243,6 +444,8 @@ def _localized_answers(submission: SupplierSubmission) -> list[dict[str, str]]:
             value_text = "Yes" if value else "No"
             if language == "zh":
                 value_text = "是" if value else "否"
+            elif language == "he":
+                value_text = "כן" if value else "לא"
         else:
             value_text = _choice_label(key, value, language)
         rows.append({"key": key, "question": _question_label(key, language), "answer": value_text})
@@ -277,13 +480,21 @@ def _send_supplier_confirmation_email(submission: SupplierSubmission):
     language = _normalized_language(submission.language)
     context = {
         "submission": submission,
-        "greeting": "Dear" if language == "en" else "尊敬的",
+        "greeting": "Dear" if language == "en" else ("尊敬的" if language == "zh" else "שלום"),
         "message_line": (
             "Thank you for submitting your supplier qualification form. Our technical team will review the information and contact you if further details are required."
             if language == "en"
-            else "感谢您提交供应商资质评估表。我们的技术团队将审核您提供的信息，如需补充资料将与您联系。"
+            else (
+                "感谢您提交供应商资质评估表。我们的技术团队将审核您提供的信息，如需补充资料将与您联系。"
+                if language == "zh"
+                else "תודה על מילוי טופס סיווג הספקים. הצוות הטכני שלנו יבחן את הנתונים וניצור קשר אם יידרש מידע נוסף."
+            )
         ),
-        "closing": "Best regards,\nClick Home Team" if language == "en" else "此致敬礼，\nClick Home 团队",
+        "closing": (
+            "Best regards,\nClick Home Team"
+            if language == "en"
+            else ("此致敬礼，\nClick Home 团队" if language == "zh" else "בברכה,\nצוות Click Home")
+        ),
     }
     html_body = render_to_string(
         "emails/ssq_supplier_confirmation.html",
@@ -293,10 +504,16 @@ def _send_supplier_confirmation_email(submission: SupplierSubmission):
         "Thank you for submitting your supplier qualification form. "
         "Our technical team will review the information and contact you if further details are required."
         if language == "en"
-        else "感谢您提交供应商资质评估表。我们的技术团队将审核信息，如需补充资料将与您联系。"
+        else (
+            "感谢您提交供应商资质评估表。我们的技术团队将审核信息，如需补充资料将与您联系。"
+            if language == "zh"
+            else "תודה על מילוי טופס סיווג ספקים. הצוות הטכני שלנו יעבור על המידע ויצור קשר במקרה הצורך."
+        )
     )
     send_mail(
-        "Supplier Qualification Submission Received" if language == "en" else "供应商资质评估表提交确认",
+        "Supplier Qualification Submission Received"
+        if language == "en"
+        else ("供应商资质评估表提交确认" if language == "zh" else "אישור קבלת טופס סיווג ספק"),
         body,
         settings.DEFAULT_FROM_EMAIL,
         [submission.email],
@@ -306,6 +523,22 @@ def _send_supplier_confirmation_email(submission: SupplierSubmission):
 
 
 def _summary_payload() -> dict[str, Any]:
+    question_labels = {}
+    for key, entry in QUESTION_LABELS.items():
+        question_labels[key] = {
+            "en": entry.get("en", key),
+            "zh": entry.get("zh", entry.get("en", key)),
+            "he": HEBREW_QUESTION_LABELS.get(key, entry.get("en", key)),
+        }
+    choice_labels = {}
+    for key, entry in CHOICE_VALUE_LABELS.items():
+        choice_labels[key] = {}
+        for value, labels in entry.items():
+            choice_labels[key][value] = {
+                "en": labels.get("en", value),
+                "zh": labels.get("zh", labels.get("en", value)),
+                "he": HEBREW_CHOICE_LABELS.get(key, {}).get(value, labels.get("en", value)),
+            }
     return {
         "sections": [
             {
@@ -319,8 +552,8 @@ def _summary_payload() -> dict[str, Any]:
         ],
         "tooltips": TOOLTIP_TERMS,
         "statuses": [{"value": key, "label": label} for key, label in STATUS_CHOICES],
-        "question_labels": QUESTION_LABELS,
-        "choice_labels": CHOICE_VALUE_LABELS,
+        "question_labels": question_labels,
+        "choice_labels": choice_labels,
     }
 
 

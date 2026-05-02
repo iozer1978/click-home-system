@@ -35,6 +35,14 @@
             previous: "上一步",
             submit: "提交评估",
         },
+        he: {
+            title: "טופס סיווג ספקים",
+            subtitle: "הערכת ספקים לפתרונות בנייה מתקדמים ומודולריים.",
+            stepLabel: "שלב",
+            next: "הבא",
+            previous: "הקודם",
+            submit: "שליחת הסיווג",
+        },
     };
 
     const stepTitlesZh = {
@@ -54,6 +62,23 @@
         14: "第14步：经验与案例",
         15: "第15步：最终声明",
     };
+    const stepTitlesHe = {
+        1: "שלב 1: פרטי חברה",
+        2: "שלב 2: מוצר / מערכת בנייה",
+        3: "שלב 3: תקנים ותעודות",
+        4: "שלב 4: איכות פלדה / LGS",
+        5: "שלב 5: עמידות אש",
+        6: "שלב 6: בידוד תרמי",
+        7: "שלב 7: בידוד אקוסטי",
+        8: "שלב 8: עמידות ללחות/מים/עובש ומזג אוויר",
+        9: "שלב 9: שקיפות מכלול קיר/גג/רצפה",
+        10: "שלב 10: ייצור ובקרת איכות",
+        11: "שלב 11: תמיכה בהתקנה והנדסה",
+        12: "שלב 12: לוגיסטיקה ואריזה",
+        13: "שלב 13: תנאים מסחריים",
+        14: "שלב 14: ניסיון ורפרנסים",
+        15: "שלב 15: הצהרות סופיות",
+    };
     const staticTextZh = {
         "Israeli references: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.":
             "以色列参考标准：SI 2262、SI 412、SI 413、SI 414、SI 921/SI 755、SI 1045、SI 1004。",
@@ -70,9 +95,27 @@
         "We can provide additional documentation upon request.":
             "我们可按要求补充提供更多资料。",
     };
+    const staticTextHe = {
+        "Israeli references: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.":
+            "תקני ייחוס ישראליים: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.",
+        "Full wall section upload is mandatory and critical for qualification.":
+            "העלאת חתך קיר מלא היא דרישת חובה קריטית לסיווג.",
+        "By submitting, you allow our technical team to review this data for qualification purposes.":
+            "בשליחה, הנך מאשר/ת לצוות הטכני שלנו לבדוק נתונים אלה לצורך סיווג.",
+        "We confirm all answers are accurate.":
+            "אנו מאשרים שכל התשובות מדויקות.",
+        "We understand that missing documents may disqualify us.":
+            "אנו מבינים שמסמכים חסרים עלולים לפסול אותנו.",
+        "We agree the documentation may be reviewed by engineers and consultants.":
+            "אנו מסכימים שהמסמכים ייבדקו על ידי מהנדסים ויועצים.",
+        "We can provide additional documentation upon request.":
+            "אנו יכולים לספק מסמכים נוספים לפי דרישה.",
+    };
 
     function setLanguage(lang) {
         const bundle = i18n[lang] || i18n.en;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
         languageInput.value = lang;
         languageButtons.forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.lang === lang);
@@ -98,17 +141,23 @@
                 titleNode.dataset.enText = titleNode.textContent.trim();
             }
             const stepNo = index + 1;
-            titleNode.textContent = lang === "zh" ? stepTitlesZh[stepNo] || titleNode.dataset.enText : titleNode.dataset.enText;
+            if (lang === "zh") {
+                titleNode.textContent = stepTitlesZh[stepNo] || titleNode.dataset.enText;
+            } else if (lang === "he") {
+                titleNode.textContent = stepTitlesHe[stepNo] || titleNode.dataset.enText;
+            } else {
+                titleNode.textContent = titleNode.dataset.enText;
+            }
         });
 
         // Free static textual blocks
-        document.querySelectorAll(".hint, .declarations label").forEach((node) => {
+        document.querySelectorAll(".hint, .declaration-text").forEach((node) => {
             const text = node.textContent.trim();
             if (!node.dataset.enText) {
                 node.dataset.enText = text;
             }
-            if (lang === "zh") {
-                const mapped = staticTextZh[node.dataset.enText];
+            if (lang === "zh" || lang === "he") {
+                const mapped = lang === "zh" ? staticTextZh[node.dataset.enText] : staticTextHe[node.dataset.enText];
                 if (mapped) {
                     node.textContent = mapped;
                 }
@@ -133,6 +182,8 @@
             }
             if (lang === "zh") {
                 span.textContent = (dict.zh || dict.en || span.dataset.enText) + (span.dataset.enText.includes("*") ? " *" : "");
+            } else if (lang === "he") {
+                span.textContent = (dict.he || dict.en || span.dataset.enText) + (span.dataset.enText.includes("*") ? " *" : "");
             } else {
                 span.textContent = dict.en || span.dataset.enText;
                 if (span.dataset.enText.includes("*") && !span.textContent.includes("*")) {
@@ -151,7 +202,7 @@
                     option.dataset.enText = option.textContent;
                 }
                 if (!option.value) {
-                    option.textContent = lang === "zh" ? "请选择" : "Select";
+                    option.textContent = lang === "zh" ? "请选择" : lang === "he" ? "בחר" : "Select";
                     return;
                 }
                 const optionMap = mapping[option.value];
@@ -159,7 +210,13 @@
                     option.textContent = option.dataset.enText;
                     return;
                 }
-                option.textContent = lang === "zh" ? optionMap.zh || optionMap.en || option.dataset.enText : optionMap.en || option.dataset.enText;
+                if (lang === "zh") {
+                    option.textContent = optionMap.zh || optionMap.en || option.dataset.enText;
+                } else if (lang === "he") {
+                    option.textContent = optionMap.he || optionMap.en || option.dataset.enText;
+                } else {
+                    option.textContent = optionMap.en || option.dataset.enText;
+                }
             });
         });
     }
