@@ -27,6 +27,10 @@ _landing_extract/
 /V2.2/
 /Server/
 
+# עותקים תחת Static/ דורסים את proposals/static ב-Django — לא לקומיט
+Static/site/css/click_home.css
+Static/site/js/click_home.js
+
 # OS
 Thumbs.db
 Desktop.ini

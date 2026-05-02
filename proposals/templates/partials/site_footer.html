@@ -1,8 +1,21 @@
-<footer class="footer">
-    <img src="/media/logo.png" alt="Click Home Logo" class="footer-logo" onerror="this.style.display='none'">
-    <div class="footer-info">
-        <span class="footer-company">קליק הום חברה בע"מ</span>
-        <p>050-3439999 | info@click-home.co.il</p>
+{% load static %}
+<footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+        <a class="site-footer__brand" href="{% url 'home' %}">
+            <img src="/media/logo.png" width="120" alt="Click Home" decoding="async" onerror="this.onerror=null;this.src='{% static 'site/img/logo_clickhome.png' %}';">
+        </a>
+        <nav class="site-footer__nav" aria-label="ניווט תחתון">
+            <a href="{% url 'home' %}">דף הבית</a>
+            <a href="{% url 'catalog' %}">דגמים</a>
+            <a href="{% url 'about' %}">אודות</a>
+            <a href="{% url 'contact' %}">צור קשר</a>
+            <a href="{% url 'home' %}#faq">שאלות נפוצות</a>
+        </nav>
+        <div class="site-footer__contact">
+            <a href="tel:+972503439999">050-3439999</a>
+            ·
+            <a href="mailto:info@click-home.co.il">info@click-home.co.il</a>
+        </div>
     </div>
-    <p class="footer-copy">© כל הזכויות שמורות</p>
+    <p class="site-footer__copy">© {% now "Y" %} קליק הום חברה בע״מ — כל הזכויות שמורות</p>
 </footer>

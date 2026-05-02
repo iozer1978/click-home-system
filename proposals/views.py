@@ -1,6 +1,9 @@
+import re
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-from django.http import JsonResponse, HttpResponse, Http404, FileResponse
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse, Http404, FileResponse, HttpResponseRedirect
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -12,6 +15,7 @@ from django.db.models import Q, Count, Sum
 from django.contrib import messages
 from django.utils import timezone
 from django.urls import reverse
+from django.templatetags.static import static as static_url
 import json
 import base64
 from pathlib import Path
@@ -94,6 +98,54 @@ def _to_int(value):
         return None
 
 
+def _is_valid_israeli_mobile(phone_digits):
+    """מספר נייד ישראלי: 05… או +972 / 972 עם ספרות מספיקות."""
+    if not phone_digits or len(phone_digits) < 9:
+        return False
+    if phone_digits.startswith("05") and len(phone_digits) >= 10:
+        return True
+    if phone_digits.startswith("+972"):
+        core = phone_digits[4:].lstrip("0")
+        return core.startswith("5") and len(core) >= 9
+    if phone_digits.startswith("972"):
+        core = phone_digits[3:].lstrip("0")
+        return core.startswith("5") and len(core) >= 9
+    return False
+
+
+def _validate_lead_minimal(post_data):
+    """טופס ליד קצר (דף הבית) — שם + טלפון חובה; שאר השדות אופציונליים."""
+    full_name = (post_data.get("full_name") or post_data.get("name") or "").strip()
+    phone = (post_data.get("phone") or "").strip()
+    email = (post_data.get("email") or "").strip()
+    interest_type = (post_data.get("interest_type") or post_data.get("subject") or "").strip()
+    message_text = (post_data.get("message") or "").strip()
+
+    errors = {}
+    if not full_name:
+        errors["full_name"] = "יש להזין שם מלא."
+
+    phone_digits = re.sub(r"[\s\-\u200f]", "", phone)
+    if not _is_valid_israeli_mobile(phone_digits):
+        errors["phone"] = "יש להזין מספר טלפון ישראלי תקין (למשל 05x-xxxxxxx או +972…)."
+
+    if email:
+        try:
+            validate_email(email)
+        except ValidationError:
+            errors["email"] = "כתובת המייל אינה תקינה."
+
+    cleaned = {
+        "full_name": full_name[:100],
+        "phone": phone[:30],
+        "email": email[:255],
+        "interest_type": (interest_type or "פנייה מהאתר")[:120],
+        "message": (message_text or "—")[:1500],
+        "model_name": (post_data.get("model_name") or "").strip()[:120],
+    }
+    return cleaned, errors
+
+
 def _validate_lead_payload(post_data):
     full_name = (post_data.get("full_name") or post_data.get("name") or "").strip()
     phone = (post_data.get("phone") or "").strip()
@@ -146,19 +198,165 @@ def _send_lead_email(cleaned_data, source_label):
         fail_silently=False,
     )
 
+DEFAULT_HOME_FAQS = [
+    {
+        "question": "מה זה בית יביל או מודולרי?",
+        "answer": "מדובר במבנה שמיוצר במפעל בשליטה תעשייתית, מגיע לאתר מוכן לרוב שלב ההרכבה, ומקצר משמעותית את זמן הבנייה לעומת בנייה רטובה קלאסית.",
+    },
+    {
+        "question": "האם ניתן להתאים את הדגם לצרכים שלי?",
+        "answer": "בהחלט. ניתן לבחור שדרוגים, גימורים ולעיתים שינויי תכנון — הצוות שלנו ילווה אתכם בתהליך התאמה אישית ובשקיפות מחירים.",
+    },
+    {
+        "question": "איך מתחילים תהליך והצעת מחיר?",
+        "answer": "משאירים פרטים בטופס באתר או בוואטסאפ, נקבעת שיחת התאמה קצרה, ולאחר מכן נכין עבורכם הצעה מפורטת בהתאם לדגם ולשדרוגים שבחרתם.",
+    },
+]
+
+
 def home_page(request):
-    houses = HouseModel.objects.all()
-    type_slug = request.GET.get('type', '').strip()
+    houses = HouseModel.objects.prefetch_related("house_types", "media_files").all()
+    type_slug = request.GET.get("type", "").strip()
     if type_slug:
         houses = houses.filter(house_types__slug=type_slug).distinct()
-    faqs = FAQ.objects.filter(is_visible=True).order_by('order')
+    faqs = FAQ.objects.filter(is_visible=True).order_by("order")
     house_types = HouseType.objects.all()
-    return render(request, 'home.html', {
-        'houses': houses,
-        'faqs': faqs,
-        'house_types': house_types,
-        'active_type_slug': type_slug,
-    })
+    featured_houses = (
+        HouseModel.objects.filter(media_files__media_type="image")
+        .distinct()
+        .prefetch_related("media_files")[:4]
+    )
+
+    project_gallery_media = []
+    for h in featured_houses:
+        for m in h.media_files.all():
+            if m.media_type == "image" and len(project_gallery_media) < 8:
+                project_gallery_media.append((h.title, m))
+
+    faqs_display = [{"question": f.question, "answer": f.answer} for f in faqs]
+    if not faqs_display:
+        faqs_display = list(DEFAULT_HOME_FAQS)
+
+    hero_image_url = "/media/main-hero.jpg"
+    hero_path = Path(settings.MEDIA_ROOT) / "main-hero.jpg"
+    if not hero_path.exists():
+        hero_image_url = None
+        first_with_img = HouseModel.objects.prefetch_related("media_files").first()
+        if first_with_img:
+            main_img = first_with_img.get_main_image()
+            if main_img:
+                hero_image_url = main_img.url
+        if not hero_image_url:
+            hero_image_url = "/media/main-hero.jpg"
+
+    canonical_url = request.build_absolute_uri(reverse("home"))
+    host = f"{request.scheme}://{request.get_host()}"
+    logo_abs = request.build_absolute_uri(static_url("site/img/logo_clickhome.png"))
+
+    houses_for_schema = list(HouseModel.objects.all()[:10])
+    item_list = [
+        {
+            "@type": "ListItem",
+            "position": idx + 1,
+            "name": h.title,
+            "url": f"{host}{h.get_absolute_url()}",
+        }
+        for idx, h in enumerate(houses_for_schema)
+    ]
+
+    faq_schema_main = [
+        {
+            "@type": "Question",
+            "name": item["question"],
+            "acceptedAnswer": {"@type": "Answer", "text": item["answer"]},
+        }
+        for item in faqs_display
+    ]
+
+    structured_data = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "name": "Click Home",
+                "url": canonical_url,
+                "logo": logo_abs,
+                "email": "info@click-home.co.il",
+                "telephone": "+972-50-3439999",
+            },
+            {
+                "@type": "LocalBusiness",
+                "name": "Click Home",
+                "url": canonical_url,
+                "telephone": "+972-50-3439999",
+                "email": "info@click-home.co.il",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "התרופה 6, אזור התעשיה",
+                    "addressLocality": "נתניה",
+                    "postalCode": "4250477",
+                    "addressCountry": "IL",
+                },
+            },
+            {"@type": "WebSite", "name": "Click Home", "url": canonical_url, "inLanguage": "he-IL"},
+            {"@type": "FAQPage", "mainEntity": faq_schema_main},
+            {
+                "@type": "ItemList",
+                "name": "דגמי בתים מובילים",
+                "itemListElement": item_list,
+            },
+        ],
+    }
+
+    return render(
+        request,
+        "home.html",
+        {
+            "houses": houses,
+            "faqs": faqs,
+            "faqs_display": faqs_display,
+            "house_types": house_types,
+            "active_type_slug": type_slug,
+            "featured_houses": featured_houses,
+            "project_gallery_media": project_gallery_media,
+            "hero_image_url": hero_image_url,
+            "canonical_url": canonical_url,
+            "structured_data_json": json.dumps(structured_data, ensure_ascii=False),
+        },
+    )
+
+
+@require_POST
+def lead_submit(request):
+    cleaned, errors = _validate_lead_minimal(request.POST)
+    source = (request.POST.get("source") or "site").strip()[:80]
+    wants_json = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+    if errors:
+        if wants_json:
+            return JsonResponse({"ok": False, "errors": errors}, status=400)
+        for msg in errors.values():
+            messages.error(request, msg)
+        frag = "#lead" if source == "final" else ""
+        return redirect(reverse("home") + frag)
+
+    try:
+        _send_lead_email(cleaned, source_label=f"ליד ({source})")
+        messages.success(
+            request,
+            "תודה! קיבלנו את הפרטים וניצור איתכם קשר בהקדם.",
+        )
+        if wants_json:
+            return JsonResponse({"ok": True})
+    except Exception:
+        messages.error(
+            request,
+            "הפנייה התקבלה אך הייתה בעיה בשליחת המייל. ננסה ליצור קשר בהקדם.",
+        )
+        if wants_json:
+            return JsonResponse({"ok": False, "error": "mail"}, status=500)
+
+    return HttpResponseRedirect(reverse("home") + "?lead_ok=1#lead-success")
 
 def about_page(request): return render(request, 'about.html')
 

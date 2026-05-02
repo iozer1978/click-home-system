@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Click Home — בונים את העתיד שלך{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}קליק הום — פתרונות דיור מתקדמים: בתים יבילים, בתי קונטיינר ובנייה קלה. קטלוג דגמים והצעות מחיר.{% endblock %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    {% block og %}
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="he_IL">
+    <meta property="og:title" content="{% block og_title %}Click Home — בונים את העתיד שלך{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}קליק הום — פתרונות דיור מתקדמים ובנייה קלה.{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/img/logo_clickhome.png' %}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Click Home{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}בתים יבילים, קונטיינר ובנייה קלה — קטלוג והצעות מחיר.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/img/logo_clickhome.png' %}{% endblock %}">
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% static 'site/css/click_home.css' %}?v=202602026">
+
+    {% block schema %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Click Home",
+          "url": "{{ request.scheme }}://{{ request.get_host }}/",
+          "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'site/img/logo_clickhome.png' %}",
+          "email": "info@click-home.co.il",
+          "telephone": "+972-50-3439999"
+        },
+        {
+          "@type": "WebSite",
+          "name": "Click Home",
+          "url": "{{ request.scheme }}://{{ request.get_host }}/",
+          "inLanguage": "he-IL"
+        }
+      ]
+    }
+    </script>
+    {% endblock %}
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <a class="skip-link" href="#main-content">דלג לתוכן</a>
+
+    {% block site_header %}
+        {% include "partials/site_nav.html" with show_auth=True %}
+    {% endblock %}
+
+    {% if messages %}
+    <ul class="messages" role="status">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block site_footer %}
+        {% include "partials/site_footer.html" %}
+    {% endblock %}
+
+    <script src="{% static 'site/js/click_home.js' %}?v=202602026" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,30 +1,77 @@
-<nav class="navbar" aria-label="ניווט עליון">
-    <div class="logo">
-        <a href="{% url 'home' %}" class="brand-inline">
-            <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
-            <span>Click Home</span>
-        </a>
-    </div>
-
-    <div class="nav-links" aria-label="ניווט ראשי">
-        <a href="{% url 'home' %}">דף הבית</a>
-        <a href="{% url 'catalog' %}">דגמים</a>
-        <a href="{% url 'about' %}">אודות</a>
-        <a href="{% url 'contact' %}">צור קשר</a>
-    </div>
-
-    {% if show_auth %}
-        <div class="auth-buttons">
-            {% if user.is_authenticated %}
-                <span class="user-greeting">שלום, {{ user.first_name|default:user.username }}</span>
-                <a href="{% url 'profile' %}" style="text-decoration:none; color:var(--brand-brown); margin:0 10px;">
-                    <i class="fas fa-user-circle"></i>
+{% load static %}
+<header class="site-header" data-site-header>
+    <div class="drawer-backdrop" data-drawer-backdrop aria-hidden="true"></div>
+    <div class="site-header__shell">
+        <div class="site-header__inner">
+            <div class="site-header__start">
+                <a class="site-header__brand" href="{% url 'home' %}">
+                    {# לוגו רשמי מהמדיה בשרת; גיבוי ל-static אחרי collectstatic #}
+                    <img class="site-header__logo-img" src="/media/logo.png" width="120" alt="Click Home" decoding="async" onerror="this.onerror=null;this.src='{% static 'site/img/logo_clickhome.png' %}';">
                 </a>
-                <a href="{% url 'account_logout' %}" class="btn-logout">יציאה</a>
-            {% else %}
-                <a href="{% url 'account_login' %}" class="btn-login" style="font-size:14px;">התחברות</a>
-                <a href="{% url 'register' %}" class="btn-register" style="font-size:14px; padding: 8px 15px;">הרשמה</a>
-            {% endif %}
+                {% if request.resolver_match.url_name == 'home' %}
+                <a class="nav-cta nav-cta--header-quote" href="#lead">קבל הצעת מחיר</a>
+                {% else %}
+                <a class="nav-cta nav-cta--header-quote" href="{% url 'home' %}#lead">קבל הצעת מחיר</a>
+                {% endif %}
+            </div>
+
+            <nav id="site-drawer-nav" class="site-nav" aria-label="ניווט ראשי">
+                <a class="site-nav__link" href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>דף הבית</a>
+                <a class="site-nav__link" href="{% url 'catalog' %}" {% if request.resolver_match.url_name == 'catalog' %}aria-current="page"{% endif %}>דגמים</a>
+                {% if request.resolver_match.url_name == 'home' %}
+                <a class="site-nav__link" href="#how">איך זה עובד</a>
+                <a class="site-nav__link" href="#projects">פרויקטים</a>
+                {% else %}
+                <a class="site-nav__link" href="{% url 'home' %}#how">איך זה עובד</a>
+                <a class="site-nav__link" href="{% url 'home' %}#projects">פרויקטים</a>
+                {% endif %}
+                <a class="site-nav__link" href="{% url 'contact' %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}>צור קשר</a>
+
+                <div class="site-nav__cta-wrap">
+                    {% if request.resolver_match.url_name == 'home' %}
+                    <a class="nav-cta site-nav__cta--mobile" href="#lead">קבל הצעת מחיר</a>
+                    {% else %}
+                    <a class="nav-cta site-nav__cta--mobile" href="{% url 'home' %}#lead">קבל הצעת מחיר</a>
+                    {% endif %}
+                </div>
+
+                {% if show_auth %}
+                <div class="site-nav__mobile-auth">
+                    {% if user.is_authenticated %}
+                        <div>שלום, {{ user.first_name|default:user.username }}</div>
+                        <a href="{% url 'profile' %}">אזור אישי</a>
+                        ·
+                        <a href="{% url 'account_logout' %}">יציאה</a>
+                    {% else %}
+                        <a href="{% url 'account_login' %}">התחברות</a>
+                        ·
+                        <a href="{% url 'register' %}">הרשמה</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </nav>
+
+            <div class="site-header__end">
+                <div class="site-header__actions">
+                    {% if show_auth %}
+                    <div class="auth-inline">
+                        {% if user.is_authenticated %}
+                            <span>{{ user.first_name|default:user.username }}</span>
+                            <a href="{% url 'profile' %}" aria-label="אזור אישי"><i class="fas fa-user-circle" aria-hidden="true"></i></a>
+                            <a href="{% url 'account_logout' %}" class="btn-logout">יציאה</a>
+                        {% else %}
+                            <a href="{% url 'account_login' %}">התחברות</a>
+                            <a href="{% url 'register' %}" class="nav-cta">הרשמה</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="site-drawer-nav" aria-label="פתח תפריט">
+                    <span class="nav-toggle__bars" aria-hidden="true">
+                        <span></span><span></span><span></span>
+                    </span>
+                </button>
+            </div>
         </div>
-    {% endif %}
-</nav>
+    </div>
+</header>

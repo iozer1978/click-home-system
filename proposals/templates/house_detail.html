@@ -1,469 +1,446 @@
+{% extends "base_site.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ house.title }} - פרטים מלאים</title>
-    
-    <meta property="og:title" content="{{ house.title }} - דגם מדהים של Click Home">
-    <meta property="og:description" content="{{ house.description|truncatechars:100 }}">
-    {% if house.get_main_image %}
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ house.get_main_image.url }}">
-    {% endif %}
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
 
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+{% block title %}{{ house.title }} — פרטים מלאים | Click Home{% endblock %}
+{% block meta_description %}{{ house.description|truncatechars:155 }}{% endblock %}
 
-    <style>
-        :root { --brand-brown: #8B5A2B; --brand-olive: #6B705C; --text-dark: #2A2A2A; --bg-body: #F2EFE4; --white: #ffffff; }
-        body { font-family: 'Heebo', sans-serif; margin: 0; padding: 0; color: var(--text-dark); background-image: url('/media/bg-pattern.jpg'); background-color: var(--bg-body); background-size: cover; background-position: center top; background-attachment: fixed; background-repeat: no-repeat; }
-        
-        /* --- Navigation --- */
-        .nav-header { background: white; padding: 15px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .nav-right { display: flex; align-items: center; gap: 20px; }
-        .btn-back { text-decoration: none; color: var(--text-dark); font-weight: 700; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-back:hover { color: var(--brand-brown); }
-        .auth-status { font-size: 14px; font-weight: bold; color: var(--brand-olive); display: flex; align-items: center; gap: 15px; }
-        .btn-profile { color: var(--brand-brown); text-decoration: none; border-bottom: 2px solid transparent; }
-        .btn-profile:hover { border-color: var(--brand-brown); }
+{% block og %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ house.title }} — דגם Click Home">
+<meta property="og:description" content="{{ house.description|truncatechars:100 }}">
+{% if house.get_main_image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ house.get_main_image.url }}">
+{% else %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'site/img/logo_clickhome.png' %}">
+{% endif %}
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta name="twitter:card" content="summary_large_image">
+{% endblock %}
 
-        /* --- Layout --- */
-        .page-paper { max-width: 1200px; margin: 40px auto; background: rgba(255, 255, 255, 0.96); box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 12px; padding: 40px; border-top: 8px solid var(--brand-brown); }
-        .header { text-align: center; margin-bottom: 40px; border-bottom: 1px solid #eee; padding-bottom: 20px; position: relative; }
-        .main-title { font-size: 48px; font-weight: 900; margin: 0; color: var(--brand-brown); line-height: 1; }
-        .sub-title { font-size: 20px; color: #777; font-weight: 400; margin-top: 5px; }
-        .house-types-wrap { margin-top: 12px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .house-type-tag { display: inline-block; padding: 6px 14px; border-radius: 50px; background: #f5f1e8; color: var(--brand-olive); font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #e5e2d9; transition: 0.2s; }
-        .house-type-tag:hover { background: var(--brand-brown); color: #fff; border-color: var(--brand-brown); }
-        
-        .fav-btn-wrapper { position: absolute; top: 0; left: 0; }
-        .btn-fav { background: white; border: 2px solid #eee; color: #ccc; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: 0.3s; cursor: pointer; text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .btn-fav:hover { transform: scale(1.1); border-color: red; color: red; }
-        .btn-fav.active { color: red; border-color: red; background: #fff0f0; }
+{% block site_header %}
+<header class="site-header site-header--detail">
+    <div class="site-header__inner" style="flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+            <a class="site-header__brand" href="{% url 'home' %}">
+                <img src="{% static 'site/img/logo_clickhome.png' %}" width="140" height="42" alt="Click Home">
+                <span>Click Home</span>
+            </a>
+            <a href="{% url 'catalog' %}" class="btn btn--ghost" style="font-size:0.88rem;"><i class="fas fa-arrow-right" aria-hidden="true"></i> חזרה לקטלוג</a>
+            <a href="{% url 'home' %}#lead" class="btn btn--primary" style="font-size:0.88rem;">קבל הצעת מחיר</a>
+        </div>
+        <div class="auth-inline">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}"><i class="fas fa-user-circle" aria-hidden="true"></i> {{ user.first_name }}</a>
+            {% else %}
+                <a href="{% url 'account_login' %}">התחבר</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+{% endblock %}
 
-        .content-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 50px; align-items: start; }
-        .visual-col { position: sticky; top: 100px; }
-        .main-media-wrapper { width: 100%; height: 450px; background: #f0f0f0; border-radius: 12px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); position: relative; border: 1px solid #ddd; }
-        .main-media-wrapper img, .main-media-wrapper video { width: 100%; height: 100%; object-fit: cover; }
-        .thumbnails { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-        .thumb { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: 0.3s; border: 2px solid transparent; opacity: 0.7; background: white; }
-        .thumb:hover, .thumb.active { opacity: 1; border-color: var(--brand-brown); transform: translateY(-3px); }
+{% block extra_head %}
+<style>
+    .site-header--detail { position: sticky; top: 0; z-index: 900; }
+    :root { --detail-accent: var(--primary-green); --detail-muted: #555; --detail-bg: var(--bg-main); }
+    body { background-image: url('/media/bg-pattern.jpg'); background-color: var(--detail-bg); background-size: cover; background-position: center top; background-attachment: fixed; background-repeat: no-repeat; }
+    .header { text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--border-soft); padding-bottom: 20px; position: relative; }
+    .main-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; margin: 0; color: var(--detail-accent); line-height: 1; }
+    .sub-title { font-size: 20px; color: var(--text-muted); font-weight: 400; margin-top: 5px; }
+    .house-types-wrap { margin-top: 12px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .house-type-tag { display: inline-block; padding: 6px 14px; border-radius: 50px; background: var(--bg-soft); color: var(--primary-green); font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid var(--border-soft); transition: 0.2s; }
+    .house-type-tag:hover { background: var(--primary-green); color: #fff; border-color: var(--primary-green); }
+    .fav-btn-wrapper { position: absolute; top: 0; left: 0; }
+    .btn-fav { background: white; border: 2px solid var(--border-soft); color: #ccc; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: 0.3s; cursor: pointer; text-decoration: none; box-shadow: var(--shadow-card); }
+    .btn-fav:hover { transform: scale(1.05); border-color: red; color: red; }
+    .btn-fav.active { color: red; border-color: red; background: #fff0f0; }
+    .content-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 50px; align-items: start; }
+    .visual-col { position: sticky; top: 100px; }
+    .main-media-wrapper { width: 100%; height: 450px; background: #f0f0f0; border-radius: 12px; overflow: hidden; margin-bottom: 15px; box-shadow: var(--shadow-card); position: relative; border: 1px solid var(--border-soft); }
+    .main-media-wrapper img, .main-media-wrapper video { width: 100%; height: 100%; object-fit: cover; }
+    .thumbnails { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .thumb { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: 0.3s; border: 2px solid transparent; opacity: 0.7; background: white; }
+    .thumb:hover, .thumb.active { opacity: 1; border-color: var(--primary-green); transform: translateY(-3px); }
+    .info-col { display: flex; flex-direction: column; gap: 20px; }
+    .price-box { background: var(--bg-soft); border: 1px solid var(--border-soft); border-right: 5px solid var(--gold); padding: 25px; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; }
+    .price-label { font-size: 14px; color: var(--text-muted); }
+    .price-value { font-size: 48px; font-weight: 900; color: var(--text-dark); line-height: 1; transition: color 0.2s; }
+    .price-note { font-size: 14px; color: var(--text-muted); margin-top: 5px; }
+    .tab-buttons { display: flex; border-bottom: 2px solid var(--border-soft); margin-bottom: 20px; flex-wrap: wrap; gap: 4px; }
+    .tab-btn { background: none; border: none; padding: 12px 20px; font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: #aaa; cursor: pointer; transition: 0.3s; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tab-btn:hover { color: var(--primary-green); }
+    .tab-btn.active { color: var(--text-dark); border-bottom: 3px solid var(--primary-green); }
+    .tab-content { display: none; animation: fadeIn 0.4s; line-height: 1.8; color: var(--detail-muted); font-size: 17px; }
+    .tab-content.active { display: block; }
+    .tab-placeholder { color: #999; font-style: italic; margin: 15px 0 0 0; padding: 15px; background: var(--bg-soft); border-radius: 8px; border: 1px dashed var(--border-soft); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .smart-list { list-style: none; padding: 0; margin: 0; }
+    .smart-list li { position: relative; padding-right: 20px; margin-bottom: 12px; border-bottom: 1px dashed #f0f0f0; padding-bottom: 8px; color: var(--detail-muted); }
+    .smart-list li::before { content: "•"; color: var(--gold); font-weight: bold; font-size: 20px; position: absolute; right: 0; top: -2px; }
+    .smart-header { font-size: 20px; font-weight: 800; color: var(--primary-green); margin-top: 25px; margin-bottom: 10px; display: block; border-bottom: 2px solid rgba(15, 74, 47, 0.2); padding-bottom: 5px; }
+    .smart-key { font-weight: 900; color: var(--primary-green); font-size: 17px; }
+    .upgrades-container { background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 20px; margin-top: 20px; }
+    .upgrades-title { font-weight: 800; color: var(--primary-green); font-size: 20px; margin-bottom: 15px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+    .upgrade-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
+    .checkbox-wrapper { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .custom-checkbox { width: 20px; height: 20px; border: 2px solid var(--primary-green); border-radius: 4px; display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s; }
+    .real-checkbox { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .real-checkbox:focus + .custom-checkbox { outline: 3px solid var(--gold); outline-offset: 2px; }
+    .real-checkbox:checked + .custom-checkbox { background: var(--primary-green); }
+    .real-checkbox:checked + .custom-checkbox::after { content: '✔'; color: white; font-size: 14px; }
+    .upgrade-price { font-weight: bold; color: var(--primary-green); }
+    .quantity-wrapper { margin-top: 20px; background: var(--bg-soft); padding: 15px; border-radius: 8px; border: 1px solid var(--border-soft); display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+    .qty-label { font-weight: bold; color: var(--primary-green); }
+    .qty-input { width: 60px; padding: 5px 10px; font-size: 18px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-family: var(--font-sans); font-weight: bold; }
+    .action-area { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; }
+    .btn-whatsapp { flex: 1; min-width: 200px; background: #25D366; color: white; padding: 15px; border-radius: 50px; text-align: center; text-decoration: none; font-weight: 800; font-size: 18px; transition: 0.3s; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-whatsapp:hover { background: #1da851; color: #fff; }
+    .btn-quote-detail { flex: 1; min-width: 200px; background: var(--primary-green); color: white; padding: 15px; border: none; border-radius: 50px; text-align: center; text-decoration: none; font-weight: 800; font-size: 18px; transition: 0.3s; cursor: pointer; font-family: var(--font-sans); box-shadow: 0 5px 15px rgba(15, 74, 47, 0.25); display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-quote-detail:hover { background: var(--primary-green-hover); color: #fff; }
+    .share-section { margin-top: 30px; border-top: 1px solid var(--border-soft); padding-top: 20px; text-align: center; }
+    .share-title { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; font-weight: bold; }
+    .share-buttons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .share-btn { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; font-size: 18px; transition: 0.3s; border: none; cursor: pointer; }
+    .share-btn:hover { transform: translateY(-3px); }
+    .bg-wa { background-color: #25D366; }
+    .bg-fb { background-color: #1877F2; }
+    .bg-copy { background-color: #555; }
+    .bg-native { background-color: var(--primary-green); }
+    .related-section { max-width: var(--container-max); margin: 60px auto; padding: 0 var(--space-md); }
+    .related-title { text-align: center; font-size: 1.5rem; font-weight: 800; color: var(--primary-green); margin-bottom: 30px; width: 100%; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+    .related-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: var(--shadow-card); transition: 0.3s; border: 1px solid var(--border-soft); }
+    .related-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-soft); }
+    .related-img { width: 100%; height: 200px; object-fit: cover; background: #f0f0f0; }
+    .related-body { padding: 20px; text-align: center; }
+    .related-name { font-weight: 800; font-size: 18px; color: var(--text-dark); text-decoration: none; display: block; margin-bottom: 5px; }
+    .related-price { color: var(--primary-green); font-weight: 700; font-size: 16px; }
+    @media (max-width: 900px) {
+        .content-grid { grid-template-columns: 1fr; }
+        .visual-col { order: -1; position: static; }
+        .fav-btn-wrapper { top: -10px; left: 0; }
+        .action-area { flex-direction: column; }
+    }
+</style>
+{% endblock %}
 
-        .info-col { display: flex; flex-direction: column; gap: 20px; }
-        .price-box { background: #fdfbf7; border: 1px solid #eee; border-right: 5px solid var(--brand-olive); padding: 25px; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; }
-        .price-label { font-size: 14px; color: #888; }
-        .price-value { font-size: 48px; font-weight: 900; color: var(--text-dark); line-height: 1; transition: color 0.2s; }
-        .price-note { font-size: 14px; color: #888; margin-top: 5px; }
-
-        /* --- Tabs --- */
-        .tab-buttons { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
-        .tab-btn { background: none; border: none; padding: 12px 25px; font-family: 'Heebo', sans-serif; font-size: 18px; font-weight: 700; color: #aaa; cursor: pointer; transition: 0.3s; border-bottom: 3px solid transparent; margin-bottom: -2px; }
-        .tab-btn:hover { color: var(--brand-brown); }
-        .tab-btn.active { color: var(--text-dark); border-bottom: 3px solid var(--brand-brown); }
-        .tab-content { display: none; animation: fadeIn 0.4s; line-height: 1.8; color: #555; font-size: 17px; }
-        .tab-content.active { display: block; }
-        .tab-placeholder { color: #999; font-style: italic; margin: 15px 0 0 0; padding: 15px; background: #f9f9f9; border-radius: 8px; border: 1px dashed #ddd; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Smart List Styling --- */
-        .smart-list { list-style: none; padding: 0; margin: 0; }
-        .smart-list li { position: relative; padding-right: 20px; margin-bottom: 12px; border-bottom: 1px dashed #f0f0f0; padding-bottom: 8px; color: #555; }
-        .smart-list li::before { content: "•"; color: var(--brand-olive); font-weight: bold; font-size: 20px; position: absolute; right: 0; top: -2px; }
-        .smart-header { font-size: 20px; font-weight: 800; color: var(--brand-brown); margin-top: 25px; margin-bottom: 10px; display: block; border-bottom: 2px solid rgba(139, 90, 43, 0.2); padding-bottom: 5px; }
-        .smart-key { font-weight: 900; color: var(--brand-brown); font-size: 17px; }
-
-        /* --- Form Elements --- */
-        .upgrades-container { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-top: 20px; }
-        .upgrades-title { font-weight: 800; color: var(--brand-brown); font-size: 20px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .upgrade-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
-        .checkbox-wrapper { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .custom-checkbox { width: 20px; height: 20px; border: 2px solid var(--brand-brown); border-radius: 4px; display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s; }
-        .real-checkbox { display: none; }
-        .real-checkbox:checked + .custom-checkbox { background: var(--brand-brown); }
-        .real-checkbox:checked + .custom-checkbox::after { content: '✔'; color: white; font-size: 14px; }
-        .upgrade-price { font-weight: bold; color: var(--brand-olive); }
-
-        .quantity-wrapper { margin-top: 20px; background: #fdfbf7; padding: 15px; border-radius: 8px; border: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
-        .qty-label { font-weight: bold; color: var(--brand-brown); }
-        .qty-input { width: 60px; padding: 5px 10px; font-size: 18px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-family: 'Heebo'; font-weight: bold; }
-
-        .action-area { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; }
-        .btn-whatsapp { flex: 1; background: #25D366; color: white; padding: 15px; border-radius: 50px; text-align: center; text-decoration: none; font-weight: 800; font-size: 18px; transition: 0.3s; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-whatsapp:hover { background: #1da851; transform: translateY(-2px); }
-        .btn-primary { flex: 1; background: var(--brand-brown); color: white; padding: 15px; border:none; border-radius: 50px; text-align: center; text-decoration: none; font-weight: 800; font-size: 18px; transition: 0.3s; cursor: pointer; font-family: 'Heebo'; box-shadow: 0 5px 15px rgba(139, 90, 43, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-primary:hover { background: #6f4721; transform: translateY(-2px); }
-
-        /* --- Social Sharing (חדש) --- */
-        .share-section { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: center; }
-        .share-title { font-size: 14px; color: #777; margin-bottom: 10px; font-weight: bold; }
-        .share-buttons { display: flex; justify-content: center; gap: 10px; }
-        .share-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; font-size: 18px; transition: 0.3s; border: none; cursor: pointer; }
-        .share-btn:hover { transform: translateY(-3px); }
-        .bg-wa { background-color: #25D366; }
-        .bg-fb { background-color: #1877F2; }
-        .bg-copy { background-color: #555; }
-        .bg-native { background-color: var(--brand-brown); }
-
-        /* --- Related Houses (חדש) --- */
-        .related-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
-        .related-title { text-align: center; font-size: 28px; font-weight: 800; color: var(--brand-brown); margin-bottom: 30px; position: relative; display: inline-block; width: 100%; }
-        .related-title::after { content: ''; display: block; width: 60px; height: 3px; background: var(--brand-olive); margin: 10px auto 0; }
-        
-        .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        .related-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #eee; }
-        .related-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .related-img { width: 100%; height: 200px; object-fit: cover; background: #f0f0f0; }
-        .related-body { padding: 20px; text-align: center; }
-        .related-name { font-weight: 800; font-size: 18px; color: var(--text-dark); text-decoration: none; display: block; margin-bottom: 5px; }
-        .related-price { color: var(--brand-brown); font-weight: 700; font-size: 16px; }
-
-        @media (max-width: 900px) {
-            .content-grid { grid-template-columns: 1fr; }
-            .visual-col { order: -1; position: static; }
-            .main-title { font-size: 36px; }
-            .action-area { flex-direction: column; }
-            .fav-btn-wrapper { top: -20px; left: 0; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="nav-header">
-        <div class="nav-right">
-            <div style="font-weight:900; font-size:22px; color:var(--brand-brown); display:flex; align-items:center; gap:10px;">
-                <img src="/media/logo.png" style="height:40px;" onerror="this.style.display='none'"> Click Home
-            </div>
-            <a href="{% url 'home' %}" class="btn-back">
-                <i class="fas fa-arrow-right"></i> חזרה לקטלוג
+{% block content %}
+<div class="house-paper">
+    <div class="header">
+        {% if user.is_authenticated %}
+        <div class="fav-btn-wrapper">
+            <a href="{% url 'toggle_favorite' house.id %}" class="btn-fav {% if is_fav %}active{% endif %}" title="הוסף למועדפים" aria-label="מועדפים">
+                <i class="{% if is_fav %}fas{% else %}far{% endif %} fa-heart" aria-hidden="true"></i>
             </a>
         </div>
-        <div class="auth-status">
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="btn-profile">
-                    <i class="fas fa-user-circle"></i> {{ user.first_name }}
-                </a>
-            {% else %}
-                <a href="{% url 'account_login' %}" style="color:var(--brand-brown); text-decoration:none;">התחבר</a>
-            {% endif %}
-        </div>
-    </div>
+        {% endif %}
 
-    <div class="page-paper">
-        <div class="header">
-            {% if user.is_authenticated %}
-            <div class="fav-btn-wrapper">
-                <a href="{% url 'toggle_favorite' house.id %}" class="btn-fav {% if is_fav %}active{% endif %}" title="הוסף למועדפים">
-                    <i class="{% if is_fav %}fas{% else %}far{% endif %} fa-heart"></i>
-                </a>
-            </div>
-            {% endif %}
-
-            <h1 class="main-title">{{ house.title }}</h1>
-            <div class="sub-title">דגם מוביל מקטלוג בתי המכולה שלנו</div>
-            {% if house.house_types.all %}
-            <div class="house-types-wrap">
-                {% for t in house.house_types.all %}
-                <a href="{% url 'catalog' %}?type={{ t.slug }}" class="house-type-tag">{{ t.name }}</a>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="content-grid">
-            <div class="info-col">
-                <div class="price-box">
-                    <div class="price-label">מחיר משוער (כולל שדרוגים וכמות):</div>
-                    
-                    {% if house.price_estimate > 0 %}
-                        <div class="price-value" id="finalPrice">₪{{ house.price_estimate }}</div>
-                        <div class="price-note">* המחיר אינו כולל מע"מ, הובלה והתקנה</div>
-                    {% else %}
-                        <a href="https://wa.me/972503439999?text=אני מתעניין בדגם {{ house.title }} ואשמח לקבל הצעת מחיר מותאמת אישית" target="_blank" style="text-decoration:none;">
-                            <div class="price-value" style="font-size:28px; color:#25D366; cursor:pointer;">
-                                <i class="fab fa-whatsapp"></i> צור קשר לקבלת הצעת מחיר מותאמת אישית
-                            </div>
-                        </a>
-                        <div class="price-note">נשמח להכין עבורך הצעת מחיר בהתאם לצרכים שלך</div>
-                    {% endif %}
-                </div>
-
-                <div class="tabs-container">
-                    <div class="tab-buttons">
-                        <button class="tab-btn active" onclick="openTab(event, 'desc')">תיאור</button>
-                        <button class="tab-btn" onclick="openTab(event, 'specs')">מפרט</button>
-                        <button class="tab-btn" onclick="openTab(event, 'layout')">חלוקה פנימית</button>
-                        {% if house.blueprint_image %}<button class="tab-btn" onclick="openTab(event, 'blueprint')">שרטוט אדריכלי</button>{% endif %}
-                    </div>
-                    <div id="desc" class="tab-content active">
-                        <div class="raw-content" style="display:none;">{{ house.description }}</div>
-                        <div class="formatted-content"></div>
-                        {% if not house.description %}<p class="tab-placeholder">תיאור הדגם יופיע כאן. ניתן לעדכן בממשק הניהול (אדמין → דגמי בתים).</p>{% endif %}
-                    </div>
-                    <div id="specs" class="tab-content">
-                        <div class="raw-content" style="display:none;">{{ house.specs }}</div>
-                        <div class="formatted-content"></div>
-                        {% if not house.specs %}<p class="tab-placeholder">מפרט טכני ומידות יופיע כאן. ניתן לעדכן בממשק הניהול.</p>{% endif %}
-                    </div>
-                    <div id="layout" class="tab-content">
-                        <div class="raw-content" style="display:none;">{{ house.internal_layout }}</div>
-                        <div class="formatted-content"></div>
-                        {% if not house.internal_layout %}<p class="tab-placeholder">חלוקה פנימית תופיע כאן. ניתן לעדכן בממשק הניהול.</p>{% endif %}
-                    </div>
-                    {% if house.blueprint_image %}
-                    <div id="blueprint" class="tab-content">
-                        <img src="{{ house.blueprint_image.url }}" style="width:100%; border-radius:8px; border:1px solid #ddd; cursor:pointer;" onclick="window.open(this.src, '_blank')">
-                    </div>
-                    {% endif %}
-                </div>
-
-                <form method="POST" action="{% url 'create_quote' house.id %}">
-                    {% csrf_token %}
-
-                    {% if house.upgrades.all %}
-                    <div class="upgrades-container">
-                        <div class="upgrades-title">שדרוגים ותוספות (לכל יחידה)</div>
-                        {% for upgrade in house.upgrades.all %}
-                        <div class="upgrade-item">
-                            <label class="checkbox-wrapper">
-                                <input type="checkbox" class="real-checkbox" 
-                                       name="upgrades" value="{{ upgrade.id }}" data-price="{{ upgrade.price }}" 
-                                       onchange="updatePrice()" {% if upgrade.is_included %}checked disabled{% endif %}>
-                                <div class="custom-checkbox"></div>
-                                <span>{{ upgrade.name }}</span>
-                            </label>
-                            <span class="upgrade-price">
-                                {% if upgrade.is_included %}
-                                    (כלול)
-                                {% elif upgrade.price > 0 %}
-                                    +₪{{ upgrade.price }}
-                                {% else %}
-                                    (בחר להוספה)
-                                {% endif %}
-                            </span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <div class="quantity-wrapper">
-                        <label class="qty-label">כמות יחידות להזמנה:</label>
-                        <input type="number" id="houseQty" name="quantity" class="qty-input" value="1" min="1" max="50" onchange="updatePrice()" onkeyup="updatePrice()">
-                    </div>
-
-                    <div class="action-area">
-                        {% if house.price_estimate > 0 %}
-                            {% if user.is_authenticated %}
-                                <button type="submit" class="btn-primary">צור הצעת מחיר רשמית</button>
-                            {% else %}
-                                <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn-primary">התחבר כדי ליצור הצעת מחיר</a>
-                            {% endif %}
-                        {% endif %}
-                        
-                        <a href="https://wa.me/972503439999?text=היי, אשמח לקבל פרטים נוספים על דגם *{{ house.title }}*" 
-                           target="_blank" class="btn-whatsapp">
-                            <i class="fab fa-whatsapp"></i> ייעוץ בווצאפ
-                        </a>
-                    </div>
-                </form>
-
-                <div class="share-section">
-                    <div class="share-title">אהבתם? שתפו עם חברים:</div>
-                    <div class="share-buttons">
-                        <button onclick="shareWhatsapp()" class="share-btn bg-wa" title="שתף בוואטסאפ">
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
-                        
-                        <button onclick="shareFacebook()" class="share-btn bg-fb" title="שתף בפייסבוק">
-                            <i class="fab fa-facebook-f"></i>
-                        </button>
-
-                        <button onclick="nativeShare()" class="share-btn bg-native" title="אפשרויות שיתוף נוספות">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-
-                        <button onclick="copyLink()" class="share-btn bg-copy" title="העתק קישור">
-                            <i class="fas fa-link"></i>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="visual-col">
-                <div class="main-media-wrapper" id="mainWrapper">
-                    {% if house.media_files.first %}
-                        {% if house.media_files.first.media_type == 'video' %}
-                            <video src="{{ house.media_files.first.file.url }}" controls autoplay muted></video>
-                        {% else %}
-                            <img src="{{ house.media_files.first.file.url }}">
-                        {% endif %}
-                    {% else %}
-                        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;">אין תמונה</div>
-                    {% endif %}
-                </div>
-                
-                <div class="thumbnails">
-                    {% for media in house.media_files.all %}
-                        <div onclick="setMainMedia('{{ media.file.url }}', '{{ media.media_type }}', this)">
-                            {% if media.media_type == 'video' %}
-                                <div style="position:relative; height:100%;">
-                                    <video src="{{ media.file.url }}" class="thumb"></video>
-                                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:18px; pointer-events:none;"><i class="fas fa-play"></i></div>
-                                </div>
-                            {% else %}
-                                <img src="{{ media.file.url }}" class="thumb {% if forloop.first %}active{% endif %}">
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="related-section">
-        <h3 class="related-title">דגמים נוספים שיכולים לעניין אותך</h3>
-        <div class="related-grid">
-            {% for rel in related_houses %}
-            <div class="related-card">
-                <a href="{% url 'house_detail' rel.pk %}">
-                    {% if rel.get_main_image %}
-                        <img src="{{ rel.get_main_image.url }}" class="related-img">
-                    {% else %}
-                        <div class="related-img" style="background:#eee; display:flex;align-items:center;justify-content:center;color:#999;">אין תמונה</div>
-                    {% endif %}
-                </a>
-                <div class="related-body">
-                    <a href="{% url 'house_detail' rel.pk %}" class="related-name">{{ rel.title }}</a>
-                    {% if rel.price_estimate > 0 %}
-                    <span class="related-price">₪{{ rel.price_estimate }}</span>
-                    {% else %}
-                    <span class="related-price" style="font-size:13px;">צור קשר להצעת מחיר</span>
-                    {% endif %}
-                </div>
-            </div>
-            {% empty %}
-            <p style="text-align:center; color:#888;">טוען דגמים נוספים...</p>
+        <h1 class="main-title">{{ house.title }}</h1>
+        <p class="sub-title">דגם מוביל מקטלוג בתי המכולה שלנו</p>
+        {% if house.house_types.all %}
+        <div class="house-types-wrap">
+            {% for t in house.house_types.all %}
+            <a href="{% url 'catalog' %}?type={{ t.slug }}" class="house-type-tag">{{ t.name }}</a>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
 
-    <script>
-        const BASE_PRICE = {{ house.price_estimate }};
-        
-        function updatePrice() {
-            if (BASE_PRICE === 0) return;
+    <div class="content-grid">
+        <div class="info-col">
+            <div class="price-box">
+                <div class="price-label">מחיר משוער (כולל שדרוגים וכמות):</div>
 
-            let unitPrice = BASE_PRICE;
-            document.querySelectorAll('.real-checkbox').forEach(cb => {
-                if (cb.checked && !cb.disabled) {
-                    unitPrice += parseInt(cb.getAttribute('data-price'));
-                }
-            });
-            let qty = parseInt(document.getElementById('houseQty').value) || 1;
-            if (qty < 1) qty = 1;
+                {% if house.price_estimate > 0 %}
+                <div class="price-value" id="finalPrice">₪{{ house.price_estimate }}</div>
+                <div class="price-note">* המחיר אינו כולל מע״מ, הובלה והתקנה</div>
+                {% else %}
+                <a href="https://wa.me/972503439999?text=אני מתעניין בדגם {{ house.title }} ואשמח לקבל הצעת מחיר מותאמת אישית" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+                    <div class="price-value" style="font-size:28px; color:#25D366;">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> צור קשר לקבלת הצעת מחיר מותאמת אישית
+                    </div>
+                </a>
+                <div class="price-note">נשמח להכין עבורך הצעת מחיר בהתאם לצרכים שלך</div>
+                {% endif %}
+            </div>
 
-            let total = unitPrice * qty;
-            
-            const priceEl = document.getElementById('finalPrice');
-            if (priceEl) {
-                priceEl.innerText = '₪' + total.toLocaleString();
+            <div class="tabs-container">
+                <div class="tab-buttons" role="tablist">
+                    <button type="button" class="tab-btn active" role="tab" aria-selected="true" onclick="openTab(event, 'desc')">תיאור</button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="openTab(event, 'specs')">מפרט</button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="openTab(event, 'layout')">חלוקה פנימית</button>
+                    {% if house.blueprint_image %}<button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="openTab(event, 'blueprint')">שרטוט אדריכלי</button>{% endif %}
+                </div>
+                <div id="desc" class="tab-content active" role="tabpanel">
+                    <div class="raw-content" style="display:none;">{{ house.description }}</div>
+                    <div class="formatted-content"></div>
+                    {% if not house.description %}<p class="tab-placeholder">תיאור הדגם יופיע כאן. ניתן לעדכן בממשק הניהול (אדמין → דגמי בתים).</p>{% endif %}
+                </div>
+                <div id="specs" class="tab-content" role="tabpanel">
+                    <div class="raw-content" style="display:none;">{{ house.specs }}</div>
+                    <div class="formatted-content"></div>
+                    {% if not house.specs %}<p class="tab-placeholder">מפרט טכני ומידות יופיע כאן. ניתן לעדכן בממשק הניהול.</p>{% endif %}
+                </div>
+                <div id="layout" class="tab-content" role="tabpanel">
+                    <div class="raw-content" style="display:none;">{{ house.internal_layout }}</div>
+                    <div class="formatted-content"></div>
+                    {% if not house.internal_layout %}<p class="tab-placeholder">חלוקה פנימית תופיע כאן. ניתן לעדכן בממשק הניהול.</p>{% endif %}
+                </div>
+                {% if house.blueprint_image %}
+                <div id="blueprint" class="tab-content" role="tabpanel">
+                    <img src="{{ house.blueprint_image.url }}" alt="שרטוט אדריכלי של דגם {{ house.title }}" width="1200" height="800" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:8px;border:1px solid var(--border-soft);cursor:pointer;" onclick="window.open(this.src, '_blank')">
+                </div>
+                {% endif %}
+            </div>
+
+            <form method="POST" action="{% url 'create_quote' house.id %}">
+                {% csrf_token %}
+
+                {% if house.upgrades.all %}
+                <div class="upgrades-container">
+                    <div class="upgrades-title">שדרוגים ותוספות (לכל יחידה)</div>
+                    {% for upgrade in house.upgrades.all %}
+                    <div class="upgrade-item">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="real-checkbox"
+                                   name="upgrades" value="{{ upgrade.id }}" data-price="{{ upgrade.price }}"
+                                   onchange="updatePrice()" {% if upgrade.is_included %}checked disabled{% endif %}>
+                            <span class="custom-checkbox" aria-hidden="true"></span>
+                            <span>{{ upgrade.name }}</span>
+                        </label>
+                        <span class="upgrade-price">
+                            {% if upgrade.is_included %}
+                                (כלול)
+                            {% elif upgrade.price > 0 %}
+                                +₪{{ upgrade.price }}
+                            {% else %}
+                                (בחר להוספה)
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="quantity-wrapper">
+                    <label class="qty-label" for="houseQty">כמות יחידות להזמנה:</label>
+                    <input type="number" id="houseQty" name="quantity" class="qty-input" value="1" min="1" max="50" onchange="updatePrice()" onkeyup="updatePrice()" aria-describedby="price-note-main">
+                </div>
+
+                <div class="action-area">
+                    {% if house.price_estimate > 0 %}
+                        {% if user.is_authenticated %}
+                            <button type="submit" class="btn-quote-detail">צור הצעת מחיר רשמית</button>
+                        {% else %}
+                            <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn-quote-detail">התחבר כדי ליצור הצעת מחיר</a>
+                        {% endif %}
+                    {% endif %}
+
+                    <a href="https://wa.me/972503439999?text=היי, אשמח לקבל פרטים נוספים על דגם *{{ house.title }}*"
+                       target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> ייעוץ בווצאפ
+                    </a>
+                </div>
+            </form>
+
+            <div class="share-section">
+                <div class="share-title">אהבתם? שתפו עם חברים:</div>
+                <div class="share-buttons">
+                    <button type="button" onclick="shareWhatsapp()" class="share-btn bg-wa" title="שתף בוואטסאפ" aria-label="שתף בוואטסאפ">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                    </button>
+
+                    <button type="button" onclick="shareFacebook()" class="share-btn bg-fb" title="שתף בפייסבוק" aria-label="שתף בפייסבוק">
+                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                    </button>
+
+                    <button type="button" onclick="nativeShare()" class="share-btn bg-native" title="אפשרויות שיתוף נוספות" aria-label="שיתוף">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i>
+                    </button>
+
+                    <button type="button" onclick="copyLink()" class="share-btn bg-copy" title="העתק קישור" aria-label="העתק קישור">
+                        <i class="fas fa-link" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="visual-col">
+            <div class="main-media-wrapper" id="mainWrapper">
+                {% if house.media_files.first %}
+                    {% if house.media_files.first.media_type == 'video' %}
+                        <video src="{{ house.media_files.first.file.url }}" controls autoplay muted playsinline poster="">סרטון דגם {{ house.title }}</video>
+                    {% else %}
+                        <img src="{{ house.media_files.first.file.url }}" alt="תמונה ראשית של דגם {{ house.title }}" width="800" height="600" fetchpriority="high" decoding="async">
+                    {% endif %}
+                {% else %}
+                    <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;">אין תמונה</div>
+                {% endif %}
+            </div>
+
+            <div class="thumbnails">
+                {% for media in house.media_files.all %}
+                    <div onclick="setMainMedia('{{ media.file.url }}', '{{ media.media_type }}', this)">
+                        {% if media.media_type == 'video' %}
+                            <div style="position:relative; height:100%;">
+                                <video src="{{ media.file.url }}" class="thumb" muted playsinline aria-label="סרטון מהגלריה"></video>
+                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:18px; pointer-events:none;"><i class="fas fa-play" aria-hidden="true"></i></div>
+                            </div>
+                        {% else %}
+                            <img src="{{ media.file.url }}" class="thumb {% if forloop.first %}active{% endif %}" alt="תמונה מהגלריה — {{ house.title }}" width="160" height="100" loading="lazy" decoding="async">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="related-section" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="related-title">דגמים נוספים שיכולים לעניין אותך</h2>
+    <div class="related-grid">
+        {% for rel in related_houses %}
+        <div class="related-card">
+            <a href="{% url 'house_detail' rel.pk %}">
+                {% if rel.get_main_image %}
+                    <img src="{{ rel.get_main_image.url }}" class="related-img" alt="דגם {{ rel.title }}" width="400" height="267" loading="lazy" decoding="async">
+                {% else %}
+                    <div class="related-img" style="background:#eee; display:flex;align-items:center;justify-content:center;color:#999;">אין תמונה</div>
+                {% endif %}
+            </a>
+            <div class="related-body">
+                <a href="{% url 'house_detail' rel.pk %}" class="related-name">{{ rel.title }}</a>
+                {% if rel.price_estimate > 0 %}
+                <span class="related-price">₪{{ rel.price_estimate }}</span>
+                {% else %}
+                <span class="related-price" style="font-size:13px;">צור קשר להצעת מחיר</span>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align:center;color:var(--text-muted);grid-column:1/-1;">טוען דגמים נוספים…</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const BASE_PRICE = {{ house.price_estimate }};
+
+    function updatePrice() {
+        if (BASE_PRICE === 0) return;
+
+        let unitPrice = BASE_PRICE;
+        document.querySelectorAll('.real-checkbox').forEach(cb => {
+            if (cb.checked && !cb.disabled) {
+                unitPrice += parseInt(cb.getAttribute('data-price'), 10) || 0;
             }
-        }
-
-        function formatSmartContent() {
-            document.querySelectorAll('.tab-content').forEach(function(tab) {
-                var rawDiv = tab.querySelector('.raw-content');
-                var targetDiv = tab.querySelector('.formatted-content');
-                if (rawDiv && targetDiv) {
-                    var lines = rawDiv.innerText.split('\n');
-                    var html = '<ul class="smart-list">';
-                    lines.forEach(function(line) {
-                        var cleanLine = line.trim();
-                        if (cleanLine.length > 0) {
-                            if (cleanLine.endsWith(':') || cleanLine.endsWith(':\r')) {
-                                html += '</ul><span class="smart-header">' + cleanLine + '</span><ul class="smart-list">';
-                            } 
-                            else if (cleanLine.includes(':')) {
-                                var parts = cleanLine.split(':');
-                                var key = parts[0];
-                                var value = parts.slice(1).join(':');
-                                html += '<li><span class="smart-key">' + key + ':</span> ' + value + '</li>';
-                            }
-                            else {
-                                html += '<li>' + cleanLine + '</li>';
-                            }
-                        }
-                    });
-                    html += '</ul>';
-                    targetDiv.innerHTML = html;
-                }
-            });
-        }
-
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
-            tablinks = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            setTimeout(() => document.getElementById(tabName).classList.add("active"), 10);
-            evt.currentTarget.className += " active";
-        }
-
-        function setMainMedia(url, type, element) {
-            const wrapper = document.getElementById('mainWrapper');
-            if (type === 'video') {
-                wrapper.innerHTML = `<video src="${url}" controls autoplay style="width:100%; height:100%; object-fit:cover;"></video>`;
-            } else {
-                wrapper.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover;">`;
-            }
-            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-            const elem = element.querySelector('img') || element.querySelector('video');
-            if(elem) elem.classList.add('active');
-        }
-
-        // --- לוגיקה לשיתוף ---
-        const pageUrl = encodeURIComponent(window.location.href);
-        const pageTitle = encodeURIComponent("{{ house.title }} - דגם מדהים של Click Home");
-
-        function shareWhatsapp() {
-            window.open(`https://wa.me/?text=${pageTitle}%20${pageUrl}`, '_blank');
-        }
-
-        function shareFacebook() {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank');
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert("הקישור הועתק בהצלחה! ניתן להדביק בסטורי או בטיקטוק.");
-            });
-        }
-
-        function nativeShare() {
-            if (navigator.share) {
-                navigator.share({
-                    title: "{{ house.title }}",
-                    text: "תראו את הדגם המדהים הזה שמצאתי בקליק הום!",
-                    url: window.location.href
-                }).catch(console.error);
-            } else {
-                copyLink();
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            formatSmartContent();
-            updatePrice(); 
         });
-    </script>
-</body>
-</html>
+        let qty = parseInt(document.getElementById('houseQty').value, 10) || 1;
+        if (qty < 1) qty = 1;
+
+        let total = unitPrice * qty;
+
+        const priceEl = document.getElementById('finalPrice');
+        if (priceEl) {
+            priceEl.innerText = '₪' + total.toLocaleString();
+        }
+    }
+
+    function formatSmartContent() {
+        document.querySelectorAll('.tab-content').forEach(function(tab) {
+            var rawDiv = tab.querySelector('.raw-content');
+            var targetDiv = tab.querySelector('.formatted-content');
+            if (rawDiv && targetDiv) {
+                var lines = rawDiv.innerText.split('\n');
+                var html = '<ul class="smart-list">';
+                lines.forEach(function(line) {
+                    var cleanLine = line.trim();
+                    if (cleanLine.length > 0) {
+                        if (cleanLine.endsWith(':') || cleanLine.endsWith(':\r')) {
+                            html += '</ul><span class="smart-header">' + cleanLine + '</span><ul class="smart-list">';
+                        }
+                        else if (cleanLine.includes(':')) {
+                            var parts = cleanLine.split(':');
+                            var key = parts[0];
+                            var value = parts.slice(1).join(':');
+                            html += '<li><span class="smart-key">' + key + ':</span> ' + value + '</li>';
+                        }
+                        else {
+                            html += '<li>' + cleanLine + '</li>';
+                        }
+                    }
+                });
+                html += '</ul>';
+                targetDiv.innerHTML = html;
+            }
+        });
+    }
+
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            tablinks[i].setAttribute("aria-selected", "false");
+        }
+        document.getElementById(tabName).style.display = "block";
+        setTimeout(() => document.getElementById(tabName).classList.add("active"), 10);
+        evt.currentTarget.className += " active";
+        evt.currentTarget.setAttribute("aria-selected", "true");
+    }
+
+    function setMainMedia(url, type, element) {
+        const wrapper = document.getElementById('mainWrapper');
+        if (type === 'video') {
+            wrapper.innerHTML = `<video src="${url}" controls autoplay playsinline style="width:100%; height:100%; object-fit:cover;">טוען וידאו…</video>`;
+        } else {
+            wrapper.innerHTML = `<img src="${url}" alt="" style="width:100%; height:100%; object-fit:cover;" width="800" height="600" decoding="async">`;
+        }
+        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+        const elem = element.querySelector('img') || element.querySelector('video');
+        if (elem) elem.classList.add('active');
+    }
+
+    const pageUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent("{{ house.title|escapejs }} - דגם מדהים של Click Home");
+
+    function shareWhatsapp() {
+        window.open(`https://wa.me/?text=${pageTitle}%20${pageUrl}`, '_blank');
+    }
+
+    function shareFacebook() {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank');
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert("הקישור הועתק בהצלחה! ניתן להדביק בסטורי או בטיקטוק.");
+        });
+    }
+
+    function nativeShare() {
+        if (navigator.share) {
+            navigator.share({
+                title: "{{ house.title|escapejs }}",
+                text: "תראו את הדגם המדהים הזה שמצאתי בקליק הום!",
+                url: window.location.href
+            }).catch(function() {});
+        } else {
+            copyLink();
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        formatSmartContent();
+        updatePrice();
+    });
+</script>
+{% endblock %}

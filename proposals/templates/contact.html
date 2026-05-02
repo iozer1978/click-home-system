@@ -1,264 +1,119 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צור קשר - Click Home | נתניה, וואטסאפ ומייל</title>
-    <meta name="description" content="צרו קשר עם קליק הום - משרד בנתניה, טלפון 050-3439999, וואטסאפ ומייל. שעות פעילות א'-ה' 09:00–18:00.">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+{% extends "base_site.html" %}
+{% load static %}
 
-    <style>
-        :root { --brand-brown: #8B5A2B; --brand-olive: #6B705C; --bg-cream: #F5F1E8; --white: #ffffff; --dark: #2A2A2A; }
-        body { font-family: 'Heebo', sans-serif; margin: 0; padding: 0; background-color: var(--bg-cream); color: var(--dark); background-image: url('/media/bg-pattern.jpg'); background-size: cover; background-attachment: fixed; }
+{% block body_class %}page-contact{% endblock %}
+{% block title %}צור קשר — Click Home | נתניה, וואטסאפ ומייל{% endblock %}
+{% block meta_description %}צרו קשר עם קליק הום — משרד בנתניה, טלפון 050-3439999, וואטסאפ ומייל. שעות פעילות א׳-ה׳ 09:00–18:00.{% endblock %}
 
-        /* --- Navbar --- */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--brand-brown); }
-        .logo img { height: 50px; }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: 0.2s; }
-        .nav-links a:hover { color: var(--brand-brown); }
-        .nav-links a.active { color: var(--brand-brown); font-weight: 700; border-bottom: 2px solid var(--brand-brown); }
-        .auth-buttons { display: flex; align-items: center; gap: 15px; }
-        .btn-register { background: var(--brand-brown); color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: 0.2s; }
-        .btn-login { color: var(--brand-brown); font-weight: bold; text-decoration: none; border: 2px solid transparent; padding: 8px 15px; border-radius: 50px; }
+{% block content %}
+<div class="page-hero">
+    <h1>דברו איתנו</h1>
+    <p>אנחנו כאן לכל שאלה, התייעצות או סתם לומר שלום</p>
+</div>
 
-        /* --- Page Header --- */
-        .page-header { text-align: center; padding: 60px 20px 40px; background: linear-gradient(to bottom, rgba(139, 90, 43, 0.1), transparent); }
-        .page-header h1 { font-size: 48px; font-weight: 900; color: var(--brand-brown); margin: 0; }
-        .page-header p { font-size: 20px; color: #666; margin-top: 10px; }
+<div class="contact-shell">
+    <div class="contact-grid">
+        <div class="info-panel">
+            <h2 class="site-footer__title" style="color:#fff;border:none;margin-bottom:1.25rem;">פרטי התקשרות</h2>
 
-        /* --- Main Layout --- */
-        .container { max-width: 1200px; margin: 0 auto 60px auto; padding: 0 20px; }
-        .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
-        
-        /* Left Column: Info */
-        .info-col { background: var(--brand-brown); color: white; padding: 50px; position: relative; overflow: hidden; }
-        .info-col::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; }
-        .info-title { font-size: 28px; font-weight: 800; margin-bottom: 30px; }
-        
-        .info-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 25px; font-size: 18px; }
-        .info-item i { background: rgba(255,255,255,0.2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
-        .info-label { font-size: 14px; opacity: 0.8; display: block; margin-bottom: 2px; }
-        
-        .social-links { margin-top: 50px; display: flex; gap: 15px; }
-        .social-btn { background: white; color: var(--brand-brown); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 20px; transition: 0.3s; }
-        .social-btn:hover { transform: translateY(-3px); background: var(--brand-olive); color: white; }
+            <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;">
+                <span style="background:rgba(255,255,255,0.2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
+                <div>
+                    <span style="font-size:0.85rem;opacity:0.85;display:block;">כתובת המשרד והתצוגה</span>
+                    התרופה 6, אזור התעשיה<br>נתניה 4250477
+                </div>
+            </div>
 
-        /* Right Column: Form */
-        .form-col { padding: 50px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--dark); }
-        .form-input, .form-textarea { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Heebo'; font-size: 16px; background: #f9f9f9; transition: 0.3s; box-sizing: border-box; }
-        .form-input:focus, .form-textarea:focus { border-color: var(--brand-brown); background: white; outline: none; }
-        .form-textarea { resize: vertical; height: 150px; }
-        .submit-btn { background: var(--brand-brown); color: white; border: none; padding: 15px 40px; font-size: 18px; font-weight: 800; border-radius: 50px; cursor: pointer; transition: 0.3s; width: 100%; box-shadow: 0 10px 20px rgba(139, 90, 43, 0.2); }
-        .submit-btn:hover { background: #6f4721; transform: translateY(-2px); }
+            <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;">
+                <span style="background:rgba(255,255,255,0.2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-phone-alt" aria-hidden="true"></i></span>
+                <div>
+                    <span style="font-size:0.85rem;opacity:0.85;display:block;">טלפון (משרד)</span>
+                    <a href="tel:+972503439999" style="color:#fff;">050-3439999</a>
+                </div>
+            </div>
 
-        /* Map Section */
-        .map-section { height: 400px; width: 100%; border-radius: 20px; overflow: hidden; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #ddd; }
+            <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;">
+                <span style="background:rgba(255,255,255,0.2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
+                <div>
+                    <span style="font-size:0.85rem;opacity:0.85;display:block;">וואטסאפ (זמין 24/7)</span>
+                    <a href="https://wa.me/972503439999" target="_blank" rel="noopener noreferrer" style="color:#fff;text-decoration:underline;">שלחו הודעה מהירה</a>
+                </div>
+            </div>
 
-        /* FAQ Section */
-        .faq-section { margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
-        .faq-title { text-align: center; font-size: 32px; font-weight: 800; color: var(--brand-brown); margin-bottom: 30px; }
-        .faq-item { background: white; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; overflow: hidden; }
-        .faq-question { padding: 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; background: #fff; transition: 0.2s; }
-        .faq-question:hover { background: #fdfbf7; }
-        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; color: #666; line-height: 1.6; }
-        .faq-answer.open { padding-bottom: 20px; max-height: 200px; }
-        .faq-icon { transition: 0.3s; color: var(--brand-olive); }
-        .faq-item.active .faq-icon { transform: rotate(180deg); }
+            <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;">
+                <span style="background:rgba(255,255,255,0.2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+                <div>
+                    <span style="font-size:0.85rem;opacity:0.85;display:block;">דואר אלקטרוני</span>
+                    <a href="mailto:info@click-home.co.il" style="color:#fff;">info@click-home.co.il</a>
+                </div>
+            </div>
 
-        .footer { text-align: center; margin-top: 60px; padding: 40px; background: white; border-top: 5px solid var(--brand-brown); font-size: 15px; color: #555; }
-        .success-msg { background: #d4edda; color: #155724; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #c3e6cb; display: flex; align-items: center; gap: 10px; }
-
-        @media (max-width: 900px) {
-            .contact-grid { grid-template-columns: 1fr; }
-            .info-col { padding: 30px; }
-            .form-col { padding: 30px; }
-            .navbar { flex-direction: column; gap: 15px; padding: 15px; }
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo">
-            <a href="{% url 'home' %}">
-                <img src="/media/logo.png" alt="Click Home" onerror="this.style.display='none'">
-                <span style="font-weight:900; font-size:24px;">Click Home</span>
-            </a>
+            <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;">
+                <span style="background:rgba(255,255,255,0.2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-clock" aria-hidden="true"></i></span>
+                <div>
+                    <span style="font-size:0.85rem;opacity:0.85;display:block;">שעות פעילות</span>
+                    א׳-ה׳: 09:00 - 18:00<br>
+                    ו׳: 09:00 - 13:00
+                </div>
+            </div>
         </div>
-        <div class="nav-links">
-            <a href="{% url 'home' %}">דף הבית</a>
-            <a href="{% url 'catalog' %}">דגמים</a>
-            <a href="{% url 'about' %}">אודות</a>
-            <a href="{% url 'contact' %}" class="active">צור קשר</a>
-        </div>
-        <div class="auth-buttons">
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" style="text-decoration:none; color:var(--brand-brown);"><i class="fas fa-user-circle"></i> {{ user.first_name }}</a>
-            {% else %}
-                <a href="{% url 'account_login' %}" class="btn-login">התחברות</a>
-            {% endif %}
-        </div>
-    </nav>
 
-    <div class="page-header">
-        <h1>דברו איתנו</h1>
-        <p>אנחנו כאן לכל שאלה, התייעצות או סתם לומר שלום</p>
+        <div class="form-panel">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="contact-name">שם מלא</label>
+                    <input id="contact-name" type="text" name="name" required autocomplete="name" maxlength="100" placeholder="ישראל ישראלי">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="field">
+                        <label for="contact-phone">טלפון</label>
+                        <input id="contact-phone" type="tel" name="phone" required autocomplete="tel" maxlength="30" placeholder="050-0000000">
+                    </div>
+                    <div class="field">
+                        <label for="contact-email">דוא״ל</label>
+                        <input id="contact-email" type="email" name="email" autocomplete="email" maxlength="255" placeholder="example@mail.com">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="contact-subject">נושא הפנייה</label>
+                    <select id="contact-subject" name="subject" class="form-input">
+                        <option value="התעניינות כללית">התעניינות כללית</option>
+                        <option value="בקשה להצעת מחיר">בקשה להצעת מחיר</option>
+                        <option value="תיאום פגישה">תיאום פגישה</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="contact-message">הודעה</label>
+                    <textarea id="contact-message" name="message" rows="5" required maxlength="1500" placeholder="רשמו כאן את שאלתכם…"></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary" style="width:100%;padding:1rem;">שלחו הודעה <i class="fas fa-paper-plane" aria-hidden="true"></i></button>
+            </form>
+        </div>
     </div>
 
-    <div class="container">
-        
-        <div class="contact-grid">
-            <div class="info-col">
-                <div class="info-title">פרטי התקשרות</div>
-                
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div>
-                        <span class="info-label">כתובת המשרד והתצוגה</span>
-                        התרופה 6, אזור התעשיה<br>נתניה 4250477
-                    </div>
-                </div>
+    <div class="map-embed">
+        <iframe title="מפת משרד קליק הום בנתניה" src="https://maps.google.com/maps?q=נתניה%20התרופה%206&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" loading="lazy"></iframe>
+    </div>
 
-                <div class="info-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <div>
-                        <span class="info-label">טלפון (משרד)</span>
-                        050-3439999
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <i class="fab fa-whatsapp"></i>
-                    <div>
-                        <span class="info-label">וואטסאפ (זמין 24/7)</span>
-                        <a href="https://wa.me/972503439999" target="_blank" style="color:white; text-decoration:underline;">שלח הודעה מהירה</a>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <i class="fas fa-envelope"></i>
-                    <div>
-                        <span class="info-label">דואר אלקטרוני</span>
-                        info@click-home.co.il
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <i class="fas fa-clock"></i>
-                    <div>
-                        <span class="info-label">שעות פעילות</span>
-                        א'-ה': 09:00 - 18:00<br>
-                        ו': 09:00 - 13:00
-                    </div>
-                </div>
-
-                <div class="social-links">
-                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-waze"></i></a>
-                </div>
-            </div>
-
-            <div class="form-col">
-                {% if messages %}
-                {% for message in messages %}
-                <div class="success-msg">
-                    <i class="fas fa-check-circle"></i>
-                    <div><strong>{{ message }}</strong><br>תודה שפנית אלינו, נחזור אליך בהקדם האפשרי.</div>
-                </div>
-                {% endfor %}
-                {% elif success %}
-                <div class="success-msg">
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>ההודעה נשלחה בהצלחה!</strong><br>
-                        תודה שפנית אלינו, נחזור אליך בהקדם האפשרי.
-                    </div>
-                </div>
-                {% endif %}
-
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="form-label">שם מלא</label>
-                        <input type="text" name="name" class="form-input" required placeholder="ישראל ישראלי">
-                    </div>
-                    <div style="display:flex; gap:20px;">
-                        <div class="form-group" style="flex:1;">
-                            <label class="form-label">טלפון</label>
-                            <input type="tel" name="phone" class="form-input" required placeholder="050-0000000">
-                        </div>
-                        <div class="form-group" style="flex:1;">
-                            <label class="form-label">דוא"ל</label>
-                            <input type="email" name="email" class="form-input" placeholder="example@mail.com">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">נושא הפנייה</label>
-                        <select name="subject" class="form-input">
-                            <option value="general">התעניינות כללית</option>
-                            <option value="quote">בקשה להצעת מחיר</option>
-                            <option value="meeting">תיאום פגישה</option>
-                            <option value="other">אחר</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">הודעה</label>
-                        <textarea name="message" class="form-textarea" required placeholder="רשום כאן את שאלתך..."></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">שלח הודעה <i class="fas fa-paper-plane"></i></button>
-                </form>
-            </div>
-        </div>
-
-        <div class="map-section">
-            <iframe src="https://maps.google.com/maps?q=נתניה%20התרופה%206&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-        </div>
-
-        <div class="faq-section">
-            <div class="faq-title">שאלות נפוצות</div>
-            
+    <section class="section" aria-labelledby="contact-faq-title">
+        <h2 id="contact-faq-title" class="section__title">שאלות נפוצות</h2>
+        <div class="faq-list" data-faq-accordion data-faq-single="true">
             {% for faq in faqs %}
             <div class="faq-item">
-                <div class="faq-question" onclick="toggleFaq(this)">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="contact-faq-{{ forloop.counter }}">
                     {{ faq.question }}
-                    <i class="fas fa-chevron-down faq-icon"></i>
-                </div>
-                <div class="faq-answer">
-                    {{ faq.answer }}
+                    <span class="faq-item__icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-item__panel" id="contact-faq-{{ forloop.counter }}" hidden>
+                    <p style="margin:0;">{{ faq.answer }}</p>
                 </div>
             </div>
             {% empty %}
-            <p style="text-align:center; color:#666;">טוען שאלות ותשובות...</p>
+            <p style="text-align:center;color:var(--text-muted);">שאלות ותשובות יתעדכנו בקרוב.</p>
             {% endfor %}
         </div>
-
-    </div>
-
-    <div class="footer">
-        <img src="/media/logo.png" alt="Click Home" style="height:60px; opacity:0.8;">
-        <p>קליק הום חברה בע"מ | info@click-home.co.il | 050-3439999</p>
-    </div>
-
-    <script>
-        function toggleFaq(element) {
-            const item = element.parentElement;
-            const answer = item.querySelector('.faq-answer');
-            
-            item.classList.toggle('active');
-            if (item.classList.contains('active')) {
-                answer.style.maxHeight = answer.scrollHeight + "px";
-                answer.classList.add('open');
-            } else {
-                answer.style.maxHeight = null;
-                answer.classList.remove('open');
-            }
-        }
-    </script>
-</body>
-</html>
+    </section>
+</div>
+{% endblock %}
