@@ -180,12 +180,10 @@ USE_I18N = True
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# קודם תמיד proposals/static — כדי ש־Static/ לא ידרוס את העיצוב (site/css/click_home.css).
-# אחר כך Static/ לקבצי legacy (טאבים וכו').
+# אל להוסיף כאן את proposals/static — זה כבר נאסף אוטומטית מ־AppDirectoriesFinder
+# וגרם לאזהרות "duplicate path" ב־collectstatic.
+# Static/ בלבד ל־legacy (טאבים וכו'). אל תשכפל תחת Static/site/ את site/css|js — זה דורס את העיצוב.
 STATICFILES_DIRS = []
-_proposals_static = BASE_DIR / "proposals" / "static"
-if _proposals_static.is_dir():
-    STATICFILES_DIRS.append(str(_proposals_static))
 _static_extra = BASE_DIR / "Static"
 if _static_extra.is_dir():
     STATICFILES_DIRS.append(str(_static_extra))

@@ -27,9 +27,8 @@ _landing_extract/
 /V2.2/
 /Server/
 
-# עותקים תחת Static/ דורסים את proposals/static ב-Django — לא לקומיט
-Static/site/css/click_home.css
-Static/site/js/click_home.js
+# אל לשכפל את עיצוב האתר כאן — כל תוכן תחת Static/site דורס את proposals/static
+Static/site/
 
 # OS
 Thumbs.db
