@@ -46,7 +46,8 @@ CONTACT_CARD_BASE = {
     "brand_name": "Click Home",
     "brand_tagline": "Building Your Dream",
     "company": "Click Home",
-    "website": "https://www.click-home.co.il/en",
+    "website": "https://www.click-home.co.il/en/",
+    "supplier_questionnaire_url": "https://www.click-home.co.il/ssq/",
     "address_lines": [
         "4 Mordechai Kostelitz St.",
         "Sha'ar Hadera Towers, Israel",
