@@ -26,13 +26,29 @@
     }
 
     var i18n = {
-        en: { title: "Supplier Qualification Form", subtitle: "Advanced construction systems and modular solutions supplier evaluation.", stepLabel: "Step", next: "Next", previous: "Previous", submit: "Submit Qualification" },
-        zh: { title: "供应商资质评估表", subtitle: "先进建筑系统与模块化解决方案供应商评估。", stepLabel: "步骤", next: "下一步", previous: "上一步", submit: "提交评估" },
-        he: { title: "טופס סיווג ספקים", subtitle: "הערכת ספקים לפתרונות בנייה מתקדמים ומודולריים.", stepLabel: "שלב", next: "הבא", previous: "הקודם", submit: "שליחת הסיווג" }
+        en: {
+            title: "Supplier Qualification Form",
+            subtitle: "Advanced construction systems and modular solutions supplier evaluation.",
+            introTitle: "Why We Request This Form",
+            introBody: "This supplier qualification form helps our engineering and sales teams evaluate technical compatibility, compliance, and market fit for your construction system. You are not required to complete every field, but the more information you provide, the faster and more accurately we can make qualification decisions and support future sales discussions with our clients regarding your products.",
+            stepLabel: "Step",
+            next: "Next",
+            previous: "Previous",
+            submit: "Submit Qualification"
+        },
+        zh: {
+            title: "供应商资质评估表",
+            subtitle: "先进建筑系统与模块化解决方案供应商评估。",
+            introTitle: "为什么我们需要此表单",
+            introBody: "此供应商资质表可帮助我们的工程与销售团队评估您体系的技术匹配性、合规性与市场适配度。您不必填写所有字段，但提供的信息越完整，我们就越能更快、更准确地完成准入评估，并在未来与客户沟通时更好地介绍您的产品。",
+            stepLabel: "步骤",
+            next: "下一步",
+            previous: "上一步",
+            submit: "提交评估"
+        }
     };
 
     var stepTitlesZh = { 1: "第1步：公司信息", 2: "第2步：产品/建造体系", 3: "第3步：标准与认证", 4: "第4步：结构钢 / LGS 质量", 5: "第5步：防火性能", 6: "第6步：保温隔热", 7: "第7步：隔音性能", 8: "第8步：防潮防水防霉与耐候性", 9: "第9步：完整墙体/屋面/地面构造", 10: "第10步：生产与质量管理", 11: "第11步：安装与工程支持", 12: "第12步：物流与包装", 13: "第13步：商务条款", 14: "第14步：经验与案例", 15: "第15步：最终声明" };
-    var stepTitlesHe = { 1: "שלב 1: פרטי חברה", 2: "שלב 2: מוצר / מערכת בנייה", 3: "שלב 3: תקנים ותעודות", 4: "שלב 4: איכות פלדה / LGS", 5: "שלב 5: עמידות אש", 6: "שלב 6: בידוד תרמי", 7: "שלב 7: בידוד אקוסטי", 8: "שלב 8: עמידות ללחות/מים/עובש ומזג אוויר", 9: "שלב 9: שקיפות מכלול קיר/גג/רצפה", 10: "שלב 10: ייצור ובקרת איכות", 11: "שלב 11: תמיכה בהתקנה והנדסה", 12: "שלב 12: לוגיסטיקה ואריזה", 13: "שלב 13: תנאים מסחריים", 14: "שלב 14: ניסיון ורפרנסים", 15: "שלב 15: הצהרות סופיות" };
 
     var staticTextZh = {
         "Israeli references: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.": "以色列参考标准：SI 2262、SI 412、SI 413、SI 414、SI 921/SI 755、SI 1045、SI 1004。",
@@ -44,27 +60,18 @@
         "We can provide additional documentation upon request.": "我们可按要求补充提供更多资料。"
     };
 
-    var staticTextHe = {
-        "Israeli references: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.": "תקני ייחוס ישראליים: SI 2262, SI 412, SI 413, SI 414, SI 921/SI 755, SI 1045, SI 1004.",
-        "Full wall section upload is mandatory and critical for qualification.": "העלאת חתך קיר מלא היא דרישת חובה קריטית לסיווג.",
-        "By submitting, you allow our technical team to review this data for qualification purposes.": "בשליחה, הנך מאשר/ת לצוות הטכני שלנו לבדוק נתונים אלה לצורך סיווג.",
-        "We confirm all answers are accurate.": "אנו מאשרים שכל התשובות מדויקות.",
-        "We understand that missing documents may disqualify us.": "אנו מבינים שמסמכים חסרים עלולים לפסול אותנו.",
-        "We agree the documentation may be reviewed by engineers and consultants.": "אנו מסכימים שהמסמכים ייבדקו על ידי מהנדסים ויועצים.",
-        "We can provide additional documentation upon request.": "אנו יכולים לספק מסמכים נוספים לפי דרישה."
-    };
 
     function each(list, callback) {
         for (var i = 0; i < list.length; i += 1) callback(list[i], i);
     }
 
     function setLanguage(lang) {
+        lang = lang === "zh" ? "zh" : "en";
         var bundle = i18n[lang] || i18n.en;
         document.documentElement.lang = lang;
-        document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
+        document.documentElement.dir = "ltr";
         if (document.body) {
-            if (lang === "he") document.body.classList.add("lang-he");
-            else document.body.classList.remove("lang-he");
+            document.body.classList.remove("lang-he");
         }
         languageInput.value = lang;
         each(languageButtons, function (btn) {
@@ -97,7 +104,6 @@
             }
             stepNo = index + 1;
             if (lang === "zh") titleNode.textContent = stepTitlesZh[stepNo] || titleNode.getAttribute("data-en-text");
-            else if (lang === "he") titleNode.textContent = stepTitlesHe[stepNo] || titleNode.getAttribute("data-en-text");
             else titleNode.textContent = titleNode.getAttribute("data-en-text");
         });
 
@@ -105,8 +111,8 @@
             var text = node.textContent.trim();
             var mapped;
             if (!node.getAttribute("data-en-text")) node.setAttribute("data-en-text", text);
-            if (lang === "zh" || lang === "he") {
-                mapped = lang === "zh" ? staticTextZh[node.getAttribute("data-en-text")] : staticTextHe[node.getAttribute("data-en-text")];
+            if (lang === "zh") {
+                mapped = staticTextZh[node.getAttribute("data-en-text")];
                 if (mapped) node.textContent = mapped;
             } else {
                 node.textContent = node.getAttribute("data-en-text");
@@ -129,7 +135,6 @@
                 return;
             }
             if (lang === "zh") translated = dict.zh || dict.en || baseText;
-            else if (lang === "he") translated = dict.he || dict.en || baseText;
             else translated = dict.en || baseText;
             if (baseText.indexOf("*") !== -1 && translated.indexOf("*") === -1) translated += " *";
             span.textContent = translated;
@@ -153,7 +158,6 @@
                     return;
                 }
                 if (lang === "zh") option.textContent = optionMap.zh || optionMap.en || option.getAttribute("data-en-text");
-                else if (lang === "he") option.textContent = optionMap.he || optionMap.en || option.getAttribute("data-en-text");
                 else option.textContent = optionMap.en || option.getAttribute("data-en-text");
             });
         });

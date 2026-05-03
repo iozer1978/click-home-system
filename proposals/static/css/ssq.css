@@ -41,6 +41,25 @@ body.lang-he {
     padding: 16px 20px;
 }
 
+.intro-card {
+    margin-top: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.intro-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+}
+
+.intro-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
 .brand {
     display: flex;
     align-items: center;

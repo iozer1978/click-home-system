@@ -21,9 +21,16 @@
             <div class="brand-meta">
                 <button class="lang-btn is-active" type="button" data-lang="en" onclick="window.ssqFallbackSetLanguage && window.ssqFallbackSetLanguage('en')">English</button>
                 <button class="lang-btn" type="button" data-lang="zh" onclick="window.ssqFallbackSetLanguage && window.ssqFallbackSetLanguage('zh')">中文</button>
-                <button class="lang-btn" type="button" data-lang="he" onclick="window.ssqFallbackSetLanguage && window.ssqFallbackSetLanguage('he')">עברית</button>
             </div>
         </header>
+
+        <section class="intro-card">
+            <h2 data-i18n="introTitle">Why We Request This Form</h2>
+            <p data-i18n="introBody">
+                This supplier qualification form helps our engineering and sales teams evaluate technical compatibility, compliance, and market fit for your construction system.
+                You are not required to complete every field, but the more information you provide, the faster and more accurately we can make qualification decisions and support future sales discussions with our clients regarding your products.
+            </p>
+        </section>
 
         {% if messages %}
             <section class="alerts">
@@ -342,9 +349,13 @@
     <script id="ssq-meta" type="application/json">{{ form_payload|safe }}</script>
     <script>
         window.ssqFallbackSetLanguage = function (lang) {
+            lang = lang === "zh" ? "zh" : "en";
             if (window.ssqSetLanguage) {
-                window.ssqSetLanguage(lang);
-                return;
+                try {
+                    window.ssqSetLanguage(lang);
+                } catch (e) {
+                    // Continue with inline fallback translation.
+                }
             }
             var metaNode = document.getElementById("ssq-meta");
             var meta = {};
@@ -360,6 +371,8 @@
             var langInput = document.getElementById("language-input");
             var buttons = document.querySelectorAll(".lang-btn");
             var stepLabel = document.querySelector("[data-i18n='stepLabel']");
+            var introTitleNode = document.querySelector("[data-i18n='introTitle']");
+            var introBodyNode = document.querySelector("[data-i18n='introBody']");
             var nextBtn = document.getElementById("next-btn");
             var prevBtn = document.getElementById("prev-btn");
             var submitBtn = document.getElementById("submit-btn");
@@ -400,21 +413,14 @@
             if (langInput) {
                 langInput.value = lang;
             }
-            if (lang === "he") {
-                document.documentElement.lang = "he";
-                document.documentElement.dir = "rtl";
-                if (titleNode) titleNode.textContent = "טופס סיווג ספקים";
-                if (subtitleNode) subtitleNode.textContent = "הערכת ספקים לפתרונות בנייה מתקדמים ומודולריים.";
-                if (stepLabel) stepLabel.textContent = "שלב";
-                if (nextBtn) nextBtn.textContent = "הבא";
-                if (prevBtn) prevBtn.textContent = "הקודם";
-                if (submitBtn) submitBtn.textContent = "שליחת הסיווג";
-            } else if (lang === "zh") {
+            if (lang === "zh") {
                 document.documentElement.lang = "zh";
                 document.documentElement.dir = "ltr";
                 if (titleNode) titleNode.textContent = "供应商资质评估表";
                 if (subtitleNode) subtitleNode.textContent = "先进建筑系统与模块化解决方案供应商评估。";
                 if (stepLabel) stepLabel.textContent = "步骤";
+                if (introTitleNode) introTitleNode.textContent = "为什么我们需要此表单";
+                if (introBodyNode) introBodyNode.textContent = "此供应商资质表可帮助我们的工程与销售团队评估您体系的技术匹配性、合规性与市场适配度。您不必填写所有字段，但提供的信息越完整，我们就越能更快、更准确地完成准入评估，并在未来与客户沟通时更好地介绍您的产品。";
                 if (nextBtn) nextBtn.textContent = "下一步";
                 if (prevBtn) prevBtn.textContent = "上一步";
                 if (submitBtn) submitBtn.textContent = "提交评估";
@@ -424,6 +430,8 @@
                 if (titleNode) titleNode.textContent = "Supplier Qualification Form";
                 if (subtitleNode) subtitleNode.textContent = "Advanced construction systems and modular solutions supplier evaluation.";
                 if (stepLabel) stepLabel.textContent = "Step";
+                if (introTitleNode) introTitleNode.textContent = "Why We Request This Form";
+                if (introBodyNode) introBodyNode.textContent = "This supplier qualification form helps our engineering and sales teams evaluate technical compatibility, compliance, and market fit for your construction system. You are not required to complete every field, but the more information you provide, the faster and more accurately we can make qualification decisions and support future sales discussions with our clients regarding your products.";
                 if (nextBtn) nextBtn.textContent = "Next";
                 if (prevBtn) prevBtn.textContent = "Previous";
                 if (submitBtn) submitBtn.textContent = "Submit Qualification";
@@ -434,8 +442,10 @@
                 var h2 = steps[s].querySelector("h2");
                 if (!h2) continue;
                 var stepNo = s + 1;
-                if (lang === "he" && stepTitlesHe[stepNo]) h2.textContent = stepTitlesHe[stepNo];
-                else if (lang === "en" && stepTitlesEn[stepNo]) h2.textContent = stepTitlesEn[stepNo];
+                if (lang === "en" && stepTitlesEn[stepNo]) h2.textContent = stepTitlesEn[stepNo];
+                else if (lang === "zh") {
+                    // Keep step title generated by ssq_form.js when available.
+                }
             }
 
             var questionLabels = meta.question_labels || {};
@@ -469,8 +479,7 @@
                         continue;
                     }
                     var optionMap = mapping[option.value] || {};
-                    if (lang === "he") option.textContent = optionMap.he || optionMap.en || option.getAttribute("data-en-text");
-                    else if (lang === "zh") option.textContent = optionMap.zh || optionMap.en || option.getAttribute("data-en-text");
+                    if (lang === "zh") option.textContent = optionMap.zh || optionMap.en || option.getAttribute("data-en-text");
                     else option.textContent = optionMap.en || option.getAttribute("data-en-text");
                 }
             }
