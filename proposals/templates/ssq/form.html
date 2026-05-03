@@ -1,11 +1,12 @@
 {% load static %}
+{% now "U" as cache_bust %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supplier Qualification Form | Click Home</title>
-    <link rel="stylesheet" href="{% static 'css/ssq.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ssq.css' %}?v={{ cache_bust }}">
 </head>
 <body>
     <main class="ssq-shell">
@@ -18,9 +19,9 @@
                 </div>
             </div>
             <div class="brand-meta">
-                <button class="lang-btn is-active" type="button" data-lang="en">English</button>
-                <button class="lang-btn" type="button" data-lang="zh">中文</button>
-                <button class="lang-btn" type="button" data-lang="he">עברית</button>
+                <button class="lang-btn is-active" type="button" data-lang="en" onclick="window.ssqFallbackSetLanguage && window.ssqFallbackSetLanguage('en')">English</button>
+                <button class="lang-btn" type="button" data-lang="zh" onclick="window.ssqFallbackSetLanguage && window.ssqFallbackSetLanguage('zh')">中文</button>
+                <button class="lang-btn" type="button" data-lang="he" onclick="window.ssqFallbackSetLanguage && window.ssqFallbackSetLanguage('he')">עברית</button>
             </div>
         </header>
 
@@ -339,6 +340,146 @@
     </main>
 
     <script id="ssq-meta" type="application/json">{{ form_payload|safe }}</script>
-    <script src="{% static 'js/ssq_form.js' %}"></script>
+    <script>
+        window.ssqFallbackSetLanguage = function (lang) {
+            if (window.ssqSetLanguage) {
+                window.ssqSetLanguage(lang);
+                return;
+            }
+            var metaNode = document.getElementById("ssq-meta");
+            var meta = {};
+            if (metaNode) {
+                try {
+                    meta = JSON.parse(metaNode.textContent || "{}");
+                } catch (e) {
+                    meta = {};
+                }
+            }
+            var titleNode = document.querySelector("[data-i18n='title']");
+            var subtitleNode = document.querySelector("[data-i18n='subtitle']");
+            var langInput = document.getElementById("language-input");
+            var buttons = document.querySelectorAll(".lang-btn");
+            var stepLabel = document.querySelector("[data-i18n='stepLabel']");
+            var nextBtn = document.getElementById("next-btn");
+            var prevBtn = document.getElementById("prev-btn");
+            var submitBtn = document.getElementById("submit-btn");
+            var stepTitlesHe = {
+                1: "שלב 1: פרטי חברה",
+                2: "שלב 2: מוצר / מערכת בנייה",
+                3: "שלב 3: תקנים ותעודות",
+                4: "שלב 4: איכות פלדה / LGS",
+                5: "שלב 5: עמידות אש",
+                6: "שלב 6: בידוד תרמי",
+                7: "שלב 7: בידוד אקוסטי",
+                8: "שלב 8: עמידות ללחות/מים/עובש ומזג אוויר",
+                9: "שלב 9: שקיפות מכלול קיר/גג/רצפה",
+                10: "שלב 10: ייצור ובקרת איכות",
+                11: "שלב 11: תמיכה בהתקנה והנדסה",
+                12: "שלב 12: לוגיסטיקה ואריזה",
+                13: "שלב 13: תנאים מסחריים",
+                14: "שלב 14: ניסיון ורפרנסים",
+                15: "שלב 15: הצהרות סופיות"
+            };
+            var stepTitlesEn = {
+                1: "Step 1: Company Details",
+                2: "Step 2: Product / Construction System",
+                3: "Step 3: Standards & Certifications",
+                4: "Step 4: Structural Steel / LGS Quality",
+                5: "Step 5: Fire Resistance",
+                6: "Step 6: Thermal Insulation",
+                7: "Step 7: Acoustic Insulation",
+                8: "Step 8: Moisture, Water, Mold & Weather Resistance",
+                9: "Step 9: Full Wall / Roof / Floor Assembly",
+                10: "Step 10: Manufacturing & Quality Control",
+                11: "Step 11: Installation & Engineering Support",
+                12: "Step 12: Logistics & Packaging",
+                13: "Step 13: Commercial Terms",
+                14: "Step 14: Experience & References",
+                15: "Step 15: Final Declarations"
+            };
+            if (langInput) {
+                langInput.value = lang;
+            }
+            if (lang === "he") {
+                document.documentElement.lang = "he";
+                document.documentElement.dir = "rtl";
+                if (titleNode) titleNode.textContent = "טופס סיווג ספקים";
+                if (subtitleNode) subtitleNode.textContent = "הערכת ספקים לפתרונות בנייה מתקדמים ומודולריים.";
+                if (stepLabel) stepLabel.textContent = "שלב";
+                if (nextBtn) nextBtn.textContent = "הבא";
+                if (prevBtn) prevBtn.textContent = "הקודם";
+                if (submitBtn) submitBtn.textContent = "שליחת הסיווג";
+            } else if (lang === "zh") {
+                document.documentElement.lang = "zh";
+                document.documentElement.dir = "ltr";
+                if (titleNode) titleNode.textContent = "供应商资质评估表";
+                if (subtitleNode) subtitleNode.textContent = "先进建筑系统与模块化解决方案供应商评估。";
+                if (stepLabel) stepLabel.textContent = "步骤";
+                if (nextBtn) nextBtn.textContent = "下一步";
+                if (prevBtn) prevBtn.textContent = "上一步";
+                if (submitBtn) submitBtn.textContent = "提交评估";
+            } else {
+                document.documentElement.lang = "en";
+                document.documentElement.dir = "ltr";
+                if (titleNode) titleNode.textContent = "Supplier Qualification Form";
+                if (subtitleNode) subtitleNode.textContent = "Advanced construction systems and modular solutions supplier evaluation.";
+                if (stepLabel) stepLabel.textContent = "Step";
+                if (nextBtn) nextBtn.textContent = "Next";
+                if (prevBtn) prevBtn.textContent = "Previous";
+                if (submitBtn) submitBtn.textContent = "Submit Qualification";
+            }
+
+            var steps = document.querySelectorAll(".step");
+            for (var s = 0; s < steps.length; s += 1) {
+                var h2 = steps[s].querySelector("h2");
+                if (!h2) continue;
+                var stepNo = s + 1;
+                if (lang === "he" && stepTitlesHe[stepNo]) h2.textContent = stepTitlesHe[stepNo];
+                else if (lang === "en" && stepTitlesEn[stepNo]) h2.textContent = stepTitlesEn[stepNo];
+            }
+
+            var questionLabels = meta.question_labels || {};
+            var labels = document.querySelectorAll("#ssq-form label");
+            for (var j = 0; j < labels.length; j += 1) {
+                var labelNode = labels[j];
+                var span = labelNode.querySelector("span");
+                var field = labelNode.querySelector("input, select, textarea");
+                if (!span || !field || !field.name) continue;
+                if (!span.getAttribute("data-en-text")) span.setAttribute("data-en-text", span.textContent.trim());
+                var dict = questionLabels[field.name] || {};
+                var base = span.getAttribute("data-en-text");
+                var translated = base;
+                if (lang === "he") translated = dict.he || dict.en || base;
+                else if (lang === "zh") translated = dict.zh || dict.en || base;
+                else translated = dict.en || base;
+                if (base.indexOf("*") !== -1 && translated.indexOf("*") === -1) translated += " *";
+                span.textContent = translated;
+            }
+
+            var choiceLabels = meta.choice_labels || {};
+            var selects = document.querySelectorAll("#ssq-form select");
+            for (var si = 0; si < selects.length; si += 1) {
+                var select = selects[si];
+                var mapping = choiceLabels[select.name] || {};
+                for (var oi = 0; oi < select.options.length; oi += 1) {
+                    var option = select.options[oi];
+                    if (!option.getAttribute("data-en-text")) option.setAttribute("data-en-text", option.textContent);
+                    if (!option.value) {
+                        option.textContent = lang === "he" ? "בחר" : (lang === "zh" ? "请选择" : "Select");
+                        continue;
+                    }
+                    var optionMap = mapping[option.value] || {};
+                    if (lang === "he") option.textContent = optionMap.he || optionMap.en || option.getAttribute("data-en-text");
+                    else if (lang === "zh") option.textContent = optionMap.zh || optionMap.en || option.getAttribute("data-en-text");
+                    else option.textContent = optionMap.en || option.getAttribute("data-en-text");
+                }
+            }
+            for (var i = 0; i < buttons.length; i += 1) {
+                if (buttons[i].getAttribute("data-lang") === lang) buttons[i].classList.add("is-active");
+                else buttons[i].classList.remove("is-active");
+            }
+        };
+    </script>
+    <script src="{% static 'js/ssq_form.js' %}?v={{ cache_bust }}"></script>
 </body>
 </html>
