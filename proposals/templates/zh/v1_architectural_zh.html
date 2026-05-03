@@ -1,16 +1,16 @@
 {% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hans">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click Home | Premium Prefab Living in Israel</title>
-  <meta name="description" content="Click Home delivers premium container, capsule and prefab homes across Israel - modern design, fast delivery, and trusted quality from concept to completion." />
+  <title>Click Home | 以色列高端预制住宅</title>
+  <meta name="description" content="Click Home 在以色列提供集装箱、胶囊房与装配式轻钢结构住宅——现代设计、快速交付、从概念到落地全流程品质保障。" />
   <link rel="alternate" hreflang="en" href="https://www.click-home.co.il/en/" />
   <link rel="alternate" hreflang="zh-Hans" href="https://www.click-home.co.il/zh/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#f5f1e8;
@@ -26,7 +26,7 @@
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:Inter,Arial,sans-serif;
+      font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",Inter,Arial,sans-serif;
       background:
         linear-gradient(rgba(245,241,232,.92),rgba(245,241,232,.92)),
         var(--bg-art) center top/cover no-repeat fixed,
@@ -35,7 +35,7 @@
     }
     .wrap{width:min(1180px,92vw);margin:0 auto}
     .topnav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-    .topnav .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+    .topnav .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;flex-wrap:wrap;gap:10px}
     .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--brown);font-weight:700}
     .brand img{
       height:72px;
@@ -44,21 +44,21 @@
       box-shadow:0 6px 18px rgba(79,60,35,.18);
     }
     .brand span{
-      font-size:1.7rem;
+      font-size:1.55rem;
       letter-spacing:.3px;
-      font-family:"Playfair Display",serif;
+      font-family:"Playfair Display","Noto Sans SC",serif;
       font-weight:700;
     }
-    .links{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+    .links{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
     .links a{text-decoration:none;color:var(--ink);font-weight:500}
     .links a:hover{color:var(--brown)}
     .lang{font-size:.88rem;color:var(--muted)}
     .lang a{color:var(--brown);font-weight:600}
 
     .hero{padding:52px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:stretch}
-    h1,h2,h3{font-family:"Playfair Display",serif;line-height:1.15;margin:0}
-    h1{font-size:clamp(2rem,4vw,3.4rem)}
-    .subtitle{margin-top:18px;color:var(--muted);line-height:1.8;font-size:1.05rem}
+    h1,h2,h3{font-family:"Noto Sans SC","Playfair Display",serif;line-height:1.25;margin:0}
+    h1{font-size:clamp(1.75rem,3.8vw,2.75rem);font-weight:700}
+    .subtitle{margin-top:18px;color:var(--muted);line-height:1.85;font-size:1.05rem}
     .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
     .btn{padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:8px}
     .btn.primary{background:var(--brown);color:#fff}
@@ -73,7 +73,7 @@
       border-radius:999px;
       background:rgba(255,255,255,.84);
       color:#5f5750;
-      font-size:1.05rem;
+      font-size:1rem;
       font-weight:700;
       box-shadow:0 8px 24px rgba(79,60,35,.12);
     }
@@ -92,44 +92,44 @@
     .section-head p{margin:0;color:var(--muted)}
     .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
     .value{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
-    .value h3{font-size:1.25rem;color:var(--brown);margin-bottom:8px}
-    .value p{margin:0;color:var(--muted);line-height:1.7}
+    .value h3{font-size:1.2rem;color:var(--brown);margin-bottom:8px}
+    .value p{margin:0;color:var(--muted);line-height:1.75}
 
     .category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
     .category{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
     .category .img{height:170px;background:#f1ebde center/cover no-repeat}
     .category .body{padding:14px 14px 16px}
-    .category h3{font-size:1.2rem;margin-bottom:6px}
-    .category p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.6}
+    .category h3{font-size:1.15rem;margin-bottom:6px}
+    .category p{margin:0;color:var(--muted);font-size:.94rem;line-height:1.65}
 
     .process{background:var(--dark);color:#f5f1e8;margin-top:18px}
     .process .wrap{padding:40px 0}
     .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
     .step{border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:14px;background:rgba(255,255,255,.03)}
-    .step b{display:block;color:#d9b27d;margin-bottom:8px}
-    .step p{margin:0;color:#d6d0c6;font-size:.92rem;line-height:1.6}
+    .step b{display:block;color:#d9b27d;margin-bottom:8px;font-family:"Noto Sans SC",sans-serif}
+    .step p{margin:0;color:#d6d0c6;font-size:.9rem;line-height:1.65}
 
     .contact{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .person{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
-    .person h3{font-size:1.28rem}
+    .person h3{font-size:1.25rem}
     .person .role{margin:5px 0 10px;color:var(--olive);font-weight:600}
     .person p{margin:4px 0;color:#4f4a41}
 
     footer{margin-top:28px;background:#fff;border-top:4px solid var(--brown)}
-    footer .wrap{padding:28px 0;color:#6b6457;font-size:.95rem;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    footer .wrap{padding:28px 0;color:#6b6457;font-size:.94rem;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     footer b{color:var(--brown)}
 
     @media (max-width:980px){
       .hero{grid-template-columns:1fr}
       .grid-3,.category-grid,.steps,.contact{grid-template-columns:1fr 1fr}
       .brand img{height:58px}
-      .brand span{font-size:1.45rem}
+      .brand span{font-size:1.35rem}
     }
     @media (max-width:760px){
       .links .nav-main{display:none}
       .grid-3,.category-grid,.steps,.contact{grid-template-columns:1fr}
       .brand img{height:52px}
-      .brand span{font-size:1.28rem}
+      .brand span{font-size:1.22rem}
     }
   </style>
 </head>
@@ -137,17 +137,17 @@
   <header class="topnav">
     <div class="wrap row">
       <a class="brand" href="https://www.click-home.co.il/">
-        <img src="{% static 'en_landing/img/logo-official.jpeg' %}" alt="Click Home logo">
+        <img src="{% static 'en_landing/img/logo-official.jpeg' %}" alt="Click Home">
         <span>Click Home</span>
       </a>
       <nav class="links">
         <span class="nav-main">
-          <a href="#about">About</a>
-          <a href="#categories">Solutions</a>
-          <a href="#process">Process</a>
-          <a href="#contact">Contact</a>
+          <a href="#about">关于</a>
+          <a href="#categories">方案</a>
+          <a href="#process">流程</a>
+          <a href="#contact">联系</a>
         </span>
-        <span class="lang"><strong>English</strong> · <a href="/zh/">中文</a></span>
+        <span class="lang"><a href="/en/">English</a> · <strong>中文</strong></span>
       </nav>
     </div>
   </header>
@@ -155,22 +155,22 @@
   <main>
     <section class="wrap hero">
       <div>
-        <h1>Luxury. Speed. Certainty.<br>Modern homes delivered across Israel.</h1>
+        <h1>奢华 · 迅捷 · 可靠<br>现代预制住宅，覆盖以色列全境交付。</h1>
         <p class="subtitle">
-          Click Home is a premium Israeli brand for container homes, capsule units and prefabricated light-construction residences.
-          We combine elegant design, engineering quality and streamlined delivery - from planning to final installation.
+          Click Home 是以色列高端预制住宅品牌，涵盖集装箱住宅、胶囊单元与装配式轻钢结构住宅。
+          我们将美学设计、工程品质与高效交付相结合——从方案规划到落地安装。
         </p>
         <div class="brand-signature">
           <img src="{% static 'en_landing/img/logo-official.jpeg' %}" alt="Click Home">
-          <span>Click Home - Building Your Dreams</span>
+          <span>Click Home — 筑造您的理想居所</span>
         </div>
         <div class="cta">
-          <a class="btn primary" href="https://www.click-home.co.il/models/">View Our Models</a>
-          <a class="btn secondary" href="https://wa.me/972503439999" target="_blank" rel="noopener">Talk to an Expert</a>
+          <a class="btn primary" href="https://www.click-home.co.il/models/">查看户型目录</a>
+          <a class="btn secondary" href="https://wa.me/972503439999" target="_blank" rel="noopener">咨询顾问</a>
         </div>
       </div>
       <div class="hero-card">
-        <video autoplay muted loop playsinline preload="metadata" aria-label="Modern A-frame home cinematic video">
+        <video autoplay muted loop playsinline preload="metadata" aria-label="现代住宅展示视频">
           <source src="{% static 'images/Gen-4_5 - Create a highly realistic cinematic video from this modern A-frame house imageIMPORTANT —.gen-4_5 - create a highly realistic cinematic video from this modern a-frame house imageimportant —.mp4' %}" type="video/mp4">
         </video>
       </div>
@@ -178,89 +178,89 @@
 
     <section class="wrap" id="about">
       <div class="section-head">
-        <h2>Built for discerning clients</h2>
-        <p>High design standards. Practical execution. Trusted long-term value.</p>
+        <h2>为挑剔客户而造</h2>
+        <p>高标准设计，务实落地，值得信赖的长期价值。</p>
       </div>
       <div class="grid-3">
         <article class="value">
-          <h3>Premium Design Language</h3>
-          <p>Contemporary architecture with clean lines, warm materials and flexible layouts for private and commercial projects.</p>
+          <h3>高端设计语言</h3>
+          <p>当代建筑美学：简洁线条、温润材质与灵活平面，适配私人与商业项目。</p>
         </article>
         <article class="value">
-          <h3>Engineering-First Quality</h3>
-          <p>Durable systems, insulation-focused specs and proven components selected for Israeli climate and day-to-day reliability.</p>
+          <h3>工程优先的品质</h3>
+          <p>耐久体系、重保温与节能选型，针对以色列气候与日常使用精选可靠部品。</p>
         </article>
         <article class="value">
-          <h3>Fast, Controlled Delivery</h3>
-          <p>A streamlined process that shortens timelines and reduces on-site complexity compared with traditional construction.</p>
+          <h3>快速且可控的交付</h3>
+          <p>流程紧凑可追踪，缩短工期并降低现场复杂度，优于传统建造路径。</p>
         </article>
       </div>
     </section>
 
     <section class="wrap" id="categories">
       <div class="section-head">
-        <h2>Our Solution Portfolio</h2>
-        <p>Curated product lines for modern living, hospitality and business use.</p>
+        <h2>解决方案矩阵</h2>
+        <p>面向现代居住、酒店旅居与商业场景的精选产品线。</p>
       </div>
       <div class="category-grid">
         <article class="category">
           <div class="img" style="background-image:url('{% static 'en_landing/img/cat-standard.png' %}')"></div>
-          <div class="body"><h3>Standard Living Containers</h3><p>Efficient, elegant homes with optimized footprints and modern interiors.</p></div>
+          <div class="body"><h3>标准居住集装箱</h3><p>高效且优雅的居住单元，优化占地面积与现代室内体验。</p></div>
         </article>
         <article class="category">
           <div class="img" style="background-image:url('{% static 'en_landing/img/cat-expandable.png' %}')"></div>
-          <div class="body"><h3>Expandable Units</h3><p>Smart mobile structures that open into spacious, comfortable living environments.</p></div>
+          <div class="body"><h3>可扩展单元</h3><p>可拓展的移动结构，展开后获得宽敞舒适的居住空间。</p></div>
         </article>
         <article class="category">
           <div class="img" style="background-image:url('{% static 'en_landing/img/cat-capsule.png' %}')"></div>
-          <div class="body"><h3>Capsule Homes</h3><p>Compact premium units for urban projects, resorts and short-stay concepts.</p></div>
+          <div class="body"><h3>胶囊住宅</h3><p>紧凑型高端单元，适用于城市更新、度假村与短租场景。</p></div>
         </article>
         <article class="category">
           <div class="img" style="background-image:url('{% static 'en_landing/img/cat-modular.png' %}')"></div>
-          <div class="body"><h3>Modular Complexes</h3><p>Scalable multi-unit systems for residential compounds, offices and public use.</p></div>
+          <div class="body"><h3>模块化建筑群</h3><p>可规模化复制的多单元系统：住宅组团、办公与公共用途。</p></div>
         </article>
         <article class="category">
           <div class="img" style="background-image:url('{% static 'en_landing/img/cat-commercial.png' %}')"></div>
-          <div class="body"><h3>Commercial Solutions</h3><p>Retail, cafe and branded spaces designed for fast deployment and visual impact.</p></div>
+          <div class="body"><h3>商业空间方案</h3><p>零售、餐饮与品牌快闪空间——快速部署与强视觉冲击。</p></div>
         </article>
         <article class="category">
           <div class="img" style="background-image:url('{% static 'en_landing/img/cat-prefab.png' %}')"></div>
-          <div class="body"><h3>Prefab Light Construction</h3><p>Full-scale residential and commercial buildings with premium finishing options.</p></div>
+          <div class="body"><h3>装配式轻型建筑</h3><p>全尺度住宅与商业建筑，可选高端饰面与系统化交付。</p></div>
         </article>
       </div>
     </section>
 
     <section class="process" id="process">
       <div class="wrap">
-        <h2>Our Client Journey</h2>
+        <h2>客户服务旅程</h2>
         <div class="steps">
-          <article class="step"><b>01 · Discovery</b><p>Understand your vision, budget and site constraints with our advisory team.</p></article>
-          <article class="step"><b>02 · Design & Spec</b><p>Define layout, finishes and technical package to match your exact use case.</p></article>
-          <article class="step"><b>03 · Production</b><p>Factory-managed execution with quality checks and clear milestone visibility.</p></article>
-          <article class="step"><b>04 · Delivery</b><p>Transport, installation and handover with support through final readiness.</p></article>
+          <article class="step"><b>01 · 需求沟通</b><p>与顾问团队厘清愿景、预算与场地条件。</p></article>
+          <article class="step"><b>02 · 设计与规格</b><p>确定平面、饰面与技术配置，贴合您的使用场景。</p></article>
+          <article class="step"><b>03 · 生产制造</b><p>工厂化执行，质量节点透明，里程碑清晰可见。</p></article>
+          <article class="step"><b>04 · 运输与交付</b><p>运输、安装与移交，交付末段持续支持。</p></article>
         </div>
       </div>
     </section>
 
     <section class="wrap" id="contact">
       <div class="section-head">
-        <h2>Direct Contact</h2>
-        <p>Speak with the founders and get a tailored recommendation.</p>
+        <h2>直接联络创始人</h2>
+        <p>获取一对一方案建议与定制化推荐。</p>
       </div>
       <div class="contact">
         <article class="person">
-          <h3>Itzik Ozer</h3>
-          <div class="role">Founder · VP Global Sourcing</div>
-          <p><b>Phone:</b> +972-54-208-2082</p>
-          <p><b>WhatsApp:</b> +972-54-208-2082</p>
-          <p><b>Email:</b> itzik@click-home.co.il</p>
+          <h3>Itzik Ozer（伊扎克）</h3>
+          <div class="role">联合创始人 · 全球采购副总裁</div>
+          <p><b>电话：</b> +972-54-208-2082</p>
+          <p><b>WhatsApp：</b> +972-54-208-2082</p>
+          <p><b>邮箱：</b> itzik@click-home.co.il</p>
         </article>
         <article class="person">
-          <h3>Hagit Mor Elmalan</h3>
-          <div class="role">Founder · CEO</div>
-          <p><b>Phone:</b> +972-50-343-9999</p>
-          <p><b>WhatsApp:</b> +972-50-343-9999</p>
-          <p><b>Email:</b> Hagit@click-home.co.il</p>
+          <h3>Hagit Mor Elmalan（哈吉特）</h3>
+          <div class="role">联合创始人 · CEO</div>
+          <p><b>电话：</b> +972-50-343-9999</p>
+          <p><b>WhatsApp：</b> +972-50-343-9999</p>
+          <p><b>邮箱：</b> Hagit@click-home.co.il</p>
         </article>
       </div>
     </section>
@@ -270,9 +270,9 @@
     <div class="wrap">
       <div style="display:flex;align-items:center;gap:10px;">
         <img src="{% static 'en_landing/img/logo-official.jpeg' %}" alt="Click Home" style="height:28px;border-radius:6px;">
-        <div><b>Click Home</b> - Building premium prefab living in Israel.</div>
+        <div><b>Click Home</b> — 以色列高端预制住宅品牌。</div>
       </div>
-      <div>Office: +972-9-7902727 | itzik@click-home.co.il</div>
+      <div>总机：+972-9-7902727 | itzik@click-home.co.il</div>
     </div>
   </footer>
 </body>

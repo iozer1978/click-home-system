@@ -5,6 +5,7 @@ from . import ssq_views
 urlpatterns = [
     # English landing (www.click-home.co.il/en)
     path('en/', views.en_landing_home, name='en_landing'),
+    path('zh/', views.zh_landing_home, name='zh_landing'),
     path('en/compare/', views.en_landing_compare, name='en_landing_compare'),
     path('en/v1/', views.en_landing_v1, name='en_landing_v1'),
     path('en/v2/', views.en_landing_v2, name='en_landing_v2'),

@@ -650,6 +650,11 @@ def en_landing_home(request):
     """Canonical English landing — V1 architectural layout."""
     return render(request, 'en/v1_architectural.html')
 
+
+def zh_landing_home(request):
+    """Simplified Chinese landing — same layout as /en/, zh-Hans copy."""
+    return render(request, "zh/v1_architectural_zh.html")
+
 def en_landing_compare(request):
     return render(request, 'en/compare.html')
 
