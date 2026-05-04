@@ -11,6 +11,7 @@ from typing import Any
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import authenticate
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -645,11 +646,23 @@ def admin_login(request):
     form = SSQAdminLoginForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         provided = form.cleaned_data["password"]
+        username = (form.cleaned_data.get("username") or "").strip()
         expected = os.environ.get("ADMIN_PASSWORD", getattr(settings, "ADMIN_PASSWORD", ""))
-        if expected and provided == expected:
-            request.session[SESSION_ADMIN_KEY] = True
-            return redirect("ssq_admin_submissions")
-        messages.error(request, "Invalid admin password.")
+        # Option 1: authenticate with Django user credentials (e.g. itzik).
+        if username:
+            user = authenticate(request, username=username, password=provided)
+            if user and (user.username.lower() in {"itzik", "itzi"} or user.is_staff or user.is_superuser):
+                request.session[SESSION_ADMIN_KEY] = True
+                request.session["ssq_admin_user"] = user.username
+                return redirect("ssq_admin_submissions")
+            messages.error(request, "Invalid username/password or no admin access.")
+        else:
+            # Option 2: shared admin password from environment.
+            if expected and provided == expected:
+                request.session[SESSION_ADMIN_KEY] = True
+                request.session["ssq_admin_user"] = "admin_password_login"
+                return redirect("ssq_admin_submissions")
+            messages.error(request, "Invalid admin password.")
     return render(request, "admin/ssq/login.html", {"form": form})
 
 

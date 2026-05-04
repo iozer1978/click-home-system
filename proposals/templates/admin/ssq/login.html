@@ -26,8 +26,13 @@
                     {% for message in messages %}<div>{{ message }}</div>{% endfor %}
                 </div>
             {% endif %}
-            <label for="{{ form.password.id_for_label }}">Admin password</label>
+            <label for="{{ form.username.id_for_label }}">Username (optional)</label>
+            {{ form.username }}
+            <label for="{{ form.password.id_for_label }}">Password</label>
             {{ form.password }}
+            <p style="margin:10px 0 0; color:#6c7784; font-size:12px;">
+                You can log in with Django user <strong>itzik</strong> + password, or leave username empty and use ADMIN_PASSWORD.
+            </p>
             <button type="submit">Login</button>
         </form>
     </div>

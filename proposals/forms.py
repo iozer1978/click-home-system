@@ -101,11 +101,21 @@ class ClientRegisterForm(UserCreationForm):
 
 
 class SSQAdminLoginForm(forms.Form):
+    username = forms.CharField(
+        label="Username (optional)",
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Enter username (e.g. itzi)",
+                "autocomplete": "username",
+            }
+        ),
+    )
     password = forms.CharField(
-        label="Admin password",
+        label="Password",
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Enter admin password",
+                "placeholder": "Enter password",
                 "autocomplete": "current-password",
             }
         ),
