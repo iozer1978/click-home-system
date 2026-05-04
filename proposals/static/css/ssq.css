@@ -203,6 +203,13 @@ textarea {
     resize: vertical;
 }
 
+.multi-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: var(--muted);
+}
+
 .declarations {
     display: grid;
     gap: 12px;

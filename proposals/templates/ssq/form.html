@@ -90,8 +90,7 @@
                 <h2>Step 2: Product / Construction System</h2>
                 <div class="grid">
                     <label><span>Product type *</span>
-                        <select name="product_type" required>
-                            <option value="">Select</option>
+                        <select name="product_type" required multiple size="8">
                             <option value="lgs_cfs">LGS / CFS structure</option>
                             <option value="modular_house">Modular house</option>
                             <option value="container_house">Container house</option>
@@ -101,6 +100,7 @@
                             <option value="insulation_system">Insulation system</option>
                             <option value="other">Other</option>
                         </select>
+                        <small class="multi-hint">You may select multiple product types.</small>
                     </label>
                     <label><span>Complete system or components only?</span><input name="complete_system_or_components"></label>
                     <label><span>Full architectural drawings?</span><input name="architectural_drawings"></label>

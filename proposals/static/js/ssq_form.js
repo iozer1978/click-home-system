@@ -201,6 +201,13 @@
         each(form.querySelectorAll("input, select, textarea"), function (el) {
             if (!el.name || el.type === "file" || el.name === "answers_json") return;
             if (el.type === "checkbox") payload[el.name] = !!el.checked;
+            else if (el.type === "select-multiple") {
+                var selectedValues = [];
+                for (var i = 0; i < el.options.length; i += 1) {
+                    if (el.options[i].selected) selectedValues.push(el.options[i].value);
+                }
+                payload[el.name] = selectedValues;
+            }
             else payload[el.name] = el.value;
         });
         payload._language = languageInput.value || "en";
@@ -212,6 +219,13 @@
         each(form.querySelectorAll("input, select, textarea"), function (el) {
             if (!el.name || el.type === "file" || el.name === "answers_json") return;
             if (el.type === "checkbox") saveData[el.name] = el.checked;
+            else if (el.type === "select-multiple") {
+                var selectedValues = [];
+                for (var i = 0; i < el.options.length; i += 1) {
+                    if (el.options[i].selected) selectedValues.push(el.options[i].value);
+                }
+                saveData[el.name] = selectedValues;
+            }
             else saveData[el.name] = el.value;
         });
         saveData.__step = currentStep;
@@ -230,6 +244,12 @@
                 if (!el.name || el.type === "file" || el.name === "answers_json") return;
                 if (typeof data[el.name] === "undefined") return;
                 if (el.type === "checkbox") el.checked = !!data[el.name];
+                else if (el.type === "select-multiple") {
+                    var savedValues = data[el.name] || [];
+                    for (var i = 0; i < el.options.length; i += 1) {
+                        el.options[i].selected = savedValues.indexOf(el.options[i].value) !== -1;
+                    }
+                }
                 else el.value = data[el.name];
             });
             stepInt = parseInt(data.__step, 10);

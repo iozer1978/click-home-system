@@ -19,6 +19,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import SSQAdminLoginForm, SupplierSubmissionStatusForm
 from .models import SupplierSubmission
@@ -419,6 +421,9 @@ def _question_label(field_name: str, language: str) -> str:
 
 
 def _choice_label(field_name: str, value: Any, language: str) -> str:
+    if isinstance(value, list):
+        mapped_values = [_choice_label(field_name, item, language) for item in value]
+        return ", ".join([item for item in mapped_values if str(item).strip()])
     value_str = str(value)
     choices = CHOICE_VALUE_LABELS.get(field_name, {})
     choice = choices.get(value_str)
@@ -590,7 +595,7 @@ def supplier_form(request):
 
         submission_language = str(answers.get("_language", "en"))
         language_code = _normalized_language(submission_language)
-        product_type_raw = str(answers.get("product_type", "")).strip()
+        product_type_raw = answers.get("product_type", "")
 
         submission = SupplierSubmission.objects.create(
             id=submission_id,
@@ -634,6 +639,8 @@ def supplier_form_thank_you(request):
 
 
 @require_http_methods(["GET", "POST"])
+@never_cache
+@ensure_csrf_cookie
 def admin_login(request):
     form = SSQAdminLoginForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -654,6 +661,7 @@ def admin_logout(request):
 
 @_admin_required
 @require_GET
+@never_cache
 def admin_submissions(request):
     submissions = SupplierSubmission.objects.all()
     score_min = request.GET.get("score_min")
@@ -706,6 +714,8 @@ def admin_submissions(request):
 
 @_admin_required
 @require_http_methods(["GET", "POST"])
+@never_cache
+@ensure_csrf_cookie
 def admin_submission_detail(request, submission_id):
     submission = get_object_or_404(SupplierSubmission, id=submission_id)
     form = SupplierSubmissionStatusForm(request.POST or None, instance=submission)

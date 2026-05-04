@@ -48,6 +48,14 @@ CSRF_TRUSTED_ORIGINS = [
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 
+# Keep CSRF/session cookies valid across click-home.co.il and www.click-home.co.il.
+# This prevents token mismatch when users switch between host variants.
+if not DEBUG:
+    CSRF_COOKIE_DOMAIN = ".click-home.co.il"
+    SESSION_COOKIE_DOMAIN = ".click-home.co.il"
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
 
 # Application definition
 
