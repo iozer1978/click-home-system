@@ -16,6 +16,61 @@
     var meta = {};
     var STORAGE_KEY = "ssq_form_autosave_v1";
     var currentStep = 0;
+    var yesNoOtherFields = [
+        "architectural_drawings",
+        "structural_drawings",
+        "shop_drawings",
+        "adapt_israeli_requirements",
+        "permanent_residential_use",
+        "hot_climate_50",
+        "coastal_suitability",
+        "iso_9001",
+        "iso_14001",
+        "ce_certificates",
+        "third_party_lab_reports",
+        "israeli_engineer_review",
+        "israeli_standard_adaptation",
+        "pre_punched_profiles",
+        "assembly_tested",
+        "non_combustible_materials",
+        "toxic_smoke_tests",
+        "hot_climate_suitability",
+        "external_insulation_support",
+        "insulation_upgrade_support",
+        "acoustic_test_report_available",
+        "exterior_board_weather_resistance",
+        "mold_resistant_materials",
+        "wet_room_suitability",
+        "waterproof_membrane_included",
+        "vapor_barrier_included",
+        "coastal_environment_suitability",
+        "tile_stone_support",
+        "incoming_material_inspection",
+        "in_process_inspection",
+        "final_inspection",
+        "third_party_inspection_available",
+        "production_photos_videos",
+        "packing_list_before_shipment",
+        "component_labeling",
+        "installation_manual_available",
+        "spare_parts_list_available",
+        "installation_drawings",
+        "online_training",
+        "site_supervisor",
+        "local_team_install_after_training",
+        "foundation_requirements",
+        "mep_coordination_support",
+        "future_extension_support",
+        "shipping_anti_rust_protection",
+        "shipping_moisture_protection",
+        "packing_optimization_per_project",
+        "sequence_based_packing",
+        "full_packing_list",
+        "hs_codes_provided",
+        "invoice_origin_certificate",
+        "installation_cost_separate",
+        "exclusive_distribution_support"
+    ];
 
     if (metaNode) {
         try {
@@ -34,7 +89,12 @@
             stepLabel: "Step",
             next: "Next",
             previous: "Previous",
-            submit: "Submit Qualification"
+            submit: "Submit Qualification",
+            select: "Select",
+            yes: "Yes",
+            no: "No",
+            other: "Other",
+            otherPlaceholder: "Please specify"
         },
         zh: {
             title: "供应商资质评估表",
@@ -44,7 +104,12 @@
             stepLabel: "步骤",
             next: "下一步",
             previous: "上一步",
-            submit: "提交评估"
+            submit: "提交评估",
+            select: "请选择",
+            yes: "是",
+            no: "否",
+            other: "其他",
+            otherPlaceholder: "请填写其他内容"
         }
     };
 
@@ -63,6 +128,99 @@
 
     function each(list, callback) {
         for (var i = 0; i < list.length; i += 1) callback(list[i], i);
+    }
+
+    function findYesNoOtherTextInput(fieldName) {
+        return form.querySelector("[data-yn-other-text-for='" + fieldName + "']");
+    }
+
+    function toggleYesNoOtherTextInput(selectElement) {
+        var fieldName = selectElement ? selectElement.name : "";
+        var textInput = findYesNoOtherTextInput(fieldName);
+        var shouldShow = selectElement && selectElement.value === "other";
+        if (!textInput) return;
+        textInput.style.display = shouldShow ? "block" : "none";
+        if (!shouldShow) textInput.value = "";
+    }
+
+    function localizeYesNoOtherControls(lang) {
+        var bundle = i18n[lang] || i18n.en;
+        each(form.querySelectorAll("[data-yn-other-select]"), function (selectElement) {
+            each(selectElement.options, function (option) {
+                var key = option.getAttribute("data-yn-option");
+                if (!key || !bundle[key]) return;
+                option.textContent = bundle[key];
+            });
+            var textInput = findYesNoOtherTextInput(selectElement.name);
+            if (textInput) textInput.placeholder = bundle.otherPlaceholder;
+        });
+    }
+
+    function initYesNoOtherFields() {
+        each(yesNoOtherFields, function (fieldName) {
+            var originalField = form.querySelector("[name='" + fieldName + "']");
+            var parentNode;
+            var selectElement;
+            var emptyOption;
+            var yesOption;
+            var noOption;
+            var otherOption;
+            var otherInput;
+            var initialValue;
+            if (!originalField || originalField.tagName === "SELECT" || originalField.type === "file") return;
+
+            parentNode = originalField.parentNode;
+            selectElement = document.createElement("select");
+            selectElement.name = fieldName;
+            selectElement.setAttribute("data-yn-other-select", "1");
+
+            emptyOption = document.createElement("option");
+            emptyOption.value = "";
+            emptyOption.setAttribute("data-yn-option", "select");
+            emptyOption.textContent = "Select";
+            selectElement.appendChild(emptyOption);
+
+            yesOption = document.createElement("option");
+            yesOption.value = "yes";
+            yesOption.setAttribute("data-yn-option", "yes");
+            yesOption.textContent = "Yes";
+            selectElement.appendChild(yesOption);
+
+            noOption = document.createElement("option");
+            noOption.value = "no";
+            noOption.setAttribute("data-yn-option", "no");
+            noOption.textContent = "No";
+            selectElement.appendChild(noOption);
+
+            otherOption = document.createElement("option");
+            otherOption.value = "other";
+            otherOption.setAttribute("data-yn-option", "other");
+            otherOption.textContent = "Other";
+            selectElement.appendChild(otherOption);
+
+            otherInput = document.createElement("input");
+            otherInput.type = "text";
+            otherInput.setAttribute("data-yn-other-text-for", fieldName);
+            otherInput.placeholder = "Please specify";
+            otherInput.style.display = "none";
+
+            initialValue = (originalField.value || "").trim();
+            if (!initialValue) {
+                selectElement.value = "";
+            } else if (initialValue.toLowerCase() === "yes" || initialValue.toLowerCase() === "no" || initialValue.toLowerCase() === "other") {
+                selectElement.value = initialValue.toLowerCase();
+            } else {
+                selectElement.value = "other";
+                otherInput.value = initialValue;
+                otherInput.style.display = "block";
+            }
+
+            parentNode.replaceChild(selectElement, originalField);
+            parentNode.appendChild(otherInput);
+            selectElement.addEventListener("change", function () {
+                toggleYesNoOtherTextInput(selectElement);
+            });
+        });
     }
 
     function setLanguage(lang) {
@@ -87,6 +245,7 @@
         submitBtn.textContent = bundle.submit;
         try {
             translateDynamicFields(lang);
+            localizeYesNoOtherControls(lang);
         } catch (err) {
             if (window.console && console.error) console.error("Language switch warning:", err);
         }
@@ -200,6 +359,7 @@
         var payload = {};
         each(form.querySelectorAll("input, select, textarea"), function (el) {
             if (!el.name || el.type === "file" || el.name === "answers_json") return;
+            if (el.hasAttribute("data-yn-other-text-for")) return;
             if (el.type === "checkbox") payload[el.name] = !!el.checked;
             else if (el.type === "select-multiple") {
                 var selectedValues = [];
@@ -207,6 +367,11 @@
                     if (el.options[i].selected) selectedValues.push(el.options[i].value);
                 }
                 payload[el.name] = selectedValues;
+            }
+            else if (el.hasAttribute("data-yn-other-select")) {
+                var otherInput = findYesNoOtherTextInput(el.name);
+                if (el.value === "other") payload[el.name] = otherInput && otherInput.value ? otherInput.value : "other";
+                else payload[el.name] = el.value;
             }
             else payload[el.name] = el.value;
         });
@@ -218,6 +383,7 @@
         var saveData = {};
         each(form.querySelectorAll("input, select, textarea"), function (el) {
             if (!el.name || el.type === "file" || el.name === "answers_json") return;
+            if (el.hasAttribute("data-yn-other-text-for")) return;
             if (el.type === "checkbox") saveData[el.name] = el.checked;
             else if (el.type === "select-multiple") {
                 var selectedValues = [];
@@ -225,6 +391,11 @@
                     if (el.options[i].selected) selectedValues.push(el.options[i].value);
                 }
                 saveData[el.name] = selectedValues;
+            }
+            else if (el.hasAttribute("data-yn-other-select")) {
+                var otherInput = findYesNoOtherTextInput(el.name);
+                saveData[el.name] = el.value;
+                saveData["__other__" + el.name] = otherInput ? otherInput.value : "";
             }
             else saveData[el.name] = el.value;
         });
@@ -242,6 +413,7 @@
             data = JSON.parse(saved);
             each(form.querySelectorAll("input, select, textarea"), function (el) {
                 if (!el.name || el.type === "file" || el.name === "answers_json") return;
+                if (el.hasAttribute("data-yn-other-text-for")) return;
                 if (typeof data[el.name] === "undefined") return;
                 if (el.type === "checkbox") el.checked = !!data[el.name];
                 else if (el.type === "select-multiple") {
@@ -250,7 +422,15 @@
                         el.options[i].selected = savedValues.indexOf(el.options[i].value) !== -1;
                     }
                 }
-                else el.value = data[el.name];
+                else if (el.hasAttribute("data-yn-other-select")) {
+                    var restoredValue = data[el.name] || "";
+                    var otherInput = findYesNoOtherTextInput(el.name);
+                    el.value = restoredValue;
+                    if (otherInput) {
+                        otherInput.value = data["__other__" + el.name] || "";
+                    }
+                    toggleYesNoOtherTextInput(el);
+                } else el.value = data[el.name];
             });
             stepInt = parseInt(data.__step, 10);
             if (!isNaN(stepInt) && stepInt >= 0 && stepInt < totalSteps) currentStep = stepInt;
@@ -291,6 +471,7 @@
         });
     });
 
+    initYesNoOtherFields();
     restoreAutosave();
     setLanguage(languageInput.value || "en");
     updateStepUI();

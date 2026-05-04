@@ -585,14 +585,6 @@ def supplier_form(request):
             extra_flags = list(set(scoring["critical_flags"] + ["missing_certificates_or_tests"]))
             scoring["critical_flags"] = extra_flags
             scoring["risk_level"] = "Critical Risk"
-            missing_labels = []
-            for field_name in missing_required_uploads:
-                label_entry = MANDATORY_UPLOAD_LABELS.get(field_name, {})
-                missing_labels.append(label_entry.get(language_code) or label_entry.get("en") or field_name)
-            messages.warning(
-                request,
-                _message("missing_mandatory_uploads", language_code, items=", ".join(missing_labels)),
-            )
 
         submission_language = str(answers.get("_language", "en"))
         language_code = _normalized_language(submission_language)
