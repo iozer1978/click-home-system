@@ -1876,6 +1876,8 @@ a:hover {
   padding: 8px 10px;
   text-align: center;
   border-inline-start: 1px solid rgba(216, 203, 184, 0.75);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 8px 20px rgba(20, 42, 35, 0.08);
 }
 
 .house-premium__feature-item:first-child {
