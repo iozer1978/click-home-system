@@ -2108,6 +2108,10 @@ a:hover {
   padding: 20px;
 }
 
+.house-premium__lightbox[hidden] {
+  display: none !important;
+}
+
 .house-premium__lightbox img {
   max-width: 94vw;
   max-height: 88vh;

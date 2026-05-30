@@ -251,6 +251,12 @@
       document.body.style.overflow = "";
     }
 
+    // Safety: ensure overlay is never stuck open on initial load/navigation cache.
+    if (lightbox) {
+      lightbox.hidden = true;
+      document.body.style.overflow = "";
+    }
+
     if (openBtn) openBtn.addEventListener("click", openLightbox);
     if (mainImage) mainImage.addEventListener("click", openLightbox);
     if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
