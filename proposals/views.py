@@ -482,7 +482,17 @@ def catalog_page(request):
 
 @xframe_options_sameorigin
 def house_detail(request, pk):
-    house = get_object_or_404(HouseModel.objects.prefetch_related("house_types", "usage_types", "media_files", "related_models"), pk=pk)
+    house = get_object_or_404(
+        HouseModel.objects.prefetch_related(
+            "house_types",
+            "usage_types",
+            "media_files",
+            "related_models",
+            "technical_specs",
+            "advantage_items",
+        ),
+        pk=pk,
+    )
 
     def _parse_specs_text(raw_text):
         spec_map = {}
@@ -565,12 +575,24 @@ def house_detail(request, pk):
     ]
 
     feature_strip_items = [
-        {"icon": "fa-ruler-combined", "title": "שטח בנוי", "value": f'{area_value} מ"ר' if area_value else "מותאם לדגם"},
-        {"icon": "fa-bed", "title": "חדרי שינה", "value": str(bedrooms_value) if bedrooms_value else "מותאם לדגם"},
-        {"icon": "fa-bath", "title": "חדר רחצה", "value": str(bathrooms_value) if bathrooms_value else "מותאם לדגם"},
-        {"icon": "fa-couch", "title": "סלון מרווח", "value": living_label_value or "כלול בדגם"},
-        {"icon": "fa-utensils", "title": "מטבח פתוח", "value": kitchen_label_value or "בהתאמה אישית"},
-        {"icon": "fa-umbrella-beach", "title": "מרפסת עץ", "value": porch_label_value or "אופציונלי"},
+        {
+            "icon": "fa-ruler-combined",
+            "title": "שטח בנוי",
+            "value": house.built_area_value or (f'{area_value} מ"ר' if area_value else "מותאם לדגם"),
+        },
+        {
+            "icon": "fa-bed",
+            "title": "חדרי שינה",
+            "value": house.bedrooms_value or (str(bedrooms_value) if bedrooms_value else "מותאם לדגם"),
+        },
+        {
+            "icon": "fa-bath",
+            "title": "חדר רחצה",
+            "value": house.bathroom_value or (str(bathrooms_value) if bathrooms_value else "מותאם לדגם"),
+        },
+        {"icon": "fa-couch", "title": "סלון מרווח", "value": house.living_room_value or living_label_value or "כלול בדגם"},
+        {"icon": "fa-utensils", "title": "מטבח פתוח", "value": house.open_kitchen_value or kitchen_label_value or "בהתאמה אישית"},
+        {"icon": "fa-umbrella-beach", "title": "מרפסת עץ", "value": house.porch_value or porch_label_value or "אופציונלי"},
     ]
 
     full_description = house.full_description or house.description
@@ -578,17 +600,24 @@ def house_detail(request, pk):
     if not description_lines:
         description_lines = [house.description] if house.description else []
 
-    advantages = house.advantages if isinstance(house.advantages, list) else []
     normalized_advantages = []
-    for adv in advantages:
-        if isinstance(adv, dict):
-            title = str(adv.get("title", "")).strip()
-            description = str(adv.get("description", "")).strip()
-            icon = str(adv.get("icon", "fa-star")).strip() or "fa-star"
-            if title:
-                normalized_advantages.append({"title": title, "description": description, "icon": icon})
-        elif isinstance(adv, str) and adv.strip():
-            normalized_advantages.append({"title": adv.strip(), "description": "", "icon": "fa-star"})
+    if house.advantage_items.exists():
+        for advantage_item in house.advantage_items.all():
+            text = str(advantage_item.text).strip()
+            if text:
+                normalized_advantages.append({"title": text, "description": "", "icon": "fa-check"})
+
+    if not normalized_advantages:
+        advantages = house.advantages if isinstance(house.advantages, list) else []
+        for adv in advantages:
+            if isinstance(adv, dict):
+                title = str(adv.get("title", "")).strip()
+                description = str(adv.get("description", "")).strip()
+                icon = str(adv.get("icon", "fa-star")).strip() or "fa-star"
+                if title:
+                    normalized_advantages.append({"title": title, "description": description, "icon": icon})
+            elif isinstance(adv, str) and adv.strip():
+                normalized_advantages.append({"title": adv.strip(), "description": "", "icon": "fa-star"})
 
     if not normalized_advantages:
         fallback_lines = [line.strip("•- ").strip() for line in str(house.internal_layout or "").splitlines() if line.strip()]
@@ -601,7 +630,13 @@ def house_detail(request, pk):
     normalized_advantages = normalized_advantages[:4]
 
     specs_grid = []
-    if isinstance(structured_specs, dict) and structured_specs:
+    if house.technical_specs.exists():
+        for technical_spec in house.technical_specs.all():
+            label = str(technical_spec.label).strip()
+            value = str(technical_spec.value).strip()
+            if label and value:
+                specs_grid.append({"label": label, "value": value})
+    elif isinstance(structured_specs, dict) and structured_specs:
         for key, value in structured_specs.items():
             if value in ("", None):
                 continue
@@ -628,6 +663,8 @@ def house_detail(request, pk):
             value_text = str(value).strip() if value is not None else ""
             if value_text:
                 specs_grid.append({"label": label, "value": value_text})
+    if house.dimensions_text.strip():
+        specs_grid.append({"label": "מידות", "value": house.dimensions_text.strip()})
 
     related_qs = house.related_models.all()
     if not related_qs.exists():
@@ -656,6 +693,8 @@ def house_detail(request, pk):
     is_fav = False
     if request.user.is_authenticated and hasattr(request.user, 'profile'):
         is_fav = house in request.user.profile.favorites.all()
+    subtitle_text = house.short_description or house.short_description_template or house.description
+    hero_title = house.marketing_title or house.title
     return render(
         request,
         'house_detail.html',
@@ -666,12 +705,18 @@ def house_detail(request, pk):
             'hero_image_url': hero_image_url,
             'gallery_images': gallery_images,
             'interior_images': interior_images,
+            'hero_title': hero_title,
+            'subtitle_text': subtitle_text,
             'hero_cards': hero_cards,
             'feature_strip_items': feature_strip_items,
             'full_description_lines': description_lines,
             'specs_grid': specs_grid,
             'advantages_display': normalized_advantages,
             'showcase_images': showcase_images,
+            'description_section_title': house.description_section_title or "תיאור הדגם",
+            'highlights_section_title': house.highlights_section_title or "למה לבחור בדגם הזה?",
+            'technical_section_title': house.technical_section_title or "מפרט טכני",
+            'extra_images_section_title': house.extra_images_section_title or "תמונות נוספות",
         },
     )
 

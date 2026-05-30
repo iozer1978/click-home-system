@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block body_class %}page-house-detail{% endblock %}
-{% block title %}{{ house.title }} — פרטים מלאים | Click Home{% endblock %}
-{% block meta_description %}{{ house.short_description|default:house.description|truncatechars:155 }}{% endblock %}
+{% block title %}{{ hero_title|default:house.title }} — פרטים מלאים | Click Home{% endblock %}
+{% block meta_description %}{{ subtitle_text|truncatechars:155 }}{% endblock %}
 
 {% block og %}
 <meta property="og:type" content="website">
-<meta property="og:title" content="{{ house.title }} — דגם Click Home">
-<meta property="og:description" content="{{ house.short_description|default:house.description|truncatechars:100 }}">
+<meta property="og:title" content="{{ hero_title|default:house.title }} — דגם Click Home">
+<meta property="og:description" content="{{ subtitle_text|truncatechars:100 }}">
 {% if hero_image_url %}
 <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ hero_image_url }}">
 {% else %}
@@ -30,8 +30,8 @@
         </div>
         <div class="house-premium__hero-grid">
             <div class="house-premium__hero-content">
-                <h1 id="house-hero-title">{{ house.title }}</h1>
-                <p>{{ house.short_description|default:house.description }}</p>
+                <h1 id="house-hero-title">{{ hero_title|default:house.title }}</h1>
+                <p>{{ subtitle_text }}</p>
                 <div class="house-premium__hero-cards">
                     {% for item in hero_cards %}
                     <article class="house-premium__hero-card">
@@ -75,7 +75,7 @@
 
     <section class="house-premium__description-floor" id="about-model">
         <div class="house-premium__description-copy">
-            <h2>תיאור הדגם</h2>
+            <h2>{{ description_section_title }}</h2>
             <span class="house-premium__gold-divider" aria-hidden="true"></span>
             {% if full_description_lines %}
             <p class="house-premium__description-intro">{{ full_description_lines.0 }}</p>
@@ -103,7 +103,7 @@
     </section>
 
     <section class="house-premium__specs">
-        <h2>מפרט טכני</h2>
+        <h2>{{ technical_section_title }}</h2>
         <div class="house-premium__spec-grid">
             {% for spec in specs_grid %}
             <article class="house-premium__spec-card">
@@ -115,7 +115,7 @@
     </section>
 
     <section class="house-premium__why">
-        <h2>למה לבחור בדגם הזה?</h2>
+        <h2>{{ highlights_section_title }}</h2>
         <div class="house-premium__adv-grid">
             {% for advantage in advantages_display %}
             <article class="house-premium__adv-card">
@@ -127,7 +127,8 @@
         </div>
     </section>
 
-    <section class="house-premium__gallery-strip">
+    <section class="house-premium__gallery-strip" aria-label="{{ extra_images_section_title }}">
+        <h2>{{ extra_images_section_title }}</h2>
         <div class="house-premium__gallery-strip-grid">
             {% for image in showcase_images %}
             <figure class="house-premium__gallery-strip-item">

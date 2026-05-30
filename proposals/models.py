@@ -84,14 +84,58 @@ class HouseMedia(models.Model):
 
 
 class HouseModel(models.Model):
+    SECTION_TITLE_CHOICES = [
+        ("תיאור הדגם", "תיאור הדגם"),
+        ("יתרונות הדגם", "יתרונות הדגם"),
+        ("מאפיינים עיקריים", "מאפיינים עיקריים"),
+        ("למה לבחור ב-APPLE?", "למה לבחור ב-APPLE?"),
+        ("מפרט ויתרונות", "מפרט ויתרונות"),
+        ("תכונות מרכזיות", "תכונות מרכזיות"),
+    ]
+    SHORT_DESCRIPTION_TEMPLATE_CHOICES = [
+        ("", "בחירה ידנית"),
+        ("בית מודולרי יוקרתי בעיצוב מודרני וחדשני.", "בית מודולרי יוקרתי בעיצוב מודרני וחדשני."),
+        ("פתרון מגורים חכם, מהיר ואיכותי.", "פתרון מגורים חכם, מהיר ואיכותי."),
+        ("מבנה מתקדם המתאים למגורים, אירוח ועסקים.", "מבנה מתקדם המתאים למגורים, אירוח ועסקים."),
+        ("שילוב מושלם של עיצוב, נוחות ועמידות.", "שילוב מושלם של עיצוב, נוחות ועמידות."),
+        ("בית מוכן להצבה עם גימור ברמה גבוהה.", "בית מוכן להצבה עם גימור ברמה גבוהה."),
+    ]
     config_key = models.CharField(max_length=30, unique=True, blank=True, null=True, verbose_name="מזהה סנכרון (MODEL_01...)")
     title = models.CharField(max_length=100, verbose_name="שם הדגם")
     description = models.TextField(verbose_name="תיאור כללי (ראשי)")
+    marketing_title = models.CharField(max_length=180, blank=True, verbose_name="כותרת שיווקית")
+    short_description_template = models.CharField(
+        max_length=255,
+        blank=True,
+        choices=SHORT_DESCRIPTION_TEMPLATE_CHOICES,
+        verbose_name="תיאור קצר (מתוך רשימה)",
+    )
     short_description = models.CharField(max_length=255, blank=True, verbose_name="תיאור קצר שיווקי")
     full_description = models.TextField(blank=True, verbose_name="תיאור מלא שיווקי")
+    description_section_title = models.CharField(
+        max_length=80,
+        blank=True,
+        choices=SECTION_TITLE_CHOICES,
+        verbose_name="כותרת מקטע תיאור",
+    )
+    highlights_section_title = models.CharField(
+        max_length=80,
+        blank=True,
+        choices=SECTION_TITLE_CHOICES,
+        verbose_name="כותרת מקטע יתרונות",
+    )
+    technical_section_title = models.CharField(max_length=80, blank=True, default="מפרט טכני", verbose_name="כותרת מקטע מפרט")
+    extra_images_section_title = models.CharField(max_length=80, blank=True, default="תמונות נוספות", verbose_name="כותרת מקטע תמונות נוספות")
     usage_types = models.ManyToManyField(UsageType, verbose_name="סוגי שימוש מתאימים", blank=True)
     house_types = models.ManyToManyField(HouseType, verbose_name="סוגי בית", blank=True, related_name="houses")
     area_sqm = models.IntegerField(verbose_name="שטח במ\"ר", default=30)
+    built_area_value = models.CharField(max_length=120, blank=True, default="מותאם לדגם", verbose_name="ערך שטח בנוי בפס הפיצ'רים")
+    bedrooms_value = models.CharField(max_length=120, blank=True, default="מותאם לדגם", verbose_name="ערך חדרי שינה בפס הפיצ'רים")
+    bathroom_value = models.CharField(max_length=120, blank=True, default="מותאם לדגם", verbose_name="ערך חדר רחצה בפס הפיצ'רים")
+    living_room_value = models.CharField(max_length=120, blank=True, default="כלול בדגם", verbose_name="ערך סלון מרווח בפס הפיצ'רים")
+    open_kitchen_value = models.CharField(max_length=120, blank=True, default="בהתאמה אישית", verbose_name="ערך מטבח פתוח בפס הפיצ'רים")
+    porch_value = models.CharField(max_length=120, blank=True, default="אופציונלי", verbose_name="ערך מרפסת בפס הפיצ'רים")
+    dimensions_text = models.TextField(blank=True, verbose_name="מידות")
     specs = models.TextField(verbose_name="מפרט טכני ומידות", blank=True)
     specifications = models.JSONField(default=dict, blank=True, verbose_name="מפרט מובנה (JSON)")
     internal_layout = models.TextField(verbose_name="חלוקה פנימית", blank=True)
@@ -122,6 +166,35 @@ class HouseModel(models.Model):
             return chosen.file
         first_img = images.first()
         return first_img.file if first_img else None
+
+
+class HouseTechnicalSpec(models.Model):
+    house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name="technical_specs", verbose_name="דגם")
+    label = models.CharField(max_length=120, verbose_name="שם שדה")
+    value = models.CharField(max_length=255, verbose_name="ערך")
+    sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר תצוגה")
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "מפרט טכני"
+        verbose_name_plural = "מפרט טכני"
+
+    def __str__(self):
+        return f"{self.house.title} - {self.label}"
+
+
+class HouseAdvantageItem(models.Model):
+    house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name="advantage_items", verbose_name="דגם")
+    text = models.CharField(max_length=255, verbose_name="יתרון / מאפיין")
+    sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר תצוגה")
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "יתרון / מאפיין"
+        verbose_name_plural = "יתרונות / מאפיינים"
+
+    def __str__(self):
+        return f"{self.house.title} - {self.text[:40]}"
 
 
 class TabHouse(models.Model):

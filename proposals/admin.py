@@ -10,6 +10,8 @@ import runpy
 from .models import (
     HouseModel,
     HouseMedia,
+    HouseTechnicalSpec,
+    HouseAdvantageItem,
     Quote,
     HouseUpgrade,
     UsageType,
@@ -63,6 +65,20 @@ class HouseUpgradeInline(admin.TabularInline):
     extra = 1
 
 
+class HouseTechnicalSpecInline(admin.TabularInline):
+    model = HouseTechnicalSpec
+    extra = 4
+    fields = ("sort_order", "label", "value")
+    ordering = ("sort_order", "id")
+
+
+class HouseAdvantageItemInline(admin.TabularInline):
+    model = HouseAdvantageItem
+    extra = 6
+    fields = ("sort_order", "text")
+    ordering = ("sort_order", "id")
+
+
 class TabHouseImageInline(admin.TabularInline):
     model = TabHouseImage
     extra = 1
@@ -93,7 +109,7 @@ class HouseAdmin(admin.ModelAdmin):
     list_filter = ("house_types", "usage_types")
     search_fields = ("title", "config_key", "description", "short_description", "full_description")
     ordering = ("title",)
-    inlines = [HouseMediaStackedInline, HouseUpgradeInline]
+    inlines = [HouseTechnicalSpecInline, HouseAdvantageItemInline, HouseMediaStackedInline, HouseUpgradeInline]
     filter_horizontal = ("house_types", "usage_types")
     fieldsets = (
         (
@@ -105,19 +121,48 @@ class HouseAdmin(admin.ModelAdmin):
         (
             "תיאור ושיוך",
             {
-                "fields": ("description", "short_description", "full_description", "house_types", "usage_types"),
+                "fields": (
+                    "description",
+                    "marketing_title",
+                    "short_description_template",
+                    "short_description",
+                    "full_description",
+                    "description_section_title",
+                    "highlights_section_title",
+                    "house_types",
+                    "usage_types",
+                ),
             },
         ),
         (
-            "מחיר ושטח",
+            "מחיר, שטח ומידות",
             {
-                "fields": ("area_sqm", "price_estimate"),
+                "fields": ("area_sqm", "dimensions_text", "price_estimate"),
             },
         ),
         (
-            "תוכן טכני",
+            "פס פיצ'רים (כמו בעמוד הבית)",
             {
-                "classes": ("wide",),
+                "fields": (
+                    "built_area_value",
+                    "bedrooms_value",
+                    "bathroom_value",
+                    "living_room_value",
+                    "open_kitchen_value",
+                    "porch_value",
+                ),
+            },
+        ),
+        (
+            "כותרות מקטעים",
+            {
+                "fields": ("technical_section_title", "extra_images_section_title"),
+            },
+        ),
+        (
+            "תוכן טכני ישן (לגיבוי בלבד)",
+            {
+                "classes": ("wide", "collapse"),
                 "fields": ("specs", "specifications", "internal_layout", "features", "advantages"),
             },
         ),
