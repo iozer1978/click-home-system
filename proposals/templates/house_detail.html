@@ -48,32 +48,35 @@
                 {% endif %}
                 <span class="house-premium__hero-title-line" aria-hidden="true"></span>
             </div>
-        </div>
-    </section>
-
-    <section class="house-premium__feature-strip" aria-label="נתוני הדגם">
-        <div class="house-premium__feature-strip-card">
-            <div class="house-premium__feature-items">
-                {% for item in feature_strip_items %}
-                <article class="house-premium__feature-item">
-                    <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
-                    <span>{{ item.title }}</span>
-                    <strong>{{ item.value }}</strong>
-                </article>
-                {% endfor %}
-            </div>
-            {% if whatsapp_url or contact_phone_display %}
-            <div class="house-premium__feature-actions">
-                {% if whatsapp_url %}
-                <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
-                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> שלחו הודעה בוואטסאפ
-                </a>
-                {% endif %}
-                {% if contact_phone_display %}
-                <a href="tel:{{ contact_phone_tel }}" class="btn btn--ghost">
-                    <i class="fa-solid fa-phone" aria-hidden="true"></i> צור קשר {{ contact_phone_display }}
-                </a>
-                {% endif %}
+            {% if feature_strip_items or whatsapp_url or contact_phone_display %}
+            <div class="house-premium__feature-strip" aria-label="נתוני הדגם">
+                <div class="house-premium__feature-strip-card">
+                    {% if feature_strip_items %}
+                    <div class="house-premium__feature-items">
+                        {% for item in feature_strip_items %}
+                        <article class="house-premium__feature-item">
+                            <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
+                            <span>{{ item.title }}</span>
+                            <strong>{{ item.value }}</strong>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if whatsapp_url or contact_phone_display %}
+                    <div class="house-premium__feature-actions">
+                        {% if whatsapp_url %}
+                        <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> שלחו הודעה בוואטסאפ
+                        </a>
+                        {% endif %}
+                        {% if contact_phone_display %}
+                        <a href="tel:{{ contact_phone_tel }}" class="btn btn--ghost">
+                            <i class="fa-solid fa-phone" aria-hidden="true"></i> צור קשר {{ contact_phone_display }}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         </div>
