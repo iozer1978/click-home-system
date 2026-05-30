@@ -135,7 +135,7 @@ class HouseAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "תיאור ושיוך",
+            "תוכן שיווקי ותיאור",
             {
                 "fields": (
                     "description",
@@ -145,9 +145,15 @@ class HouseAdmin(admin.ModelAdmin):
                     "full_description",
                     "description_section_title",
                     "highlights_section_title",
-                    "house_types",
-                    "usage_types",
                 ),
+            },
+        ),
+        (
+            "סיווג פנימי (לא מוצג ישירות ללקוח)",
+            {
+                "classes": ("collapse",),
+                "description": "סוגי בית/שימוש מיועדים לסינון קטלוג, התאמות וחיפוש פנימי.",
+                "fields": ("house_types", "usage_types", "related_models"),
             },
         ),
         (
@@ -198,7 +204,6 @@ class HouseAdmin(admin.ModelAdmin):
                     "delivery_time",
                     "warranty",
                     "construction_type",
-                    "related_models",
                 ),
             },
         ),
