@@ -2841,7 +2841,7 @@ a:hover {
 .home-faq__kicker {
   margin: 0 0 8px;
   text-align: center;
-  color: #b79a57;
+  color: #c89b52;
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -2849,7 +2849,7 @@ a:hover {
 .home-faq__title {
   margin: 0;
   text-align: center;
-  color: #0f3b2f;
+  color: #0d3b2a;
   font-size: clamp(2rem, 3.8vw, 3.2rem);
   line-height: 1.15;
 }
@@ -2867,8 +2867,8 @@ a:hover {
 }
 
 .home-faq--premium .faq-item {
-  border-radius: 20px;
-  border: 1px solid #e6dac4;
+  border-radius: 16px;
+  border: 1px solid #e8d7b8;
   background: #fff;
   box-shadow: 0 14px 34px rgba(20, 37, 32, 0.08);
   margin-bottom: 14px;
@@ -2878,14 +2878,14 @@ a:hover {
 .home-faq--premium .faq-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 40px rgba(20, 37, 32, 0.11);
-  border-color: #d7c296;
+  border-color: #c89b52;
 }
 
 .home-faq--premium .faq-item__question {
   min-height: 72px;
   padding: 18px 24px;
   background: transparent;
-  color: #123f32;
+  color: #0d3b2a;
   font-size: clamp(1.01rem, 1.55vw, 1.2rem);
 }
 
@@ -2897,7 +2897,7 @@ a:hover {
 }
 
 .home-faq__q-head i {
-  color: #b79a57;
+  color: #c89b52;
   font-size: 1.04rem;
 }
 
@@ -2907,9 +2907,9 @@ a:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #d7c296;
+  border: 1px solid #e4cca0;
   border-radius: 50%;
-  color: #0f3b2f;
+  color: #0d3b2a;
   background: #fffaf1;
 }
 
@@ -2926,6 +2926,62 @@ a:hover {
 .home-faq--premium .faq-item__panel p {
   margin: 0 0 10px;
   line-height: 1.8;
+}
+
+.home-faq__inner-title {
+  margin: 16px 0 12px;
+  color: #0d3b2a;
+  font-size: 1.08rem;
+}
+
+.home-faq__long-benefits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-faq__long-benefits div {
+  border: 1px solid #ecdfcb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.home-faq__long-benefits h4 {
+  margin: 0 0 6px;
+  color: #1f3c34;
+  font-size: 0.98rem;
+}
+
+.home-faq__long-benefits p {
+  margin: 0;
+  color: #455851;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.home-faq__quick-highlights {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-faq__quick-highlights span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e4cca0;
+  border-radius: 12px;
+  padding: 10px 10px;
+  background: #fffaf1;
+  color: #234137;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.home-faq__quick-highlights i {
+  color: #c89b52;
 }
 
 .home-faq__adv-box {
@@ -2988,7 +3044,7 @@ a:hover {
   border-radius: 14px;
   padding: 12px 14px;
   background: linear-gradient(135deg, #fff9ec 0%, #f4e4bd 100%);
-  border: 1px solid #e2c88f;
+  border: 1px solid #c89b52;
   color: #244037;
   font-weight: 600;
 }
@@ -2999,7 +3055,7 @@ a:hover {
 
 .home-faq__trust-card {
   border-radius: 16px;
-  border: 1px solid #e4d0a6;
+  border: 1px solid #e4cca0;
   background: linear-gradient(140deg, #fffef9 0%, #f9f1df 100%);
   padding: 16px;
 }
@@ -3029,7 +3085,7 @@ a:hover {
 }
 
 .home-faq__trust-icons i {
-  color: #b79a57;
+  color: #c89b52;
 }
 
 .home-faq__cta {
@@ -3074,6 +3130,8 @@ a:hover {
 }
 
 @media (max-width: 1024px) {
+  .home-faq__long-benefits,
+  .home-faq__quick-highlights,
   .home-faq__adv-grid,
   .home-faq__trust-icons {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3095,6 +3153,8 @@ a:hover {
   }
 
   .home-faq__adv-grid,
+  .home-faq__long-benefits,
+  .home-faq__quick-highlights,
   .home-faq__stat-grid,
   .home-faq__trust-icons {
     grid-template-columns: 1fr;
