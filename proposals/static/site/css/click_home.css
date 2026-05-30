@@ -2314,10 +2314,10 @@ a:hover {
   background: #fff;
   border: 1px solid rgba(225, 211, 190, 0.75);
   border-radius: 24px;
-  padding: 24px 22px 22px;
+  padding: 22px 20px 20px;
   box-shadow: 0 14px 30px rgba(17, 17, 17, 0.08);
   text-align: center;
-  min-height: 360px;
+  min-height: 345px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -2347,16 +2347,16 @@ a:hover {
 
 .home-testimonials__card blockquote {
   margin: 12px 0 0;
-  font-size: 1.5rem;
+  font-size: 1.38rem;
   line-height: 1.35;
   font-weight: 800;
   color: var(--text-dark);
 }
 
 .home-testimonials__card p {
-  margin: 16px 0 0;
-  font-size: 1rem;
-  line-height: 1.7;
+  margin: 14px 0 0;
+  font-size: 0.96rem;
+  line-height: 1.66;
   color: var(--text-muted);
   flex-grow: 1;
 }

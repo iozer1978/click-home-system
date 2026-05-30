@@ -203,7 +203,8 @@
     }
 
     function updateDots() {
-      var safeIndex = Math.min(index, dots.length - 1);
+      var max = maxIndex();
+      var safeIndex = Math.min(index, Math.max(0, max));
       dots.forEach(function (dot, dotIndex) {
         dot.classList.toggle("is-active", dotIndex === safeIndex);
       });
