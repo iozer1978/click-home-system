@@ -225,6 +225,37 @@ class HouseAdmin(admin.ModelAdmin):
                     is_enabled=False,
                     sort_order=idx,
                 )
+        self._cleanup_duplicate_rows(obj)
+
+    def _cleanup_duplicate_rows(self, obj):
+        """Keep one row per preset key (except custom) to avoid admin duplication."""
+        self._dedupe_model_rows(HouseTechnicalSpec, obj, "label", "value")
+        self._dedupe_model_rows(HouseAdvantageItem, obj, "text", "text")
+
+    def _dedupe_model_rows(self, model_cls, obj, primary_text_field, value_field):
+        choices = getattr(model_cls, "PRESET_CHOICES", [])
+        for preset_key, _label in choices:
+            if preset_key == "custom":
+                continue
+            rows = list(model_cls.objects.filter(house=obj, preset_key=preset_key))
+            if len(rows) <= 1:
+                continue
+
+            def _score(row):
+                primary_text = str(getattr(row, primary_text_field, "") or "").strip()
+                value_text = str(getattr(row, value_field, "") or "").strip()
+                return (
+                    1 if value_text else 0,
+                    1 if primary_text else 0,
+                    1 if getattr(row, "is_enabled", False) else 0,
+                    -int(getattr(row, "sort_order", 0)),
+                    -int(getattr(row, "id", 0)),
+                )
+
+            rows_sorted = sorted(rows, key=_score, reverse=True)
+            row_to_keep = rows_sorted[0]
+            for duplicate_row in rows_sorted[1:]:
+                duplicate_row.delete()
         for idx, (key, label) in enumerate(HouseAdvantageItem.PRESET_CHOICES):
             existing_advantage = HouseAdvantageItem.objects.filter(house=obj, preset_key=key).first()
             if not existing_advantage:

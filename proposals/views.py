@@ -631,7 +631,7 @@ def house_detail(request, pk):
             normalized_advantages.append({"title": text, "description": "", "icon": "fa-check"})
     normalized_advantages = normalized_advantages[:4]
 
-    specs_grid = []
+    enabled_specs = []
     if house.technical_specs.exists():
         for technical_spec in house.technical_specs.all():
             if not technical_spec.is_enabled:
@@ -639,34 +639,37 @@ def house_detail(request, pk):
             label = technical_spec.display_label().strip()
             value = str(technical_spec.value).strip()
             if label and value:
-                specs_grid.append({"label": label, "value": value})
-    elif isinstance(structured_specs, dict) and structured_specs:
-        for key, value in structured_specs.items():
-            if value in ("", None):
-                continue
-            label = str(key).replace("_", " ")
-            specs_grid.append({"label": label, "value": str(value)})
-    else:
-        label_map = {
-            "שטח בנוי": f'{area_value} מ"ר' if area_value else "",
-            "חדרי שינה": bedrooms_value or spec_map_from_text.get("חדרי שינה", ""),
-            "חדרי רחצה": bathrooms_value or spec_map_from_text.get("חדרי רחצה", spec_map_from_text.get("מרחצאות", "")),
-            "סלון": living_value or spec_map_from_text.get("סלון", ""),
-            "מטבח": kitchen_value or spec_map_from_text.get("מטבח", ""),
-            "סוג בנייה": house.construction_type or spec_map_from_text.get("סוג מבנה", ""),
-            "גמר חוץ": spec_map_from_text.get("חוץ", ""),
-            "סוג גג": spec_map_from_text.get("גג", ""),
-            "בידוד": spec_map_from_text.get("בידוד", ""),
-            "חלונות": spec_map_from_text.get("חלונות", ""),
-            "דלתות": spec_map_from_text.get("דלתות", ""),
-            "סוג יסוד": spec_map_from_text.get("יסוד", ""),
-            "הכנה לחשמל": spec_map_from_text.get("חשמל", ""),
-            "הכנה לאינסטלציה": spec_map_from_text.get("אינסטלציה", ""),
-        }
-        for label, value in label_map.items():
-            value_text = str(value).strip() if value is not None else ""
-            if value_text:
-                specs_grid.append({"label": label, "value": value_text})
+                enabled_specs.append({"label": label, "value": value})
+
+    specs_grid = list(enabled_specs)
+    if not specs_grid:
+        if isinstance(structured_specs, dict) and structured_specs:
+            for key, value in structured_specs.items():
+                if value in ("", None):
+                    continue
+                label = str(key).replace("_", " ")
+                specs_grid.append({"label": label, "value": str(value)})
+        else:
+            label_map = {
+                "שטח בנוי": f'{area_value} מ"ר' if area_value else "",
+                "חדרי שינה": bedrooms_value or spec_map_from_text.get("חדרי שינה", ""),
+                "חדרי רחצה": bathrooms_value or spec_map_from_text.get("חדרי רחצה", spec_map_from_text.get("מרחצאות", "")),
+                "סלון": living_value or spec_map_from_text.get("סלון", ""),
+                "מטבח": kitchen_value or spec_map_from_text.get("מטבח", ""),
+                "סוג בנייה": house.construction_type or spec_map_from_text.get("סוג מבנה", ""),
+                "גמר חוץ": spec_map_from_text.get("חוץ", ""),
+                "סוג גג": spec_map_from_text.get("גג", ""),
+                "בידוד": spec_map_from_text.get("בידוד", ""),
+                "חלונות": spec_map_from_text.get("חלונות", ""),
+                "דלתות": spec_map_from_text.get("דלתות", ""),
+                "סוג יסוד": spec_map_from_text.get("יסוד", ""),
+                "הכנה לחשמל": spec_map_from_text.get("חשמל", ""),
+                "הכנה לאינסטלציה": spec_map_from_text.get("אינסטלציה", ""),
+            }
+            for label, value in label_map.items():
+                value_text = str(value).strip() if value is not None else ""
+                if value_text:
+                    specs_grid.append({"label": label, "value": value_text})
     if house.dimensions_text.strip():
         specs_grid.append({"label": "מידות", "value": house.dimensions_text.strip()})
 

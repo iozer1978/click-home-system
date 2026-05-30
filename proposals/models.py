@@ -210,7 +210,7 @@ class HouseTechnicalSpec(models.Model):
         ("custom", "טקסט מותאם אישית"),
     ]
     house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name="technical_specs", verbose_name="דגם")
-    is_enabled = models.BooleanField(default=True, verbose_name="להציג באתר (V)")
+    is_enabled = models.BooleanField(default=False, verbose_name="להציג באתר (V)")
     preset_key = models.CharField(max_length=60, choices=PRESET_CHOICES, default="custom", verbose_name="פריט מובנה")
     label = models.CharField(max_length=120, blank=True, verbose_name="כותרת מותאמת (לפריט מותאם)")
     value = models.CharField(max_length=255, blank=True, verbose_name="ערך")
@@ -260,7 +260,7 @@ class HouseAdvantageItem(models.Model):
         ("custom", "טקסט מותאם אישית"),
     ]
     house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name="advantage_items", verbose_name="דגם")
-    is_enabled = models.BooleanField(default=True, verbose_name="להציג באתר (V)")
+    is_enabled = models.BooleanField(default=False, verbose_name="להציג באתר (V)")
     preset_key = models.CharField(max_length=60, choices=PRESET_CHOICES, default="custom", verbose_name="יתרון מובנה")
     text = models.CharField(max_length=255, blank=True, verbose_name="טקסט מותאם (לפריט מותאם)")
     sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר תצוגה")
