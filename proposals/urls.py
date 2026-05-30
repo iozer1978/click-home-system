@@ -19,6 +19,7 @@ urlpatterns = [
 
     # דפים ראשיים
     path('', views.home_page, name='home'),
+    path('home', views.home_page, name='home_alias'),
     path('lead/submit/', views.lead_submit, name='lead_submit'),
     path('about/', views.about_page, name='about'),
     path('contact/', views.contact_page, name='contact'),
