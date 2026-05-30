@@ -482,12 +482,168 @@ def catalog_page(request):
 
 @xframe_options_sameorigin
 def house_detail(request, pk):
-    house = get_object_or_404(HouseModel, pk=pk)
-    related_houses = HouseModel.objects.filter(~Q(pk=pk))[:3]
+    house = get_object_or_404(HouseModel.objects.prefetch_related("house_types", "usage_types", "media_files", "related_models"), pk=pk)
+
+    def _parse_specs_text(raw_text):
+        spec_map = {}
+        if not raw_text:
+            return spec_map
+        for raw_line in str(raw_text).splitlines():
+            line = raw_line.strip().strip("•-")
+            if not line or ":" not in line:
+                continue
+            key, value = line.split(":", 1)
+            spec_map[key.strip()] = value.strip()
+        return spec_map
+
+    def _extract_count(spec_map, *keys):
+        for key in keys:
+            value = spec_map.get(key)
+            if not value:
+                continue
+            match = re.search(r"\d+", str(value))
+            if match:
+                return int(match.group(0))
+        return None
+
+    spec_map_from_text = _parse_specs_text(house.specs)
+    structured_specs = house.specifications if isinstance(house.specifications, dict) else {}
+
+    hero_image_url = house.hero_image.url if house.hero_image else None
+    if not hero_image_url:
+        main_image = house.get_main_image()
+        hero_image_url = main_image.url if main_image else ""
+
+    media_images = [m.file.url for m in house.media_files.all() if m.media_type == "image" and m.file]
+    gallery_images = list(media_images)
+    if isinstance(house.gallery_images, list):
+        gallery_images.extend([img for img in house.gallery_images if isinstance(img, str)])
+    gallery_images = list(dict.fromkeys([img for img in gallery_images if img]))
+    if hero_image_url and hero_image_url not in gallery_images:
+        gallery_images.insert(0, hero_image_url)
+
+    interior_images = []
+    if isinstance(house.interior_images, list):
+        interior_images = [img for img in house.interior_images if isinstance(img, str) and img]
+    if not interior_images:
+        interior_images = gallery_images[1:6] if len(gallery_images) > 1 else gallery_images[:4]
+
+    area_value = house.area_sqm
+    bedrooms_value = _extract_count(structured_specs, "bedrooms", "חדרי שינה") or _extract_count(spec_map_from_text, "חדרי שינה")
+    bathrooms_value = _extract_count(structured_specs, "bathrooms", "חדרי רחצה") or _extract_count(spec_map_from_text, "חדרי רחצה", "מרחצאות")
+    living_value = _extract_count(structured_specs, "living_room", "סלון") or _extract_count(spec_map_from_text, "סלון")
+    kitchen_value = _extract_count(structured_specs, "kitchen", "מטבח") or _extract_count(spec_map_from_text, "מטבח")
+
+    hero_highlights = [
+        {"icon": "fa-ruler-combined", "label": 'שטח בנוי', "value": f'{area_value} מ"ר' if area_value else "מותאם לדגם"},
+        {"icon": "fa-bed", "label": "מספר חדרים", "value": str(bedrooms_value) if bedrooms_value else "מותאם לדגם"},
+        {"icon": "fa-bath", "label": "מספר חדרי רחצה", "value": str(bathrooms_value) if bathrooms_value else "מותאם לדגם"},
+        {"icon": "fa-building", "label": "סוג בנייה", "value": house.construction_type or spec_map_from_text.get("סוג מבנה") or "בנייה מתקדמת"},
+        {"icon": "fa-truck-fast", "label": "זמן אספקה", "value": house.delivery_time or "בהתאם לדגם ולמפרט"},
+        {"icon": "fa-shield-halved", "label": "אחריות", "value": house.warranty or spec_map_from_text.get("אחריות") or "בהתאם למפרט"},
+    ]
+
+    feature_strip = house.features if isinstance(house.features, list) else []
+    feature_strip = [item for item in feature_strip if isinstance(item, str) and item.strip()]
+    if not feature_strip:
+        feature_strip = [t.name for t in house.house_types.all()[:3]]
+        feature_strip.extend([u.name for u in house.usage_types.all()[:3]])
+        feature_strip.extend(list(spec_map_from_text.keys())[:3])
+        feature_strip = [item for item in feature_strip if item]
+        feature_strip = list(dict.fromkeys(feature_strip))[:8]
+
+    full_description = house.full_description or house.description
+    description_lines = [line.strip() for line in str(full_description).splitlines() if line.strip()]
+    if not description_lines:
+        description_lines = [house.description] if house.description else []
+
+    advantages = house.advantages if isinstance(house.advantages, list) else []
+    normalized_advantages = []
+    for adv in advantages:
+        if isinstance(adv, dict):
+            title = str(adv.get("title", "")).strip()
+            description = str(adv.get("description", "")).strip()
+            icon = str(adv.get("icon", "fa-star")).strip() or "fa-star"
+            if title:
+                normalized_advantages.append({"title": title, "description": description, "icon": icon})
+        elif isinstance(adv, str) and adv.strip():
+            normalized_advantages.append({"title": adv.strip(), "description": "", "icon": "fa-star"})
+
+    if not normalized_advantages:
+        fallback_lines = [line.strip("•- ").strip() for line in str(house.internal_layout or "").splitlines() if line.strip()]
+        if not fallback_lines:
+            fallback_lines = [line.strip("•- ").strip() for line in str(house.specs or "").splitlines() if line.strip()]
+        if not fallback_lines:
+            fallback_lines = [sentence.strip() for sentence in re.split(r"[.\n]", str(house.description or "")) if sentence.strip()]
+        for text in fallback_lines[:6]:
+            normalized_advantages.append({"title": text, "description": "", "icon": "fa-check"})
+
+    specs_grid = []
+    if isinstance(structured_specs, dict) and structured_specs:
+        for key, value in structured_specs.items():
+            if value in ("", None):
+                continue
+            label = str(key).replace("_", " ")
+            specs_grid.append({"label": label, "value": str(value)})
+    else:
+        label_map = {
+            "שטח בנוי": f'{area_value} מ"ר' if area_value else "",
+            "חדרי שינה": bedrooms_value or spec_map_from_text.get("חדרי שינה", ""),
+            "חדרי רחצה": bathrooms_value or spec_map_from_text.get("חדרי רחצה", spec_map_from_text.get("מרחצאות", "")),
+            "סלון": living_value or spec_map_from_text.get("סלון", ""),
+            "מטבח": kitchen_value or spec_map_from_text.get("מטבח", ""),
+            "סוג בנייה": house.construction_type or spec_map_from_text.get("סוג מבנה", ""),
+            "גמר חוץ": spec_map_from_text.get("חוץ", ""),
+            "סוג גג": spec_map_from_text.get("גג", ""),
+            "בידוד": spec_map_from_text.get("בידוד", ""),
+            "חלונות": spec_map_from_text.get("חלונות", ""),
+            "דלתות": spec_map_from_text.get("דלתות", ""),
+            "סוג יסוד": spec_map_from_text.get("יסוד", ""),
+            "הכנה לחשמל": spec_map_from_text.get("חשמל", ""),
+            "הכנה לאינסטלציה": spec_map_from_text.get("אינסטלציה", ""),
+        }
+        for label, value in label_map.items():
+            value_text = str(value).strip() if value is not None else ""
+            if value_text:
+                specs_grid.append({"label": label, "value": value_text})
+
+    related_qs = house.related_models.all()
+    if not related_qs.exists():
+        house_type_ids = list(house.house_types.values_list("id", flat=True))
+        candidates = HouseModel.objects.filter(~Q(pk=house.pk)).prefetch_related("house_types", "media_files")[:40]
+        scored = []
+        for candidate in candidates:
+            score = 0
+            candidate_type_ids = set(candidate.house_types.values_list("id", flat=True))
+            if house_type_ids and candidate_type_ids.intersection(house_type_ids):
+                score += 100
+            score -= abs((candidate.area_sqm or 0) - (house.area_sqm or 0))
+            scored.append((score, candidate))
+        scored.sort(key=lambda item: item[0], reverse=True)
+        related_houses = [item[1] for item in scored[:4]]
+    else:
+        related_houses = list(related_qs[:4])
+
     is_fav = False
     if request.user.is_authenticated and hasattr(request.user, 'profile'):
         is_fav = house in request.user.profile.favorites.all()
-    return render(request, 'house_detail.html', {'house': house, 'related_houses': related_houses, 'is_fav': is_fav})
+    return render(
+        request,
+        'house_detail.html',
+        {
+            'house': house,
+            'related_houses': related_houses,
+            'is_fav': is_fav,
+            'hero_image_url': hero_image_url,
+            'gallery_images': gallery_images,
+            'interior_images': interior_images,
+            'hero_highlights': hero_highlights,
+            'feature_strip': feature_strip,
+            'full_description_lines': description_lines,
+            'specs_grid': specs_grid,
+            'advantages_display': normalized_advantages,
+        },
+    )
 
 @login_required
 def create_quote(request, pk):

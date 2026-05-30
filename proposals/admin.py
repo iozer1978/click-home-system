@@ -91,7 +91,7 @@ class HouseAdmin(admin.ModelAdmin):
         "price_estimate",
     )
     list_filter = ("house_types", "usage_types")
-    search_fields = ("title", "config_key", "description")
+    search_fields = ("title", "config_key", "description", "short_description", "full_description")
     ordering = ("title",)
     inlines = [HouseMediaStackedInline, HouseUpgradeInline]
     filter_horizontal = ("house_types", "usage_types")
@@ -105,7 +105,7 @@ class HouseAdmin(admin.ModelAdmin):
         (
             "תיאור ושיוך",
             {
-                "fields": ("description", "house_types", "usage_types"),
+                "fields": ("description", "short_description", "full_description", "house_types", "usage_types"),
             },
         ),
         (
@@ -118,13 +118,27 @@ class HouseAdmin(admin.ModelAdmin):
             "תוכן טכני",
             {
                 "classes": ("wide",),
-                "fields": ("specs", "internal_layout"),
+                "fields": ("specs", "specifications", "internal_layout", "features", "advantages"),
             },
         ),
         (
             "שרטוט",
             {
-                "fields": ("blueprint_image",),
+                "fields": ("blueprint_image", "floor_plan_pdf"),
+            },
+        ),
+        (
+            "שדות תצוגה מתקדמים",
+            {
+                "fields": (
+                    "hero_image",
+                    "gallery_images",
+                    "interior_images",
+                    "delivery_time",
+                    "warranty",
+                    "construction_type",
+                    "related_models",
+                ),
             },
         ),
     )
