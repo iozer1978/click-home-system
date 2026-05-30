@@ -182,7 +182,6 @@
             })
             .join("");
           var benefits = (item.benefits || []).map(benefitCard).join("");
-          var highlightsIntro = item.highlightsIntro ? '<p class="home-faq__highlights-intro">' + escapeHtml(item.highlightsIntro) + "</p>" : "";
           var highlights = (item.highlights || [])
             .map(function (hl) {
               return "<span>" + escapeHtml(hl) + "</span>";
@@ -203,7 +202,6 @@
             "</div>" +
             '<h3 class="home-faq__inner-title">סיכום מודגש</h3>' +
             '<div class="home-faq__highlight">' + escapeHtml(item.summary || "") + "</div>" +
-            highlightsIntro +
             '<div class="home-faq__quick-highlights">' + highlights + "</div>" +
             "</div>" +
             "</div>"
@@ -228,8 +226,6 @@
             (item.title || "") +
             " " +
             (item.summary || "") +
-            " " +
-            (item.highlightsIntro || "") +
             " " +
             (item.introParagraphs || []).join(" ") +
             " " +
