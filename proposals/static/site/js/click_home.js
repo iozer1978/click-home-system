@@ -267,6 +267,35 @@
     startAutoplay();
   }
 
+  function initProjectCardsSelect() {
+    var root = document.querySelector("[data-project-options]");
+    var select = document.querySelector("#lead-interest");
+    if (!root || !select) return;
+
+    var buttons = root.querySelectorAll("button[data-value]");
+    if (!buttons.length) return;
+
+    function setActive(value) {
+      buttons.forEach(function (btn) {
+        btn.classList.toggle("is-active", btn.getAttribute("data-value") === value);
+      });
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var value = btn.getAttribute("data-value") || "";
+        select.value = value;
+        setActive(value);
+      });
+    });
+
+    select.addEventListener("change", function () {
+      setActive(select.value);
+    });
+
+    setActive(select.value);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initMobileNav();
     initFaqAccordion();
@@ -274,5 +303,6 @@
     initAnalyticsClicks();
     initScrollReveal();
     initTestimonialsCarousel();
+    initProjectCardsSelect();
   });
 })();

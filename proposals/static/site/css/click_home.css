@@ -2475,88 +2475,352 @@ a:hover {
 }
 
 .home-final-cta {
-  padding: 48px 16px 64px;
+  position: relative;
+  background: #f5f1e8;
+  padding: 72px 16px 84px;
+  overflow: hidden;
 }
 
 .home-final-cta__box {
-  max-width: 960px;
+  max-width: 1400px;
   margin-inline: auto;
-  border-radius: 18px;
-  padding: 48px;
-  background: linear-gradient(135deg, var(--wood-gradient-start) 0%, var(--gold) 100%);
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(17, 17, 17, 0.12);
+  overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr minmax(280px, 460px);
-  gap: 40px;
-  align-items: start;
+  grid-template-columns: 45% 55%;
+  min-height: 850px;
   direction: ltr;
 }
 
-.home-final-cta__text {
-  direction: rtl;
-  color: var(--white);
+.home-final-cta__visual {
+  position: relative;
+  background-image: url("/media/advantages/clontact.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100%;
 }
 
-.home-final-cta__text h2 {
-  margin: 0;
-  font-size: 32px;
+.home-final-cta__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.65), rgba(20, 20, 20, 0.45));
+}
+
+.home-final-cta__content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 30px 28px 34px;
+  color: #fff;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.home-final-cta__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  min-height: 42px;
+  padding: 0 16px;
+  background: rgba(15, 15, 15, 0.25);
+  backdrop-filter: blur(6px);
+  font-size: 0.93rem;
+}
+
+.home-final-cta__badge i {
+  font-size: 0.95rem;
+}
+
+.home-final-cta__content h2 {
+  margin: 30px 0 0;
+  line-height: 1.05;
+  font-size: clamp(2.4rem, 4.6vw, 4.5rem);
   font-weight: 900;
-  line-height: 1.15;
 }
 
-.home-final-cta__text p {
-  margin: 12px 0 0;
-  font-size: 17px;
-  line-height: 1.5;
-  opacity: 0.95;
+.home-final-cta__content h2 span {
+  display: block;
 }
 
-.home-final-cta__form {
+.home-final-cta__content h2 span:last-child {
+  color: #d9a24a;
+}
+
+.home-final-cta__content p {
+  margin: 24px 0 0;
+  line-height: 1.65;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.home-final-cta__visual-features {
+  margin-top: auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-final-cta__vf-item {
+  text-align: center;
+}
+
+.home-final-cta__vf-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 162, 74, 0.75);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  color: #d9a24a;
+  background: rgba(15, 15, 15, 0.15);
+}
+
+.home-final-cta__vf-item strong,
+.home-final-cta__vf-item small {
+  display: block;
+  line-height: 1.35;
+}
+
+.home-final-cta__vf-item strong {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.home-final-cta__vf-item small {
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.home-final-cta__floating-contact {
+  margin-top: 22px;
+  align-self: flex-start;
+  background: #fff;
+  color: #1a1a1a;
+  border-radius: 18px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  padding: 14px 14px 14px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.home-final-cta__floating-text {
+  text-align: right;
+}
+
+.home-final-cta__floating-text span,
+.home-final-cta__floating-text small {
+  display: block;
+}
+
+.home-final-cta__floating-text span {
+  font-size: 0.9rem;
+}
+
+.home-final-cta__floating-text strong {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin: 2px 0;
+}
+
+.home-final-cta__floating-text small {
+  font-size: 0.78rem;
+  color: #6a675f;
+}
+
+.home-final-cta__floating-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9913d, #d9a24a);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+}
+
+.home-final-cta__form-wrap {
+  padding: 48px;
   direction: rtl;
 }
 
-.home-final-cta__form input,
-.home-final-cta__form select,
-.home-final-cta__form textarea {
+.home-final-cta__form-wrap input,
+.home-final-cta__form-wrap select,
+.home-final-cta__form-wrap textarea {
   width: 100%;
-  height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--input-border);
-  border-radius: 8px;
+  height: 56px;
+  padding: 0 16px;
+  border: 1px solid #ddd4c6;
+  border-radius: 14px;
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: 1rem;
   box-sizing: border-box;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   background: var(--white);
 }
 
-.home-final-cta__form textarea {
-  height: auto;
-  min-height: 88px;
-  padding: 10px 12px;
+.home-final-cta__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
 
-.home-final-cta__form button[type="submit"] {
+.home-final-cta__form-wrap textarea {
+  height: auto;
+  min-height: 146px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+.home-final-cta__project-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.home-final-cta__project-cards button {
+  min-height: 66px;
+  border-radius: 18px;
+  border: 1px solid #d8c3a0;
+  background: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #524a3f;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-final-cta__project-cards button:hover {
+  transform: translateY(-1px);
+  background: #f7ebd6;
+}
+
+.home-final-cta__project-cards button.is-active {
+  background: linear-gradient(135deg, #c9913d, #d9a24a);
+  color: #fff;
+  border-color: transparent;
+}
+
+.home-final-cta__consent {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #6d665a;
+  font-size: 0.92rem;
+  margin-bottom: 14px;
+}
+
+.home-final-cta__consent input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.home-final-cta__submit {
   width: 100%;
-  height: 48px;
-  margin-top: 4px;
+  height: 72px;
+  margin-top: 2px;
   border: none;
-  border-radius: 12px;
-  background: var(--btn-brand);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #c9913d, #d9a24a);
   color: var(--white);
-  font-weight: 800;
-  font-size: 16px;
+  font-weight: 900;
+  font-size: 1.2rem;
   cursor: pointer;
   font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.home-final-cta__form button[type="submit"]:hover {
-  background: var(--btn-brand-hover);
+.home-final-cta__submit:hover {
+  transform: scale(1.03);
+  filter: brightness(1.02);
+}
+
+.home-final-cta__security-note {
+  margin: 14px 0 0;
+  color: #6f685d;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.home-final-cta__security-note i {
+  color: #b8893a;
 }
 
 @media (max-width: 900px) {
+  .home-final-cta {
+    padding: 56px 12px 70px;
+  }
+
   .home-final-cta__box {
     grid-template-columns: 1fr;
-    padding: 32px 24px;
+    min-height: 0;
+  }
+
+  .home-final-cta__content {
+    padding: 24px 16px 22px;
+  }
+
+  .home-final-cta__content h2 {
+    font-size: 2.3rem;
+    margin-top: 20px;
+  }
+
+  .home-final-cta__content p {
+    font-size: 1rem;
+    margin-top: 14px;
+  }
+
+  .home-final-cta__visual-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 18px;
+  }
+
+  .home-final-cta__vf-icon {
+    width: 64px;
+    height: 64px;
+    font-size: 1.2rem;
+  }
+
+  .home-final-cta__floating-contact {
+    align-self: center;
+    margin-top: 16px;
+  }
+
+  .home-final-cta__form-wrap {
+    padding: 26px 16px 20px;
+  }
+
+  .home-final-cta__row,
+  .home-final-cta__project-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .home-final-cta__submit {
+    height: 64px;
+    font-size: 1.06rem;
   }
 }
 

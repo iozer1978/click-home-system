@@ -339,21 +339,65 @@
 <section id="lead" class="home-final-cta" aria-labelledby="lead-heading">
     <span id="lead-success" tabindex="-1"></span>
     <div class="home-final-cta__box">
-        <div class="home-final-cta__text">
-            <h2 id="lead-heading">התחל את הפרויקט שלך היום</h2>
-            <p>נחזור אליך עם ייעוץ ראשוני והצעת מחיר מותאמת אישית</p>
+        <div class="home-final-cta__visual">
+            <div class="home-final-cta__overlay"></div>
+            <div class="home-final-cta__content">
+                <div class="home-final-cta__badge">
+                    <i class="fa-solid fa-house" aria-hidden="true"></i>
+                    <span>ליווי אישי. תכנון מדויק. בית שמרגיש בדיוק לכם.</span>
+                </div>
+                <h2 id="lead-heading"><span>התחילו את הפרויקט</span><span>שלכם היום</span></h2>
+                <p>מלאו את הפרטים ונחזור אליכם בהקדם<br>לפגישת ייעוץ ראשונית ללא התחייבות.</p>
+
+                <div class="home-final-cta__visual-features" aria-label="יתרונות הליווי שלנו">
+                    <div class="home-final-cta__vf-item">
+                        <span class="home-final-cta__vf-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+                        <strong>ליווי אישי</strong>
+                        <small>לאורך כל הדרך</small>
+                    </div>
+                    <div class="home-final-cta__vf-item">
+                        <span class="home-final-cta__vf-icon"><i class="fa-solid fa-pen-ruler" aria-hidden="true"></i></span>
+                        <strong>תכנון מותאם</strong>
+                        <small>בדיוק לצרכים שלכם</small>
+                    </div>
+                    <div class="home-final-cta__vf-item">
+                        <span class="home-final-cta__vf-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+                        <strong>פרטיות מלאה</strong>
+                        <small>ושמירה על המידע</small>
+                    </div>
+                    <div class="home-final-cta__vf-item">
+                        <span class="home-final-cta__vf-icon"><i class="fa-solid fa-star" aria-hidden="true"></i></span>
+                        <strong>שירות ברמת</strong>
+                        <small>VIP</small>
+                    </div>
+                </div>
+
+                <div class="home-final-cta__floating-contact">
+                    <div class="home-final-cta__floating-text">
+                        <span>עדיפים לדבר?</span>
+                        <strong>079-580-7494</strong>
+                        <small>א׳-ה׳ 08:00-18:00</small>
+                    </div>
+                    <span class="home-final-cta__floating-icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
+                </div>
+            </div>
         </div>
-        <div class="home-final-cta__form">
+
+        <div class="home-final-cta__form-wrap">
             <form method="post" action="{% url 'lead_submit' %}">
                 {% csrf_token %}
                 <input type="hidden" name="source" value="final">
-                <label class="sr-only" for="lead-full-name">שם מלא</label>
-                <input id="lead-full-name" name="full_name" type="text" autocomplete="name" required maxlength="100" placeholder="שם מלא">
-                <label class="sr-only" for="lead-phone">טלפון</label>
-                <input id="lead-phone" name="phone" type="tel" autocomplete="tel" required maxlength="30" placeholder="טלפון">
+                <div class="home-final-cta__row">
+                    <label class="sr-only" for="lead-full-name">שם מלא</label>
+                    <input id="lead-full-name" name="full_name" type="text" autocomplete="name" required maxlength="100" placeholder="שם מלא *">
+                    <label class="sr-only" for="lead-phone">טלפון</label>
+                    <input id="lead-phone" name="phone" type="tel" autocomplete="tel" required maxlength="30" placeholder="טלפון *">
+                </div>
+
                 <label class="sr-only" for="lead-email">דוא״ל</label>
                 <input id="lead-email" name="email" type="email" autocomplete="email" maxlength="255" placeholder="דוא״ל (אופציונלי)">
-                <label class="sr-only" for="lead-interest">סוג פרויקט</label>
+
+                <label class="sr-only" for="lead-interest">סוג הפרויקט</label>
                 <select id="lead-interest" name="interest_type">
                     <option value="בית פרטי / דופלקס">בית פרטי / דופלקס</option>
                     <option value="דירת גן / קוטג׳">דירת גן / קוטג׳</option>
@@ -361,9 +405,31 @@
                     <option value="פרויקט השקעה / נופש">פרויקט השקעה / נופש</option>
                     <option value="אחר">אחר</option>
                 </select>
+
+                <div class="home-final-cta__project-cards" data-project-options>
+                    <button type="button" data-value="בית פרטי / דופלקס" class="is-active">בית פרטי</button>
+                    <button type="button" data-value="דירת גן / קוטג׳">דופלקס</button>
+                    <button type="button" data-value="וילה/קוטג׳">וילה/קוטג׳</button>
+                    <button type="button" data-value="יחידת דיור נפרדת (ADU)">יחידת דיור</button>
+                </div>
+
                 <label class="sr-only" for="lead-message">הודעה</label>
                 <textarea id="lead-message" name="message" maxlength="1500" placeholder="הודעה (אופציונלי)"></textarea>
-                <button type="submit">שלחו ונחזור אליכם</button>
+
+                <label class="home-final-cta__consent">
+                    <input type="checkbox" name="consent_marketing">
+                    <span>אני מאשר/ת קבלת עדכונים והצעות מ-Click Home</span>
+                </label>
+
+                <button type="submit" class="home-final-cta__submit">
+                    <span>שלחו ונתחיל בתכנון הבית שלכם</span>
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                </button>
+
+                <p class="home-final-cta__security-note">
+                    <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                    <span>הפרטים שלכם מאובטחים ולא יועברו לגורם שלישי</span>
+                </p>
             </form>
         </div>
     </div>
