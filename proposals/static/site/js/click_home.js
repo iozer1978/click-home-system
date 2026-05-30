@@ -60,6 +60,27 @@
   }
 
   function initFaqAccordion() {
+    function keepQuestionAnchor(btn, beforeTop) {
+      if (!btn) return;
+      var ticks = 0;
+      function adjust() {
+        var afterTop = btn.getBoundingClientRect().top;
+        var delta = afterTop - beforeTop;
+        if (Math.abs(delta) > 1) {
+          window.scrollBy(0, delta);
+        }
+      }
+      function rafLoop() {
+        adjust();
+        ticks += 1;
+        if (ticks < 10) {
+          requestAnimationFrame(rafLoop);
+        }
+      }
+      requestAnimationFrame(rafLoop);
+      window.setTimeout(adjust, 380);
+    }
+
     function animateOpen(item, panel) {
       if (!panel) return;
       panel.hidden = false;
@@ -113,15 +134,9 @@
           animateClose(item, panel);
         }
 
-        // Keep the clicked question visually anchored in place.
-        // This prevents page jumps when large panels above collapse/open.
-        requestAnimationFrame(function () {
-          var afterTop = btn.getBoundingClientRect().top;
-          var delta = afterTop - beforeTop;
-          if (Math.abs(delta) > 1) {
-            window.scrollBy(0, delta);
-          }
-        });
+        // Keep the clicked question visually anchored in place
+        // during and after the accordion animation.
+        keepQuestionAnchor(btn, beforeTop);
       });
 
       btn.addEventListener("keydown", function (e) {
@@ -186,7 +201,7 @@
       list.innerHTML = items
         .map(function (item, index) {
           var panelId = "faq-panel-" + (index + 1);
-          var isOpen = index === 0;
+          var isOpen = false;
           var intro = (item.introParagraphs || [])
             .map(function (paragraph) {
               return "<p>" + escapeHtml(paragraph) + "</p>";

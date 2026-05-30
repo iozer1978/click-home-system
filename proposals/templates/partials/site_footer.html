@@ -1,21 +1,95 @@
 {% load static %}
 <footer class="site-footer" role="contentinfo">
-    <div class="site-footer__inner">
-        <a class="site-footer__brand" href="{% url 'home' %}">
-            <img src="/media/logo.png" width="120" alt="Click Home" decoding="async" onerror="this.onerror=null;this.src='{% static 'site/img/logo_clickhome.png' %}';">
-        </a>
-        <nav class="site-footer__nav" aria-label="ניווט תחתון">
-            <a href="{% url 'home' %}">דף הבית</a>
-            <a href="{% url 'catalog' %}">דגמים</a>
-            <a href="{% url 'about' %}">אודות</a>
-            <a href="{% url 'contact' %}">צור קשר</a>
-            <a href="{% url 'home' %}#faq">שאלות נפוצות</a>
-        </nav>
-        <div class="site-footer__contact">
-            <a href="tel:+972503439999">050-3439999</a>
-            ·
-            <a href="mailto:info@click-home.co.il">info@click-home.co.il</a>
+    <div class="site-footer__top">
+        <div class="site-footer__grid">
+            <div class="site-footer__col site-footer__col--brand">
+                <a class="site-footer__brand" href="{% url 'home' %}">
+                    <img src="/media/logo.png" width="172" alt="Click Home" decoding="async" onerror="this.onerror=null;this.src='{% static 'site/img/logo_clickhome.png' %}';">
+                </a>
+                <p class="site-footer__brand-copy">בנייה מתקדמת, בתים מודולריים ופתרונות מגורים חכמים בהתאמה אישית.</p>
+                <p class="site-footer__brand-accent">מהתכנון ועד מסירת המפתח.</p>
+            </div>
+
+            <nav class="site-footer__col site-footer__col--links" aria-label="ניווט מהיר">
+                <h3>ניווט מהיר</h3>
+                <a href="{% url 'home' %}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>דף הבית</a>
+                <a href="{% url 'catalog' %}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>דגמים</a>
+                <a href="{% url 'about' %}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>אודות</a>
+                <a href="{% url 'home' %}#how"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>תהליך העבודה</a>
+                <a href="{% url 'home' %}#faq"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>שאלות נפוצות</a>
+                <a href="{% url 'contact' %}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>צור קשר</a>
+            </nav>
+
+            <div class="site-footer__col site-footer__col--services">
+                <h3>השירותים שלנו</h3>
+                <div class="site-footer__service"><i class="fa-regular fa-house" aria-hidden="true"></i><span>בתים מודולריים</span></div>
+                <div class="site-footer__service"><i class="fa-regular fa-building" aria-hidden="true"></i><span>בנייה קלה מתקדמת</span></div>
+                <div class="site-footer__service"><i class="fa-regular fa-hospital" aria-hidden="true"></i><span>וילות בהתאמה אישית</span></div>
+                <div class="site-footer__service"><i class="fa-regular fa-map" aria-hidden="true"></i><span>יחידות אירוח וצימרים</span></div>
+                <div class="site-footer__service"><i class="fa-regular fa-tree-city" aria-hidden="true"></i><span>פתרונות למגרשים פרטיים</span></div>
+                <div class="site-footer__service"><i class="fa-regular fa-clipboard" aria-hidden="true"></i><span>ליווי תכנון, ייצור והקמה</span></div>
+            </div>
+
+            <div class="site-footer__col site-footer__col--contact">
+                <h3>יצירת קשר</h3>
+                <div class="site-footer__contact-item"><span>050-3439999</span><i class="fa-solid fa-phone-volume" aria-hidden="true"></i></div>
+                <div class="site-footer__contact-item"><span>info@click-home.co.il</span><i class="fa-solid fa-envelope" aria-hidden="true"></i></div>
+                <div class="site-footer__contact-item"><span>כל רחבי הארץ</span><i class="fa-solid fa-location-dot" aria-hidden="true"></i></div>
+                <div class="site-footer__hours">
+                    <span class="site-footer__hours-title">שעות פעילות:</span>
+                    <span>ימים א'–ה': 09:00–17:00</span>
+                    <span>יום ו': 09:00–13:00</span>
+                </div>
+                <a class="site-footer__wa-btn" href="https://wa.me/972503439999" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                    <span>דברו איתנו בוואטסאפ</span>
+                </a>
+            </div>
+
+            <div class="site-footer__col site-footer__col--newsletter">
+                <h3>הישארו מעודכנים</h3>
+                <p>הצטרפו לניוזלטר וקבלו עדכונים, טיפים והצעות בלעדיות.</p>
+                <form action="#" method="post" class="site-footer__newsletter-form">
+                    <input type="email" name="newsletter_email" placeholder="כתובת מייל" aria-label="כתובת מייל">
+                    <button type="submit">הרשמה לניוזלטר</button>
+                </form>
+                <div class="site-footer__socials" aria-label="רשתות חברתיות">
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                </div>
+            </div>
         </div>
     </div>
-    <p class="site-footer__copy">© {% now "Y" %} קליק הום חברה בע״מ — כל הזכויות שמורות</p>
+
+    <div class="site-footer__benefits" aria-label="יתרונות השירות">
+        <div class="site-footer__benefit">
+            <i class="fa-solid fa-house" aria-hidden="true"></i>
+            <div><strong>התאמה אישית מלאה</strong><span>כל בית מתוכנן לפי הצרכים שלכם</span></div>
+        </div>
+        <div class="site-footer__benefit">
+            <i class="fa-solid fa-users" aria-hidden="true"></i>
+            <div><strong>ליווי אישי</strong><span>צוות מקצועי זמין לכל אורך הדרך</span></div>
+        </div>
+        <div class="site-footer__benefit">
+            <i class="fa-solid fa-medal" aria-hidden="true"></i>
+            <div><strong>אחריות מלאה</strong><span>שקט נפשי לאורך כל התהליך</span></div>
+        </div>
+        <div class="site-footer__benefit">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <div><strong>איכות ללא פשרות</strong><span>חומרים מתקדמים וביצוע ברמה הגבוהה ביותר</span></div>
+        </div>
+    </div>
+
+    <div class="site-footer__bottom">
+        <div class="site-footer__bottom-right">
+            <a href="#">מדיניות פרטיות</a>
+            <span>|</span>
+            <a href="#">תנאי שימוש</a>
+            <span>|</span>
+            <a href="#">מפת אתר</a>
+        </div>
+        <p class="site-footer__copy">© 2026 Click Home - כל הזכויות שמורות</p>
+        <button type="button" class="site-footer__accessibility"><i class="fa-solid fa-universal-access" aria-hidden="true"></i><span>נגישות</span></button>
+    </div>
 </footer>
