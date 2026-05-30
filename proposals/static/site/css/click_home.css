@@ -1778,15 +1778,6 @@ a:hover {
   border-color: rgba(184, 137, 58, 0.45);
 }
 
-.home-process__step-no {
-  font-size: 2rem;
-  line-height: 1;
-  font-weight: 900;
-  color: rgba(112, 71, 52, 0.95);
-  text-align: center;
-  margin-bottom: 14px;
-}
-
 .home-process__icon {
   width: 62px;
   height: 62px;
@@ -1894,43 +1885,37 @@ a:hover {
   }
 
   .home-process__timeline {
-    grid-template-columns: 1fr;
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 4px 2px 14px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-process__timeline > .home-process__step {
+    scroll-snap-align: start;
+    flex: 0 0 min(300px, 82vw);
     gap: 14px;
   }
 
   .home-process__timeline::before {
-    display: block;
-    top: 16px;
-    bottom: 16px;
-    right: 22px;
-    left: auto;
-    width: 4px;
-    height: auto;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(184, 137, 58, 0.35) 0%, rgba(112, 71, 52, 0.8) 100%);
+    display: none;
   }
 
   .home-process__step {
-    min-height: 0;
+    min-height: 280px;
     text-align: right;
-    padding: 18px 18px 20px 64px;
-    position: relative;
-  }
-
-  .home-process__step-no {
-    text-align: right;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    padding: 18px 16px 20px;
+    position: static;
   }
 
   .home-process__icon {
-    position: absolute;
-    right: 0;
-    top: 20px;
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-    margin: 0;
+    position: static;
+    width: 54px;
+    height: 54px;
+    font-size: 24px;
+    margin: 0 auto 14px;
   }
 
   .home-process__step h3,
@@ -1966,7 +1951,7 @@ a:hover {
 
 @media (max-width: 540px) {
   .home-process__step {
-    padding-left: 54px;
+    min-height: 260px;
   }
 
   .home-process__trust {
