@@ -151,10 +151,38 @@
     }
   }
 
+  function initScrollReveal() {
+    var items = document.querySelectorAll("[data-scroll-reveal]");
+    if (!items.length) return;
+
+    if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
+      items.forEach(function (item) {
+        item.classList.add("is-visible");
+      });
+      return;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -6% 0px" }
+    );
+
+    items.forEach(function (item) {
+      observer.observe(item);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initMobileNav();
     initFaqAccordion();
     initSmoothAnchors();
     initAnalyticsClicks();
+    initScrollReveal();
   });
 })();
