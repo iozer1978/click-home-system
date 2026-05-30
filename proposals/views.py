@@ -1,4 +1,5 @@
 import re
+import mimetypes
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -529,12 +530,24 @@ def house_detail(request, pk):
 
     hero_image_url = ""
     hero_video_url = ""
-    primary_media = house.media_files.filter(is_homepage_card=True).first()
+    hero_video_mime = "video/mp4"
+    media_queryset = house.media_files.all()
+    primary_media = media_queryset.filter(is_homepage_card=True).first()
     if primary_media and primary_media.file:
         if primary_media.media_type == "video":
             hero_video_url = primary_media.file.url
+            guessed_mime, _ = mimetypes.guess_type(primary_media.file.name)
+            if guessed_mime:
+                hero_video_mime = guessed_mime
         else:
             hero_image_url = primary_media.file.url
+    if not hero_video_url:
+        fallback_video = media_queryset.filter(media_type="video").exclude(file="").first()
+        if fallback_video and fallback_video.file:
+            hero_video_url = fallback_video.file.url
+            guessed_mime, _ = mimetypes.guess_type(fallback_video.file.name)
+            if guessed_mime:
+                hero_video_mime = guessed_mime
     if not hero_image_url and not hero_video_url and house.hero_image:
         hero_image_url = house.hero_image.url
     if not hero_image_url and not hero_video_url:
@@ -722,6 +735,7 @@ def house_detail(request, pk):
             'is_fav': is_fav,
             'hero_image_url': hero_image_url,
             'hero_video_url': hero_video_url,
+            'hero_video_mime': hero_video_mime,
             'gallery_images': gallery_images,
             'interior_images': interior_images,
             'hero_title': hero_title,

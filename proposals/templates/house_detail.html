@@ -53,7 +53,7 @@
             <div class="house-premium__hero-media">
                 {% if hero_video_url %}
                 <video autoplay muted loop playsinline preload="metadata" poster="{{ hero_image_url|default:'' }}">
-                    <source src="{{ hero_video_url }}">
+                    <source src="{{ hero_video_url }}" type="{{ hero_video_mime|default:'video/mp4' }}">
                 </video>
                 {% elif hero_image_url %}
                 <img src="{{ hero_image_url }}" alt="{{ house.title }}" fetchpriority="high" decoding="async">
