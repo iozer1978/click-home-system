@@ -375,8 +375,8 @@
                 <div class="home-final-cta__floating-contact">
                     <div class="home-final-cta__floating-text">
                         <span>עדיפים לדבר?</span>
-                        <strong>079-580-7494</strong>
-                        <small>א׳-ה׳ 08:00-18:00</small>
+                        <strong>0503439999</strong>
+                        <small>א׳-ה׳ 09:00-18:00 ושישי 09:00-13:00</small>
                     </div>
                     <span class="home-final-cta__floating-icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
                 </div>
@@ -399,7 +399,7 @@
 
                 <label class="sr-only" for="lead-interest">סוג הפרויקט</label>
                 <select id="lead-interest" name="interest_type">
-                    <option value="בית פרטי / דופלקס">בית פרטי / דופלקס</option>
+                    <option value="בית פרטי / בית נופש">בית פרטי / בית נופש</option>
                     <option value="דירת גן / קוטג׳">דירת גן / קוטג׳</option>
                     <option value="יחידת דיור נפרדת (ADU)">יחידת דיור נפרדת (ADU)</option>
                     <option value="פרויקט השקעה / נופש">פרויקט השקעה / נופש</option>
@@ -407,8 +407,8 @@
                 </select>
 
                 <div class="home-final-cta__project-cards" data-project-options>
-                    <button type="button" data-value="בית פרטי / דופלקס" class="is-active">בית פרטי</button>
-                    <button type="button" data-value="דירת גן / קוטג׳">דופלקס</button>
+                    <button type="button" data-value="בית פרטי / בית נופש" class="is-active">בית פרטי</button>
+                    <button type="button" data-value="פרויקט השקעה / נופש">בית נופש</button>
                     <button type="button" data-value="וילה/קוטג׳">וילה/קוטג׳</button>
                     <button type="button" data-value="יחידת דיור נפרדת (ADU)">יחידת דיור</button>
                 </div>
@@ -435,21 +435,158 @@
     </div>
 </section>
 
-<section id="faq" class="home-faq-wrap" aria-labelledby="faq-heading">
-    <div class="container" style="max-width:1180px;margin-inline:auto;padding:0 16px;">
-        <h2 id="faq-heading" class="home-projects__title" style="margin-bottom:24px;">שאלות נפוצות</h2>
-        <div class="faq-list" data-faq-accordion data-faq-single="true">
-            {% for faq in faqs_display %}
-            <div class="faq-item">
-                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-{{ forloop.counter }}">
-                    {{ faq.question }}
+<section id="faq" class="home-faq-wrap home-faq--premium" aria-labelledby="faq-heading" data-scroll-reveal>
+    <div class="home-faq__container">
+        <p class="home-faq__kicker">שאלות נפוצות</p>
+        <h2 id="faq-heading" class="home-faq__title">כל מה שחשוב לדעת לפני שבונים את הבית שלכם</h2>
+        <p class="home-faq__sub">ריכזנו עבורכם את התשובות לשאלות הנפוצות ביותר כדי שתוכלו לקבל החלטה בביטחון מלא.</p>
+
+        <div class="faq-list home-faq__list" data-faq-accordion data-faq-single="true">
+            <div class="faq-item is-open">
+                <button type="button" class="faq-item__question" aria-expanded="true" aria-controls="faq-panel-1">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-house" aria-hidden="true"></i> למה יותר ויותר משפחות בוחרות בבית בבנייה מתקדמת מפלדה במקום בבנייה קונבנציונלית?</span>
                     <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
                 </button>
-                <div class="faq-item__panel" id="faq-panel-{{ forloop.counter }}" hidden>
-                    <p style="margin:0;">{{ faq.answer }}</p>
+                <div class="faq-item__panel" id="faq-panel-1">
+                    <p>בתי Click Home מבוססים על קונסטרוקציית פלדה מתקדמת המשלבת חוזק הנדסי גבוה, דיוק ייצור וביצועים תרמיים מתקדמים.</p>
+                    <p>שיטה זו נמצאת בשימוש נרחב בארצות הברית, קנדה, אוסטרליה, ניו זילנד ומדינות רבות באירופה, באזורים המתמודדים עם תנאי אקלים קיצוניים, רוחות חזקות, שלג, לחות גבוהה ורעידות אדמה.</p>
+                    <div class="home-faq__adv-box">
+                        <h3>יתרונות הבנייה המתקדמת מפלדה</h3>
+                        <div class="home-faq__adv-grid">
+                            <span>✔ חוזק מבני גבוה במיוחד</span><span>✔ עמידות טובה יותר בפני רעידות אדמה</span><span>✔ בידוד תרמי ואקוסטי מתקדם</span><span>✔ פחות סדקים ותחזוקה</span><span>✔ זמן בנייה קצר משמעותית</span><span>✔ דיוק הנדסי גבוה</span><span>✔ פחות פסולת בנייה</span><span>✔ גמישות תכנונית גבוהה</span><span>✔ איכות ביצוע אחידה ומבוקרת</span>
+                        </div>
+                    </div>
+                    <div class="home-faq__highlight">בית בבנייה מתקדמת מעניק שילוב של חוזק, איכות, נוחות ויעילות שלאורך זמן הופכים אותו לבחירה חכמה עבור משפחות רבות.</div>
                 </div>
             </div>
-            {% endfor %}
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-2">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-person-digging" aria-hidden="true"></i> כמה זמן לוקח לבנות בית בבנייה מתקדמת?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-2" hidden>
+                    <p>משך הבנייה משתנה בהתאם לגודל הבית, רמת הגמר ומורכבות הפרויקט.</p>
+                    <p>עם זאת, אחד היתרונות המשמעותיים של בנייה מתקדמת הוא קיצור משמעותי של לוחות הזמנים ביחס לבנייה מסורתית.</p>
+                    <div class="home-faq__stat-grid">
+                        <div><strong>בנייה מסורתית</strong><span>12-18 חודשים ואף יותר</span></div>
+                        <div><strong>בנייה מתקדמת</strong><span>מספר חודשים בלבד בהתאם לפרויקט</span></div>
+                    </div>
+                    <div class="home-faq__highlight">פחות זמן המתנה, פחות אי-ודאות וכניסה מהירה יותר לבית החדש שלכם.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-3">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-temperature-half" aria-hidden="true"></i> האם בית בבנייה מתקדמת מפלדה מתאים לאקלים הישראלי?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-3" hidden>
+                    <p>בהחלט.</p>
+                    <p>שיטה זו מיושמת בהצלחה במדינות כמו ארצות הברית, קנדה ואוסטרליה המתמודדות עם תנאי אקלים מאתגרים בהרבה מישראל.</p>
+                    <div class="home-faq__adv-grid">
+                        <span>🌡 בידוד תרמי מתקדם</span><span>🏠 בית נעים יותר בקיץ ובחורף</span><span>⚡ הפחתת הצורך בחימום ובקירור</span><span>🌊 עמידות בסביבה ימית ולחות</span><span>🏗 חוזק מבני יוצא דופן</span><span>🌍 עמידות טובה יותר בפני רעידות אדמה</span><span>🎯 דיוק הנדסי גבוה</span>
+                    </div>
+                    <div class="home-faq__highlight">כאשר משלבים מעטפת מבודדת היטב ותכנון מתקדם מתקבל בית נוח, איכותי ויעיל לכל עונות השנה.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-4">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> האם ניתן להוסיף יחידת דיור בחצר הבית?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-4" hidden>
+                    <p>בהחלט.</p>
+                    <p>יחידות דיור הפכו לאחד הפתרונות המבוקשים ביותר בישראל.</p>
+                    <div class="home-faq__adv-grid">
+                        <span>🏡 מגורים לילדים בוגרים</span><span>👵 יחידה להורים</span><span>💰 הכנסה משכירות</span><span>🌴 יחידת אירוח</span><span>💼 משרד ביתי</span><span>🎨 סטודיו או קליניקה</span>
+                    </div>
+                    <div class="home-faq__highlight">יחידת דיור יכולה להגדיל את ערך הנכס ולייצר פוטנציאל הכנסה נוסף לאורך שנים.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-5">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i> האם ניתן להתאים את תכנון הבית לצרכים שלי?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-5" hidden><p>בוודאי. כל בית מתוכנן בהתאמה אישית מלאה למשפחה, לתקציב, לסגנון החיים ולמטרות העתידיות שלכם. תהליך העבודה מתחיל בהקשבה ואפיון מדויק, וממשיך לתכנון חכם שמאזן בין עיצוב, פונקציונליות ועלויות.</p></div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-6">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-file-signature" aria-hidden="true"></i> האם אתם מלווים גם את תהליך התכנון וההיתרים?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-6" hidden><p>כן. אנו מלווים את הלקוחות משלב הרעיון הראשוני, דרך תכנון מקצועי ותיאומים נדרשים, ועד קבלת האישורים הרלוונטיים. המטרה היא לתת לכם כתובת אחת שמנהלת את התהליך בצורה ברורה, מסודרת ושקופה.</p></div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-7">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-palette" aria-hidden="true"></i> האם ניתן לבחור את חומרי הגמר והעיצוב?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-7" hidden><p>בהחלט. אתם בוחרים את חומרי הגמר, הסגנון והעיצוב בהתאם לטעם האישי ולתקציב שלכם, עם ליווי מקצועי לאורך הדרך. כך מתקבל בית איכותי שנראה בדיוק כמו שחלמתם ומרגיש נכון לשימוש יומיומי.</p></div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-8">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> האם בית בבנייה מתקדמת עמיד לאורך שנים?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-8" hidden><p>כן. קונסטרוקציית פלדה מתקדמת מספקת יציבות גבוהה, דיוק ביצוע ועמידות מצוינת לאורך זמן. בשילוב מעטפת איכותית ותכנון נכון מתקבל בית חזק, בטוח ונוח, עם תחזוקה יעילה יותר ביחס לשיטות בנייה מסורתיות.</p></div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-9">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-key" aria-hidden="true"></i> האם ניתן להרחיב את הבית בעתיד?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-9" hidden><p>ברוב המקרים כן. אחד היתרונות המשמעותיים בבנייה מתקדמת הוא גמישות תכנונית גבוהה יותר, שמאפשרת לתכנן כבר היום אפשרויות הרחבה עתידיות. כך הבית יכול להתאים את עצמו לשינויים במשפחה ובצרכים לאורך השנים.</p></div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-10">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-briefcase" aria-hidden="true"></i> מה כוללת מעטפת השירות של Click Home?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-10" hidden><p>מעטפת השירות שלנו כוללת ליווי אישי מהשלב הראשון ועד קבלת המפתח, אפיון צרכים, תכנון, בחירת מפרט, ניהול תהליך ובקרה שוטפת. אתם נהנים מתהליך מסודר עם נקודת קשר מרכזית ושקיפות מלאה בכל שלב.</p></div>
+            </div>
+
+            <div class="faq-item">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-11">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-handshake" aria-hidden="true"></i> האם יש לי איש קשר אחד שמלווה אותי לאורך כל הדרך?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-11" hidden><p>כן. לכל לקוח מותאם ליווי אישי רציף, כך שיש לכם כתובת ברורה ומוכרת לכל שאלה, עדכון או החלטה. זה מקצר תהליכים, מונע אי-הבנות ומעניק שקט וביטחון לאורך כל המסע.</p></div>
+            </div>
+
+            <div class="faq-item faq-item--trust">
+                <button type="button" class="faq-item__question" aria-expanded="false" aria-controls="faq-panel-12">
+                    <span class="home-faq__q-head"><i class="fa-solid fa-star" aria-hidden="true"></i> למה משפחות בוחרות ב-Click Home?</span>
+                    <span class="faq-item__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="faq-item__panel" id="faq-panel-12" hidden>
+                    <div class="home-faq__trust-card">
+                        <p>כי אצלנו משלבים הקשבה אמיתית, תכנון מותאם אישית, בנייה מתקדמת, שקיפות מלאה וליווי אישי עד המפתח.</p>
+                        <div class="home-faq__trust-icons">
+                            <span><i class="fa-solid fa-ear-listen" aria-hidden="true"></i> הקשבה</span>
+                            <span><i class="fa-solid fa-compass-drafting" aria-hidden="true"></i> התאמה אישית</span>
+                            <span><i class="fa-solid fa-binoculars" aria-hidden="true"></i> שקיפות</span>
+                            <span><i class="fa-solid fa-layer-group" aria-hidden="true"></i> מעטפת מלאה</span>
+                            <span><i class="fa-solid fa-key" aria-hidden="true"></i> קבלת מפתח</span>
+                            <span><i class="fa-solid fa-shield-heart" aria-hidden="true"></i> ביטחון ושקט</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="home-faq__cta" data-scroll-reveal>
+            <h3>לא מצאתם תשובה?</h3>
+            <p>נשמח לענות על כל שאלה ולסייע לכם לבחור את הפתרון המתאים ביותר עבורכם.</p>
+            <a href="#lead">לתיאום פגישת ייעוץ</a>
         </div>
     </div>
 </section>
