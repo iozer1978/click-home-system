@@ -1475,11 +1475,12 @@ a:hover {
 }
 
 .home-projects__signature {
-  margin: 18px 0 0;
+  margin: 26px 0 0;
   font-size: 1.02rem;
   font-weight: 800;
   color: var(--btn-brand);
   line-height: 1.8;
+  text-align: center;
 }
 
 .home-projects__cta {
