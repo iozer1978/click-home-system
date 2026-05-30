@@ -95,6 +95,7 @@
         var panel = item.querySelector(".faq-item__panel");
         var open = !item.classList.contains("is-open");
         var root = item.closest("[data-faq-accordion]");
+        var beforeTop = btn.getBoundingClientRect().top;
         if (root && root.getAttribute("data-faq-single") !== "false") {
           root.querySelectorAll(".faq-item.is-open").forEach(function (o) {
             if (o !== item) {
@@ -111,6 +112,16 @@
         } else {
           animateClose(item, panel);
         }
+
+        // Keep the clicked question visually anchored in place.
+        // This prevents page jumps when large panels above collapse/open.
+        requestAnimationFrame(function () {
+          var afterTop = btn.getBoundingClientRect().top;
+          var delta = afterTop - beforeTop;
+          if (Math.abs(delta) > 1) {
+            window.scrollBy(0, delta);
+          }
+        });
       });
 
       btn.addEventListener("keydown", function (e) {
