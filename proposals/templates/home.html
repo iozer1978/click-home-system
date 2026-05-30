@@ -262,19 +262,63 @@
 </section>
 
 <section class="home-testimonials" aria-labelledby="testimonials-heading">
-    <div class="home-testimonials__contain">
-        <h2 id="testimonials-heading" class="home-testimonials__title">מה הלקוחות שלנו אומרים</h2>
-        <p class="home-testimonials__tag">ליווי אישי, תכנון מדויק ושקט נפשי לכל אורך הפרויקט</p>
-        <div class="home-testimonials__grid">
-            <figure class="home-testimonials__card">
-                <blockquote>“תהליך מסודר, תקשורת ברורה והבית הורכב בזמן — ממליצים בחום.”</blockquote>
-            </figure>
-            <figure class="home-testimonials__card">
-                <blockquote>“התאמות בגימורים והשקט הנפשי שיש כשיודעים מה מקבלים.”</blockquote>
-            </figure>
-            <figure class="home-testimonials__card">
-                <blockquote>“שילוב של איכות תעשייתית וגמישות בתכנון — בדיוק מה שחיפשנו.”</blockquote>
-            </figure>
+    <div class="home-testimonials__contain" data-scroll-reveal>
+        <h2 id="testimonials-heading" class="home-testimonials__title">מה הלקוחות שלנו אומרים?</h2>
+        <p class="home-testimonials__tag">משפחות ולקוחות שבחרו ב-Click Home משתפים את חוויית הליווי, השקיפות והדרך לבית החדש שלהם.</p>
+        <div class="home-testimonials__carousel" data-testimonials-carousel>
+            <button type="button" class="home-testimonials__nav home-testimonials__nav--prev" aria-label="חוות דעת קודמת">
+                <span aria-hidden="true">‹</span>
+            </button>
+
+            <div class="home-testimonials__viewport">
+                <div class="home-testimonials__track">
+                    <figure class="home-testimonials__card" data-slide data-scroll-reveal>
+                        <div class="home-testimonials__stars" aria-hidden="true">★★★★★</div>
+                        <div class="home-testimonials__quote-icon" aria-hidden="true">❝</div>
+                        <blockquote>“הרגשנו שיש לנו כתובת אחת לכל התהליך”</blockquote>
+                        <p>מהפגישה הראשונה ועד קבלת המפתח קיבלנו ליווי אישי, זמינות מלאה ותחושת ביטחון שלא הכרנו.</p>
+                        <figcaption>
+                            <span class="home-testimonials__avatar">כ</span>
+                            <span class="home-testimonials__name">משפחת כהן</span>
+                            <span class="home-testimonials__project">בית פרטי</span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="home-testimonials__card" data-slide data-scroll-reveal>
+                        <div class="home-testimonials__stars" aria-hidden="true">★★★★★</div>
+                        <div class="home-testimonials__quote-icon" aria-hidden="true">❝</div>
+                        <blockquote>“הבית יצא בדיוק כמו שחלמנו”</blockquote>
+                        <p>הקשיבו לכל פרט, התאימו את התכנון לצרכים שלנו וליוו אותנו לאורך כל הדרך.</p>
+                        <figcaption>
+                            <span class="home-testimonials__avatar">ל</span>
+                            <span class="home-testimonials__name">משפחת לוי</span>
+                            <span class="home-testimonials__project">בית מגורים</span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="home-testimonials__card" data-slide data-scroll-reveal>
+                        <div class="home-testimonials__stars" aria-hidden="true">★★★★★</div>
+                        <div class="home-testimonials__quote-icon" aria-hidden="true">❝</div>
+                        <blockquote>“שקיפות מלאה ותהליך מסודר”</blockquote>
+                        <p>ידענו בדיוק מה קורה בכל שלב, בלי הפתעות ובלי כאבי ראש.</p>
+                        <figcaption>
+                            <span class="home-testimonials__avatar">פ</span>
+                            <span class="home-testimonials__name">משפחת פלג</span>
+                            <span class="home-testimonials__project">יחידת דיור</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <button type="button" class="home-testimonials__nav home-testimonials__nav--next" aria-label="חוות דעת הבאה">
+                <span aria-hidden="true">›</span>
+            </button>
+
+            <div class="home-testimonials__dots" role="tablist" aria-label="ניווט חוות דעת">
+                <button type="button" class="is-active" data-dot="0" aria-label="חוות דעת 1"></button>
+                <button type="button" data-dot="1" aria-label="חוות דעת 2"></button>
+                <button type="button" data-dot="2" aria-label="חוות דעת 3"></button>
+            </div>
         </div>
     </div>
 </section>
