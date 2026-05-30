@@ -1717,7 +1717,7 @@ a:hover {
   width: 100vw;
   height: 850px;
   margin-inline: calc(50% - 50vw);
-  overflow: hidden;
+  overflow: visible;
   border: 0;
   border-radius: 0;
   padding: 0;
@@ -1754,12 +1754,13 @@ a:hover {
   height: 100%;
   min-height: 850px;
   border-radius: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .house-premium__hero-media {
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
 .house-premium__hero-media img {
@@ -1842,13 +1843,13 @@ a:hover {
   width: 90%;
   max-width: 1700px;
   height: 220px;
-  z-index: 100;
+  z-index: 320;
   margin: 0;
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: none;
   border-radius: 32px;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 26px 68px rgba(0, 0, 0, 0.2);
   padding: 14px 18px;
 }
 
@@ -1857,6 +1858,8 @@ a:hover {
   flex-direction: column;
   height: 100%;
   gap: 10px;
+  border: none;
+  box-shadow: none;
 }
 
 .house-premium__feature-items {
