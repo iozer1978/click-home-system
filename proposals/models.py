@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -40,7 +39,7 @@ class HouseType(models.Model):
 
 
 class HouseMedia(models.Model):
-    """מדיה של דגם — סדר התצוגה ותמונת הכרטיס בדף הבית מוגדרים כאן."""
+    """מדיה של דגם — סדר התצוגה והמדיה הראשית לדף הדגם מוגדרים כאן."""
     MEDIA_TYPES = (("image", "תמונה"), ("video", "וידאו"))
     house = models.ForeignKey(
         "HouseModel", on_delete=models.CASCADE, related_name="media_files"
@@ -56,8 +55,8 @@ class HouseMedia(models.Model):
     )
     is_homepage_card = models.BooleanField(
         default=False,
-        verbose_name="תמונת כרטיס בדף הבית",
-        help_text="רק תמונה אחת לכל בית — זו שתופיע ברשימת הדגמים בדף הראשי.",
+        verbose_name="מדיה ראשית לדף הדגם",
+        help_text="פריט אחד בלבד יכול להיות ראשי (תמונה או וידאו) עבור ה-Hero בדף הדגם.",
     )
 
     class Meta:
@@ -67,10 +66,6 @@ class HouseMedia(models.Model):
 
     def clean(self):
         super().clean()
-        if self.is_homepage_card and self.media_type != "image":
-            raise ValidationError(
-                {"is_homepage_card": "תמונת כרטיס לדף הבית זמינה רק לקבצי תמונה, לא לווידאו."}
-            )
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

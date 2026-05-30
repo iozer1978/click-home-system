@@ -51,7 +51,11 @@
                 </div>
             </div>
             <div class="house-premium__hero-media">
-                {% if hero_image_url %}
+                {% if hero_video_url %}
+                <video autoplay muted loop playsinline preload="metadata" poster="{{ hero_image_url|default:'' }}">
+                    <source src="{{ hero_video_url }}">
+                </video>
+                {% elif hero_image_url %}
                 <img src="{{ hero_image_url }}" alt="{{ house.title }}" fetchpriority="high" decoding="async">
                 {% else %}
                 <img src="{% static 'site/img/logo_clickhome.png' %}" alt="Click Home" fetchpriority="high" decoding="async">

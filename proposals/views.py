@@ -527,8 +527,17 @@ def house_detail(request, pk):
     spec_map_from_text = _parse_specs_text(house.specs)
     structured_specs = house.specifications if isinstance(house.specifications, dict) else {}
 
-    hero_image_url = house.hero_image.url if house.hero_image else None
-    if not hero_image_url:
+    hero_image_url = ""
+    hero_video_url = ""
+    primary_media = house.media_files.filter(is_homepage_card=True).first()
+    if primary_media and primary_media.file:
+        if primary_media.media_type == "video":
+            hero_video_url = primary_media.file.url
+        else:
+            hero_image_url = primary_media.file.url
+    if not hero_image_url and not hero_video_url and house.hero_image:
+        hero_image_url = house.hero_image.url
+    if not hero_image_url and not hero_video_url:
         main_image = house.get_main_image()
         hero_image_url = main_image.url if main_image else ""
 
@@ -712,6 +721,7 @@ def house_detail(request, pk):
             'related_houses': related_houses,
             'is_fav': is_fav,
             'hero_image_url': hero_image_url,
+            'hero_video_url': hero_video_url,
             'gallery_images': gallery_images,
             'interior_images': interior_images,
             'hero_title': hero_title,
