@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.utils.html import format_html
 from django.urls import path, reverse
 from django.http import HttpResponseRedirect
@@ -24,6 +25,17 @@ from .models import (
 )
 from .utils import queue_email, send_email_from_queue
 from .models import TabHouse, TabHouseImage
+
+
+class HouseAdminForm(forms.ModelForm):
+    class Meta:
+        model = HouseModel
+        fields = "__all__"
+        widgets = {
+            "house_types": forms.CheckboxSelectMultiple,
+            "usage_types": forms.CheckboxSelectMultiple,
+            "related_models": forms.CheckboxSelectMultiple,
+        }
 
 admin.site.site_header = "Click Home Admin"
 admin.site.site_title = "Click Home"
@@ -67,16 +79,20 @@ class HouseUpgradeInline(admin.TabularInline):
 
 class HouseTechnicalSpecInline(admin.TabularInline):
     model = HouseTechnicalSpec
-    extra = 4
-    fields = ("sort_order", "label", "value")
+    extra = 0
+    fields = ("is_enabled", "sort_order", "preset_key", "label", "value")
     ordering = ("sort_order", "id")
+    verbose_name = "מפרט טכני"
+    verbose_name_plural = "מפרט טכני - סמנו V רק למה שמוצג באתר"
 
 
 class HouseAdvantageItemInline(admin.TabularInline):
     model = HouseAdvantageItem
-    extra = 6
-    fields = ("sort_order", "text")
+    extra = 0
+    fields = ("is_enabled", "sort_order", "preset_key", "text")
     ordering = ("sort_order", "id")
+    verbose_name = "יתרון / מאפיין"
+    verbose_name_plural = "יתרונות / מאפיינים - סמנו V רק למה שמוצג באתר"
 
 
 class TabHouseImageInline(admin.TabularInline):
@@ -95,6 +111,7 @@ class TabHouseImageInline(admin.TabularInline):
 
 @admin.register(HouseModel)
 class HouseAdmin(admin.ModelAdmin):
+    form = HouseAdminForm
     save_on_top = True
     view_on_site = True
     change_form_template = "admin/proposals/housemodel/change_form.html"
@@ -110,7 +127,6 @@ class HouseAdmin(admin.ModelAdmin):
     search_fields = ("title", "config_key", "description", "short_description", "full_description")
     ordering = ("title",)
     inlines = [HouseTechnicalSpecInline, HouseAdvantageItemInline, HouseMediaStackedInline, HouseUpgradeInline]
-    filter_horizontal = ("house_types", "usage_types")
     fieldsets = (
         (
             "פרטים כלליים",
@@ -196,10 +212,39 @@ class HouseAdmin(admin.ModelAdmin):
 
     get_house_types.short_description = "סוגי בית"
 
+    def _ensure_preset_rows(self, obj):
+        if not obj:
+            return
+        for idx, (key, label) in enumerate(HouseTechnicalSpec.PRESET_CHOICES):
+            existing_spec = HouseTechnicalSpec.objects.filter(house=obj, preset_key=key).first()
+            if not existing_spec:
+                HouseTechnicalSpec.objects.create(
+                    house=obj,
+                    preset_key=key,
+                    label=label if key == "custom" else "",
+                    is_enabled=False,
+                    sort_order=idx,
+                )
+        for idx, (key, label) in enumerate(HouseAdvantageItem.PRESET_CHOICES):
+            existing_advantage = HouseAdvantageItem.objects.filter(house=obj, preset_key=key).first()
+            if not existing_advantage:
+                HouseAdvantageItem.objects.create(
+                    house=obj,
+                    preset_key=key,
+                    text=label if key == "custom" else "",
+                    is_enabled=False,
+                    sort_order=idx,
+                )
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        self._ensure_preset_rows(form.instance)
+
     def change_view(self, request, object_id, form_url="", extra_context=None):
         extra_context = extra_context or {}
         obj = self.get_object(request, object_id)
         if obj is not None:
+            self._ensure_preset_rows(obj)
             extra_context["house_public_url"] = request.build_absolute_uri(
                 reverse("house_detail", args=[obj.pk])
             )

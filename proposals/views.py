@@ -603,9 +603,11 @@ def house_detail(request, pk):
     normalized_advantages = []
     if house.advantage_items.exists():
         for advantage_item in house.advantage_items.all():
-            text = str(advantage_item.text).strip()
-            if text:
-                normalized_advantages.append({"title": text, "description": "", "icon": "fa-check"})
+            if not advantage_item.is_enabled:
+                continue
+            title = advantage_item.display_text().strip()
+            if title:
+                normalized_advantages.append({"title": title, "description": "", "icon": "fa-check"})
 
     if not normalized_advantages:
         advantages = house.advantages if isinstance(house.advantages, list) else []
@@ -632,7 +634,9 @@ def house_detail(request, pk):
     specs_grid = []
     if house.technical_specs.exists():
         for technical_spec in house.technical_specs.all():
-            label = str(technical_spec.label).strip()
+            if not technical_spec.is_enabled:
+                continue
+            label = technical_spec.display_label().strip()
             value = str(technical_spec.value).strip()
             if label and value:
                 specs_grid.append({"label": label, "value": value})
@@ -695,6 +699,8 @@ def house_detail(request, pk):
         is_fav = house in request.user.profile.favorites.all()
     subtitle_text = house.short_description or house.short_description_template or house.description
     hero_title = house.marketing_title or house.title
+    has_specs_section = bool(specs_grid)
+    has_advantages_section = bool(normalized_advantages)
     return render(
         request,
         'house_detail.html',
@@ -717,6 +723,8 @@ def house_detail(request, pk):
             'highlights_section_title': house.highlights_section_title or "למה לבחור בדגם הזה?",
             'technical_section_title': house.technical_section_title or "מפרט טכני",
             'extra_images_section_title': house.extra_images_section_title or "תמונות נוספות",
+            'has_specs_section': has_specs_section,
+            'has_advantages_section': has_advantages_section,
         },
     )
 

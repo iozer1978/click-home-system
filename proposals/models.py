@@ -169,9 +169,51 @@ class HouseModel(models.Model):
 
 
 class HouseTechnicalSpec(models.Model):
+    PRESET_CHOICES = [
+        ("structure_type", "סוג המבנה"),
+        ("built_area", "שטח בנוי"),
+        ("external_dimensions", "מידות חיצוניות"),
+        ("rooms_total", "מספר חדרים"),
+        ("bedrooms_total", "מספר חדרי שינה"),
+        ("bathrooms_total", "מספר חדרי רחצה"),
+        ("living_room", "סלון"),
+        ("kitchen", "מטבח"),
+        ("porch", "מרפסת"),
+        ("galvanized_steel_frame", "שלד פלדה מגולוונת"),
+        ("insulated_walls", "קירות מבודדים"),
+        ("thermal_insulation", "בידוד תרמי"),
+        ("acoustic_insulation", "בידוד אקוסטי"),
+        ("aluminum_windows", "חלונות אלומיניום"),
+        ("double_glazing", "זכוכית כפולה"),
+        ("entry_door", "דלת כניסה"),
+        ("interior_doors", "דלתות פנים"),
+        ("flooring", "ריצוף"),
+        ("exterior_cladding", "חיפוי חוץ"),
+        ("interior_cladding", "חיפוי פנים"),
+        ("insulated_roof", "גג מבודד"),
+        ("electrical_system", "מערכת חשמל"),
+        ("plumbing_system", "מערכת אינסטלציה"),
+        ("ac_preparation", "הכנה למיזוג אוויר"),
+        ("equipped_bathroom", "חדר רחצה מאובזר"),
+        ("equipped_kitchen", "מטבח מאובזר"),
+        ("water_sewage_preparation", "הכנה למים וביוב"),
+        ("internet_preparation", "הכנה לאינטרנט / תקשורת"),
+        ("interior_lighting", "תאורת פנים"),
+        ("exterior_lighting", "תאורת חוץ"),
+        ("full_furniture_option", "אפשרות לריהוט מלא"),
+        ("customization_option", "אפשרות להתאמה אישית"),
+        ("delivery_time", "זמן אספקה"),
+        ("installation_time", "זמן התקנה"),
+        ("transport_type", "סוג הובלה"),
+        ("need_crane", "צורך במנוף"),
+        ("need_foundation", "צורך בהכנת תשתית / יסודות"),
+        ("custom", "טקסט מותאם אישית"),
+    ]
     house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name="technical_specs", verbose_name="דגם")
-    label = models.CharField(max_length=120, verbose_name="שם שדה")
-    value = models.CharField(max_length=255, verbose_name="ערך")
+    is_enabled = models.BooleanField(default=True, verbose_name="להציג באתר (V)")
+    preset_key = models.CharField(max_length=60, choices=PRESET_CHOICES, default="custom", verbose_name="פריט מובנה")
+    label = models.CharField(max_length=120, blank=True, verbose_name="כותרת מותאמת (לפריט מותאם)")
+    value = models.CharField(max_length=255, blank=True, verbose_name="ערך")
     sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר תצוגה")
 
     class Meta:
@@ -180,12 +222,47 @@ class HouseTechnicalSpec(models.Model):
         verbose_name_plural = "מפרט טכני"
 
     def __str__(self):
-        return f"{self.house.title} - {self.label}"
+        return f"{self.house.title} - {self.display_label()}"
+
+    def display_label(self):
+        if self.preset_key == "custom":
+            return self.label.strip() if self.label else "פריט מותאם"
+        return self.get_preset_key_display()
 
 
 class HouseAdvantageItem(models.Model):
+    PRESET_CHOICES = [
+        ("fast_construction", "בנייה מהירה"),
+        ("ready_to_place", "פתרון מגורים מוכן להצבה"),
+        ("modern_luxury_design", "עיצוב מודרני ויוקרתי"),
+        ("high_quality_materials", "איכות חומרים גבוהה"),
+        ("advanced_insulation", "בידוד מתקדם לחיסכון באנרגיה"),
+        ("low_maintenance", "תחזוקה נמוכה לאורך שנים"),
+        ("fit_residential", "מתאים למגורים"),
+        ("fit_guest_unit", "מתאים לצימר / יחידת אירוח"),
+        ("fit_office", "מתאים למשרד"),
+        ("fit_clinic", "מתאים לקליניקה"),
+        ("fit_adu", "מתאים ליחידת דיור משלימה"),
+        ("fit_rental", "מתאים להשכרה"),
+        ("smart_space_usage", "ניצול חכם של החלל"),
+        ("large_windows", "חלונות גדולים להכנסת אור טבעי"),
+        ("luxury_look", "מראה יוקרתי ומזמין"),
+        ("fast_installation", "התקנה מהירה באתר"),
+        ("upgrade_option", "אפשרות לשדרוגים"),
+        ("layout_change_option", "אפשרות לשינוי חלוקה פנימית"),
+        ("weather_resistance", "עמידות גבוהה בתנאי מזג אוויר"),
+        ("cost_effective", "פתרון חסכוני ביחס לבנייה רגילה"),
+        ("factory_controlled", "ייצור מבוקר במפעל"),
+        ("less_site_noise", "פחות לכלוך ורעש באתר"),
+        ("fit_private_and_hospitality", "מתאים לקרקע פרטית / משק / מתחם אירוח"),
+        ("easy_transport", "ניתן לשינוע והצבה מהירה"),
+        ("fit_multi_usage", "מתאים למגוון שימושים פרטיים ועסקיים"),
+        ("custom", "טקסט מותאם אישית"),
+    ]
     house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, related_name="advantage_items", verbose_name="דגם")
-    text = models.CharField(max_length=255, verbose_name="יתרון / מאפיין")
+    is_enabled = models.BooleanField(default=True, verbose_name="להציג באתר (V)")
+    preset_key = models.CharField(max_length=60, choices=PRESET_CHOICES, default="custom", verbose_name="יתרון מובנה")
+    text = models.CharField(max_length=255, blank=True, verbose_name="טקסט מותאם (לפריט מותאם)")
     sort_order = models.PositiveIntegerField(default=0, verbose_name="סדר תצוגה")
 
     class Meta:
@@ -194,7 +271,12 @@ class HouseAdvantageItem(models.Model):
         verbose_name_plural = "יתרונות / מאפיינים"
 
     def __str__(self):
-        return f"{self.house.title} - {self.text[:40]}"
+        return f"{self.house.title} - {self.display_text()[:40]}"
+
+    def display_text(self):
+        if self.preset_key == "custom":
+            return self.text.strip() if self.text else ""
+        return self.get_preset_key_display()
 
 
 class TabHouse(models.Model):

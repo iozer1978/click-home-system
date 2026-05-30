@@ -102,6 +102,7 @@
         </div>
     </section>
 
+    {% if has_specs_section %}
     <section class="house-premium__specs">
         <h2>{{ technical_section_title }}</h2>
         <div class="house-premium__spec-grid">
@@ -113,19 +114,21 @@
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
+    {% if has_advantages_section %}
     <section class="house-premium__why">
         <h2>{{ highlights_section_title }}</h2>
-        <div class="house-premium__adv-grid">
+        <ul class="house-premium__adv-list">
             {% for advantage in advantages_display %}
-            <article class="house-premium__adv-card">
-                <i class="fa-solid {{ advantage.icon }}" aria-hidden="true"></i>
-                <h3>{{ advantage.title }}</h3>
-                {% if advantage.description %}<p>{{ advantage.description }}</p>{% endif %}
-            </article>
+            <li class="house-premium__adv-list-item">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                <span>{{ advantage.title }}</span>
+            </li>
             {% endfor %}
-        </div>
+        </ul>
     </section>
+    {% endif %}
 
     <section class="house-premium__gallery-strip" aria-label="{{ extra_images_section_title }}">
         <h2>{{ extra_images_section_title }}</h2>
