@@ -532,7 +532,7 @@ def house_detail(request, pk):
     hero_video_url = ""
     hero_video_mime = "video/mp4"
     media_queryset = house.media_files.all()
-    primary_media = media_queryset.filter(is_homepage_card=True).first()
+    primary_media = media_queryset.filter(is_homepage_card=True).order_by("-id").first()
     if primary_media and primary_media.file:
         if primary_media.media_type == "video":
             hero_video_url = primary_media.file.url
@@ -541,15 +541,18 @@ def house_detail(request, pk):
                 hero_video_mime = guessed_mime
         else:
             hero_image_url = primary_media.file.url
-    if not hero_video_url:
-        fallback_video = media_queryset.filter(media_type="video").exclude(file="").first()
-        if fallback_video and fallback_video.file:
-            hero_video_url = fallback_video.file.url
-            guessed_mime, _ = mimetypes.guess_type(fallback_video.file.name)
-            if guessed_mime:
-                hero_video_mime = guessed_mime
     if not hero_image_url and not hero_video_url and house.hero_image:
         hero_image_url = house.hero_image.url
+    if not hero_image_url and not hero_video_url:
+        first_media = media_queryset.exclude(file="").order_by("sort_order", "id").first()
+        if first_media and first_media.file:
+            if first_media.media_type == "video":
+                hero_video_url = first_media.file.url
+                guessed_mime, _ = mimetypes.guess_type(first_media.file.name)
+                if guessed_mime:
+                    hero_video_mime = guessed_mime
+            else:
+                hero_image_url = first_media.file.url
     if not hero_image_url and not hero_video_url:
         main_image = house.get_main_image()
         hero_image_url = main_image.url if main_image else ""

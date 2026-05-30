@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django import forms
+from django.forms.models import BaseInlineFormSet
+from django.core.exceptions import ValidationError
 from django.utils.html import format_html
 from django.urls import path, reverse
 from django.http import HttpResponseRedirect
@@ -41,18 +43,35 @@ admin.site.site_header = "Click Home Admin"
 admin.site.site_title = "Click Home"
 admin.site.index_title = "ניהול אתר"
 
+class HouseMediaInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        selected_primary = 0
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+            if form.cleaned_data.get("DELETE"):
+                continue
+            if form.cleaned_data.get("is_homepage_card"):
+                selected_primary += 1
+        if selected_primary > 1:
+            raise ValidationError("אפשר לסמן רק מדיה ראשית אחת לדף הדגם (V יחיד).")
+
+
 class HouseMediaStackedInline(admin.StackedInline):
     model = HouseMedia
+    formset = HouseMediaInlineFormSet
     extra = 1
     fields = (
         "thumbnail_preview",
         "file",
         "media_type",
-        "sort_order",
         "is_homepage_card",
     )
     readonly_fields = ("thumbnail_preview",)
-    ordering = ("sort_order", "id")
+    ordering = ("id",)
+    verbose_name = "מדיה לדף הדגם"
+    verbose_name_plural = "מדיה לדף הדגם - סמנו V אחת כמדיה ראשית"
     @admin.display(description="תצוגה")
     def thumbnail_preview(self, obj):
         if not obj.file:
