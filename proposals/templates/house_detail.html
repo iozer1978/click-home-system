@@ -20,81 +20,86 @@
 
 {% block content %}
 <article class="house-premium" dir="rtl">
-    <section class="house-premium__hero">
-        <div class="house-premium__hero-media">
-            {% if hero_image_url %}
-            <img src="{{ hero_image_url }}" alt="{{ house.title }}" fetchpriority="high" decoding="async">
-            {% else %}
-            <img src="{% static 'site/img/logo_clickhome.png' %}" alt="Click Home" fetchpriority="high" decoding="async">
-            {% endif %}
-            <div class="house-premium__hero-overlay"></div>
+    <section class="house-premium__hero" aria-labelledby="house-hero-title">
+        <div class="house-premium__hero-breadcrumbs">
+            <a href="{% url 'home' %}">דף הבית</a>
+            <span>›</span>
+            <a href="{% url 'catalog' %}">דגמים</a>
+            <span>›</span>
+            <strong aria-current="page">{{ house.title }}</strong>
         </div>
-        <div class="house-premium__hero-content">
-            <h1>{{ house.title }}</h1>
-            <p>{{ house.short_description|default:house.description }}</p>
-            <div class="house-premium__hero-meta">
-                <span><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>{{ house.area_sqm }} מ"ר</span>
-                {% for item in hero_highlights %}
-                    {% if item.label == "מספר חדרים" %}
-                    <span><i class="fa-solid fa-bed" aria-hidden="true"></i>{{ item.value }} חדרים</span>
-                    {% endif %}
-                {% endfor %}
+        <div class="house-premium__hero-grid">
+            <div class="house-premium__hero-content">
+                <h1 id="house-hero-title">{{ house.title }}</h1>
+                <p>{{ house.short_description|default:house.description }}</p>
+                <div class="house-premium__hero-cards">
+                    {% for item in hero_cards %}
+                    <article class="house-premium__hero-card">
+                        <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
+                        <span>{{ item.label }}</span>
+                        <strong>{{ item.value }}</strong>
+                    </article>
+                    {% endfor %}
+                </div>
+                <div class="house-premium__hero-cta">
+                    <a href="https://wa.me/972503439999?text=היי, אני רוצה מידע על דגם {{ house.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> שלחו הודעה בוואטסאפ
+                    </a>
+                    <a href="tel:+972503439999" class="btn btn--ghost">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i> צרו קשר 050-3439999
+                    </a>
+                </div>
             </div>
-            <div class="house-premium__hero-cta">
-                <a href="#lead-model" class="btn btn--primary">אני רוצה בית כזה</a>
-                <a href="#about-model" class="btn btn--ghost">קבלו מידע נוסף</a>
-                <a href="https://wa.me/972503439999?text=היי, אני מתעניין בדגם {{ house.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn--gold">
-                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> דברו איתנו עכשיו
-                </a>
+            <div class="house-premium__hero-media">
+                {% if hero_image_url %}
+                <img src="{{ hero_image_url }}" alt="{{ house.title }}" fetchpriority="high" decoding="async">
+                {% else %}
+                <img src="{% static 'site/img/logo_clickhome.png' %}" alt="Click Home" fetchpriority="high" decoding="async">
+                {% endif %}
+                <div class="house-premium__hero-overlay"></div>
             </div>
         </div>
     </section>
 
-    <section class="house-premium__highlights">
-        <div class="house-premium__cards">
-            {% for item in hero_highlights %}
-            <div class="house-premium__card">
+    <section class="house-premium__feature-strip" aria-label="נתוני הדגם">
+        <div class="house-premium__feature-strip-card">
+            {% for item in feature_strip_items %}
+            <article class="house-premium__feature-item">
                 <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
-                <span>{{ item.label }}</span>
+                <span>{{ item.title }}</span>
                 <strong>{{ item.value }}</strong>
-            </div>
+            </article>
             {% endfor %}
         </div>
     </section>
 
-    <section class="house-premium__feature-strip">
-        <div class="house-premium__feature-wrap">
-            {% for feature in feature_strip %}
-            <span><i class="fa-solid fa-check"></i>{{ feature }}</span>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="house-premium__gallery">
-        <div class="house-premium__gallery-main">
-            {% with first_img=gallery_images.0 %}
-            {% if first_img %}
-            <img id="premium-main-image" src="{{ first_img }}" alt="תמונה ראשית של {{ house.title }}" loading="lazy" decoding="async">
+    <section class="house-premium__description-floor" id="about-model">
+        <div class="house-premium__description-copy">
+            <h2>תיאור הדגם</h2>
+            <span class="house-premium__gold-divider" aria-hidden="true"></span>
+            {% if full_description_lines %}
+            <p class="house-premium__description-intro">{{ full_description_lines.0 }}</p>
+            <ul class="house-premium__description-list">
+                {% for line in full_description_lines|slice:"1:" %}
+                <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>{{ line }}</span></li>
+                {% endfor %}
+            </ul>
             {% endif %}
-            {% endwith %}
-            <button type="button" class="house-premium__zoom-btn" data-open-lightbox>
-                <i class="fa-solid fa-expand" aria-hidden="true"></i> צפייה במסך מלא
-            </button>
         </div>
-        <div class="house-premium__thumbs" data-gallery-thumbs>
-            {% for image in gallery_images %}
-            <button type="button" class="house-premium__thumb {% if forloop.first %}is-active{% endif %}" data-image="{{ image }}">
-                <img src="{{ image }}" alt="גלריית {{ house.title }}" loading="lazy" decoding="async">
-            </button>
-            {% endfor %}
+        <div class="house-premium__description-floorplan">
+            {% if house.blueprint_image %}
+            <img src="{{ house.blueprint_image.url }}" alt="תוכנית {{ house.title }}" loading="lazy" decoding="async">
+            {% elif gallery_images.0 %}
+            <img src="{{ gallery_images.0 }}" alt="תוכנית {{ house.title }}" loading="lazy" decoding="async">
+            {% else %}
+            <div class="house-premium__empty">תוכנית הדגם תתווסף בקרוב.</div>
+            {% endif %}
+            {% if house.floor_plan_pdf %}
+            <a href="{{ house.floor_plan_pdf.url }}" class="house-premium__floor-pdf" download>
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i> הורדת תוכנית PDF
+            </a>
+            {% endif %}
         </div>
-    </section>
-
-    <section id="about-model" class="house-premium__about">
-        <h2>על הדגם</h2>
-        {% for paragraph in full_description_lines %}
-        <p>{{ paragraph }}</p>
-        {% endfor %}
     </section>
 
     <section class="house-premium__specs">
@@ -106,29 +111,6 @@
                 <strong>{{ spec.value }}</strong>
             </article>
             {% endfor %}
-        </div>
-    </section>
-
-    <section class="house-premium__floorplan">
-        <h2>תוכנית הדגם</h2>
-        <div class="house-premium__floor-wrap">
-            {% if house.blueprint_image %}
-            <img src="{{ house.blueprint_image.url }}" alt="תוכנית {{ house.title }}" loading="lazy" decoding="async">
-            {% else %}
-            <div class="house-premium__empty">תוכנית הדגם תתווסף בקרוב.</div>
-            {% endif %}
-        </div>
-        <div class="house-premium__floor-actions">
-            {% if house.floor_plan_pdf %}
-            <a href="{{ house.floor_plan_pdf.url }}" class="btn btn--ghost" download>
-                <i class="fa-solid fa-file-pdf"></i> הורדת PDF
-            </a>
-            {% endif %}
-            {% if house.blueprint_image %}
-            <a href="{{ house.blueprint_image.url }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
-                <i class="fa-solid fa-magnifying-glass-plus"></i> זום לתוכנית
-            </a>
-            {% endif %}
         </div>
     </section>
 
@@ -145,12 +127,12 @@
         </div>
     </section>
 
-    <section class="house-premium__interior">
-        <h2>גלריית פנים</h2>
-        <div class="house-premium__interior-grid">
-            {% for image in interior_images %}
-            <figure class="house-premium__interior-item">
-                <img src="{{ image }}" alt="תמונת פנים של {{ house.title }}" loading="lazy" decoding="async">
+    <section class="house-premium__gallery-strip">
+        <div class="house-premium__gallery-strip-grid">
+            {% for image in showcase_images %}
+            <figure class="house-premium__gallery-strip-item">
+                <img src="{{ image.url }}" alt="{{ image.label }} - {{ house.title }}" loading="lazy" decoding="async">
+                <figcaption>{{ image.label }}</figcaption>
             </figure>
             {% endfor %}
         </div>
@@ -175,93 +157,13 @@
         </div>
     </section>
 
-    <section id="lead-model" class="house-premium__lead">
-        <h2>מעוניינים בדגם הזה?</h2>
-        <p>השאירו פרטים ונחזור אליכם עם מידע מלא והצעת מחיר מותאמת אישית.</p>
-        <form method="post" action="{% url 'lead_submit' %}">
-            {% csrf_token %}
-            <input type="hidden" name="source" value="house_detail">
-            <input type="hidden" name="model_name" value="{{ house.title }}">
-            <div class="house-premium__lead-grid">
-                <input type="text" name="full_name" required placeholder="שם מלא">
-                <input type="tel" name="phone" required placeholder="טלפון">
-                <input type="email" name="email" placeholder="דוא״ל">
-                <input type="text" name="message" placeholder="עיר">
-            </div>
-            <div class="house-premium__lead-actions">
-                <button type="submit" class="btn btn--primary">שלחו בקשה</button>
-                <a href="https://wa.me/972503439999?text=היי, אני רוצה מידע מלא על דגם {{ house.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn--gold">
-                    <i class="fa-brands fa-whatsapp"></i> וואטסאפ
-                </a>
-            </div>
-        </form>
-    </section>
-
     <section class="house-premium__final-cta">
-        <h2>אהבתם את הדגם? בואו נבנה אותו עבורכם.</h2>
+        <h2>מוכנים לבנות את הבית שלכם?</h2>
+        <p>צוות המומחים שלנו כאן כדי ללוות אתכם מהתכנון ועד מסירת המפתח.</p>
         <div class="house-premium__final-actions">
-            <a href="tel:+972503439999" class="btn btn--ghost"><i class="fa-solid fa-phone"></i> התקשרו עכשיו</a>
-            <a href="https://wa.me/972503439999?text=אהבתי את הדגם {{ house.title|urlencode }} ורוצה להתקדם" target="_blank" rel="noopener noreferrer" class="btn btn--gold"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            <a href="https://wa.me/972503439999?text=היי, אני רוצה להתקדם עם דגם {{ house.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary"><i class="fa-brands fa-whatsapp"></i> שלחו הודעה בוואטסאפ</a>
+            <a href="tel:+972503439999" class="btn btn--ghost"><i class="fa-solid fa-phone"></i> התקשרו אלינו 050-3439999</a>
         </div>
     </section>
-
-    <div class="house-premium__mobile-sticky">
-        <a href="#lead-model" class="btn btn--primary">השאירו פרטים</a>
-        <a href="https://wa.me/972503439999?text=היי, אני רוצה מידע על {{ house.title|urlencode }}" class="btn btn--gold" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>
-    </div>
-
-    <div class="house-premium__lightbox" data-lightbox hidden>
-        <button type="button" class="house-premium__lightbox-close" data-close-lightbox aria-label="סגירה">×</button>
-        <img src="" alt="תמונה מוגדלת" data-lightbox-image>
-    </div>
 </article>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-  (function () {
-    var mainImage = document.querySelector("#premium-main-image");
-    var thumbs = document.querySelectorAll("[data-gallery-thumbs] .house-premium__thumb");
-    var lightbox = document.querySelector("[data-lightbox]");
-    var lightboxImage = document.querySelector("[data-lightbox-image]");
-    var openBtn = document.querySelector("[data-open-lightbox]");
-    var closeBtn = document.querySelector("[data-close-lightbox]");
-
-    if (mainImage && thumbs.length) {
-      thumbs.forEach(function (thumb) {
-        thumb.addEventListener("click", function () {
-          var src = thumb.getAttribute("data-image");
-          if (!src) return;
-          mainImage.src = src;
-          thumbs.forEach(function (item) { item.classList.remove("is-active"); });
-          thumb.classList.add("is-active");
-        });
-      });
-    }
-
-    function openLightbox() {
-      if (!mainImage || !lightbox || !lightboxImage) return;
-      lightboxImage.src = mainImage.src;
-      lightbox.hidden = false;
-      document.body.style.overflow = "hidden";
-    }
-    function closeLightbox() {
-      if (!lightbox) return;
-      lightbox.hidden = true;
-      document.body.style.overflow = "";
-    }
-
-    // Safety: ensure overlay is never stuck open on initial load/navigation cache.
-    if (lightbox) {
-      lightbox.hidden = true;
-      document.body.style.overflow = "";
-    }
-
-    if (openBtn) openBtn.addEventListener("click", openLightbox);
-    if (mainImage) mainImage.addEventListener("click", openLightbox);
-    if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
-    if (lightbox) lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLightbox(); });
-  })();
-</script>
 {% endblock %}

@@ -506,6 +506,14 @@ def house_detail(request, pk):
                 return int(match.group(0))
         return None
 
+    def _extract_value(spec_map, *keys):
+        for key in keys:
+            value = spec_map.get(key)
+            if value in ("", None):
+                continue
+            return str(value).strip()
+        return ""
+
     spec_map_from_text = _parse_specs_text(house.specs)
     structured_specs = house.specifications if isinstance(house.specifications, dict) else {}
 
@@ -534,23 +542,36 @@ def house_detail(request, pk):
     living_value = _extract_count(structured_specs, "living_room", "סלון") or _extract_count(spec_map_from_text, "סלון")
     kitchen_value = _extract_count(structured_specs, "kitchen", "מטבח") or _extract_count(spec_map_from_text, "מטבח")
 
-    hero_highlights = [
-        {"icon": "fa-ruler-combined", "label": 'שטח בנוי', "value": f'{area_value} מ"ר' if area_value else "מותאם לדגם"},
-        {"icon": "fa-bed", "label": "מספר חדרים", "value": str(bedrooms_value) if bedrooms_value else "מותאם לדגם"},
-        {"icon": "fa-bath", "label": "מספר חדרי רחצה", "value": str(bathrooms_value) if bathrooms_value else "מותאם לדגם"},
+    living_label_value = (
+        _extract_value(structured_specs, "living_room", "living", "סלון מרווח", "סלון")
+        or _extract_value(spec_map_from_text, "סלון מרווח", "סלון")
+        or (str(living_value) if living_value else "")
+    )
+    kitchen_label_value = (
+        _extract_value(structured_specs, "open_kitchen", "kitchen", "מטבח פתוח", "מטבח")
+        or _extract_value(spec_map_from_text, "מטבח פתוח", "מטבח")
+        or (str(kitchen_value) if kitchen_value else "")
+    )
+    porch_label_value = (
+        _extract_value(structured_specs, "porch", "deck", "terrace", "מרפסת עץ", "מרפסת")
+        or _extract_value(spec_map_from_text, "מרפסת עץ", "מרפסת", "דק")
+    )
+
+    hero_cards = [
+        {"icon": "fa-ruler-combined", "label": "שטח בנוי", "value": f'{area_value} מ"ר' if area_value else "מותאם לדגם"},
+        {"icon": "fa-bed", "label": "חדרי שינה", "value": str(bedrooms_value) if bedrooms_value else "מותאם לדגם"},
+        {"icon": "fa-bath", "label": "חדרי רחצה", "value": str(bathrooms_value) if bathrooms_value else "מותאם לדגם"},
         {"icon": "fa-building", "label": "סוג בנייה", "value": house.construction_type or spec_map_from_text.get("סוג מבנה") or "בנייה מתקדמת"},
-        {"icon": "fa-truck-fast", "label": "זמן אספקה", "value": house.delivery_time or "בהתאם לדגם ולמפרט"},
-        {"icon": "fa-shield-halved", "label": "אחריות", "value": house.warranty or spec_map_from_text.get("אחריות") or "בהתאם למפרט"},
     ]
 
-    feature_strip = house.features if isinstance(house.features, list) else []
-    feature_strip = [item for item in feature_strip if isinstance(item, str) and item.strip()]
-    if not feature_strip:
-        feature_strip = [t.name for t in house.house_types.all()[:3]]
-        feature_strip.extend([u.name for u in house.usage_types.all()[:3]])
-        feature_strip.extend(list(spec_map_from_text.keys())[:3])
-        feature_strip = [item for item in feature_strip if item]
-        feature_strip = list(dict.fromkeys(feature_strip))[:8]
+    feature_strip_items = [
+        {"icon": "fa-ruler-combined", "title": "שטח בנוי", "value": f'{area_value} מ"ר' if area_value else "מותאם לדגם"},
+        {"icon": "fa-bed", "title": "חדרי שינה", "value": str(bedrooms_value) if bedrooms_value else "מותאם לדגם"},
+        {"icon": "fa-bath", "title": "חדר רחצה", "value": str(bathrooms_value) if bathrooms_value else "מותאם לדגם"},
+        {"icon": "fa-couch", "title": "סלון מרווח", "value": living_label_value or "כלול בדגם"},
+        {"icon": "fa-utensils", "title": "מטבח פתוח", "value": kitchen_label_value or "בהתאמה אישית"},
+        {"icon": "fa-umbrella-beach", "title": "מרפסת עץ", "value": porch_label_value or "אופציונלי"},
+    ]
 
     full_description = house.full_description or house.description
     description_lines = [line.strip() for line in str(full_description).splitlines() if line.strip()]
@@ -577,6 +598,7 @@ def house_detail(request, pk):
             fallback_lines = [sentence.strip() for sentence in re.split(r"[.\n]", str(house.description or "")) if sentence.strip()]
         for text in fallback_lines[:6]:
             normalized_advantages.append({"title": text, "description": "", "icon": "fa-check"})
+    normalized_advantages = normalized_advantages[:4]
 
     specs_grid = []
     if isinstance(structured_specs, dict) and structured_specs:
@@ -624,6 +646,13 @@ def house_detail(request, pk):
     else:
         related_houses = list(related_qs[:4])
 
+    showcase_candidates = []
+    for image in gallery_images + interior_images:
+        if image and image not in showcase_candidates:
+            showcase_candidates.append(image)
+    showcase_labels = ["סלון", "מטבח", "חדר שינה", "חוץ / מרפסת"]
+    showcase_images = [{"url": url, "label": showcase_labels[idx]} for idx, url in enumerate(showcase_candidates[:4])]
+
     is_fav = False
     if request.user.is_authenticated and hasattr(request.user, 'profile'):
         is_fav = house in request.user.profile.favorites.all()
@@ -637,11 +666,12 @@ def house_detail(request, pk):
             'hero_image_url': hero_image_url,
             'gallery_images': gallery_images,
             'interior_images': interior_images,
-            'hero_highlights': hero_highlights,
-            'feature_strip': feature_strip,
+            'hero_cards': hero_cards,
+            'feature_strip_items': feature_strip_items,
             'full_description_lines': description_lines,
             'specs_grid': specs_grid,
             'advantages_display': normalized_advantages,
+            'showcase_images': showcase_images,
         },
     )
 
