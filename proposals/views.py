@@ -20,6 +20,7 @@ from django.templatetags.static import static as static_url
 import json
 import base64
 from pathlib import Path
+from urllib.parse import quote
 from .models import Quote, HouseModel, HouseUpgrade, UsageType, HouseType, FAQ
 from .forms import ClientRegisterForm
 from .utils import queue_email, send_email_from_queue
@@ -603,22 +604,23 @@ def house_detail(request, pk):
         {
             "icon": "fa-ruler-combined",
             "title": "שטח בנוי",
-            "value": house.built_area_value or (f'{area_value} מ"ר' if area_value else "מותאם לדגם"),
+            "value": house.built_area_value or (f'{area_value} מ"ר' if area_value else ""),
         },
         {
             "icon": "fa-bed",
             "title": "חדרי שינה",
-            "value": house.bedrooms_value or (str(bedrooms_value) if bedrooms_value else "מותאם לדגם"),
+            "value": house.bedrooms_value or (str(bedrooms_value) if bedrooms_value else ""),
         },
         {
             "icon": "fa-bath",
             "title": "חדר רחצה",
-            "value": house.bathroom_value or (str(bathrooms_value) if bathrooms_value else "מותאם לדגם"),
+            "value": house.bathroom_value or (str(bathrooms_value) if bathrooms_value else ""),
         },
-        {"icon": "fa-couch", "title": "סלון מרווח", "value": house.living_room_value or living_label_value or "כלול בדגם"},
-        {"icon": "fa-utensils", "title": "מטבח פתוח", "value": house.open_kitchen_value or kitchen_label_value or "בהתאמה אישית"},
-        {"icon": "fa-umbrella-beach", "title": "מרפסת עץ", "value": house.porch_value or porch_label_value or "אופציונלי"},
+        {"icon": "fa-couch", "title": "סלון מרווח", "value": house.living_room_value or living_label_value or ""},
+        {"icon": "fa-utensils", "title": "מטבח פתוח", "value": house.open_kitchen_value or kitchen_label_value or ""},
+        {"icon": "fa-umbrella-beach", "title": "מרפסת עץ", "value": house.porch_value or porch_label_value or ""},
     ]
+    feature_strip_items = [item for item in feature_strip_items if str(item.get("value", "")).strip()]
 
     full_description = house.full_description or house.description
     description_lines = [line.strip() for line in str(full_description).splitlines() if line.strip()]
@@ -726,7 +728,21 @@ def house_detail(request, pk):
     if request.user.is_authenticated and hasattr(request.user, 'profile'):
         is_fav = house in request.user.profile.favorites.all()
     subtitle_text = house.short_description or house.short_description_template or house.description
+    hero_subtitle = (house.hero_subtitle or house.short_description or house.short_description_template or "").strip()
     hero_title = house.marketing_title or house.title
+    contact_phone_display = (house.contact_phone or "").strip()
+    contact_phone_tel = re.sub(r"[^\d+]", "", contact_phone_display)
+    whatsapp_url = (house.whatsapp_link or "").strip()
+    if not whatsapp_url and contact_phone_display:
+        digits = re.sub(r"\D", "", contact_phone_display)
+        if digits:
+            if digits.startswith("0"):
+                digits = "972" + digits[1:]
+            elif digits.startswith("972"):
+                digits = digits
+            elif digits.startswith("00"):
+                digits = digits[2:]
+            whatsapp_url = f"https://wa.me/{digits}?text={quote(f'היי, אני רוצה מידע על דגם {house.title}')}"
     has_specs_section = bool(specs_grid)
     has_advantages_section = bool(normalized_advantages)
     return render(
@@ -742,6 +758,7 @@ def house_detail(request, pk):
             'gallery_images': gallery_images,
             'interior_images': interior_images,
             'hero_title': hero_title,
+            'hero_subtitle': hero_subtitle,
             'subtitle_text': subtitle_text,
             'hero_cards': hero_cards,
             'feature_strip_items': feature_strip_items,
@@ -755,6 +772,9 @@ def house_detail(request, pk):
             'extra_images_section_title': house.extra_images_section_title or "תמונות נוספות",
             'has_specs_section': has_specs_section,
             'has_advantages_section': has_advantages_section,
+            'contact_phone_display': contact_phone_display,
+            'contact_phone_tel': contact_phone_tel,
+            'whatsapp_url': whatsapp_url,
         },
     )
 

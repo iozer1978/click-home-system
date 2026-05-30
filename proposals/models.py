@@ -99,6 +99,7 @@ class HouseModel(models.Model):
     title = models.CharField(max_length=100, verbose_name="שם הדגם")
     description = models.TextField(verbose_name="תיאור כללי (ראשי)")
     marketing_title = models.CharField(max_length=180, blank=True, verbose_name="כותרת שיווקית")
+    hero_subtitle = models.CharField(max_length=255, blank=True, verbose_name="כותרת משנה לאזור הפתיחה")
     short_description_template = models.CharField(
         max_length=255,
         blank=True,
@@ -144,6 +145,8 @@ class HouseModel(models.Model):
     delivery_time = models.CharField(max_length=120, blank=True, verbose_name="זמן אספקה")
     warranty = models.CharField(max_length=120, blank=True, verbose_name="אחריות")
     construction_type = models.CharField(max_length=120, blank=True, verbose_name="סוג בנייה")
+    contact_phone = models.CharField(max_length=30, blank=True, verbose_name="טלפון ליצירת קשר בדף הדגם")
+    whatsapp_link = models.URLField(blank=True, verbose_name="קישור וואטסאפ בדף הדגם")
     related_models = models.ManyToManyField("self", symmetrical=False, blank=True, verbose_name="דגמים קשורים")
     price_estimate = models.IntegerField(verbose_name="מחיר מחירון", default=0)
     

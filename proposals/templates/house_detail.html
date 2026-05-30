@@ -29,27 +29,6 @@
             <strong aria-current="page">{{ house.title }}</strong>
         </div>
         <div class="house-premium__hero-grid">
-            <div class="house-premium__hero-content">
-                <h1 id="house-hero-title">{{ hero_title|default:house.title }}</h1>
-                <p>{{ subtitle_text }}</p>
-                <div class="house-premium__hero-cards">
-                    {% for item in hero_cards %}
-                    <article class="house-premium__hero-card">
-                        <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
-                        <span>{{ item.label }}</span>
-                        <strong>{{ item.value }}</strong>
-                    </article>
-                    {% endfor %}
-                </div>
-                <div class="house-premium__hero-cta">
-                    <a href="https://wa.me/972503439999?text=היי, אני רוצה מידע על דגם {{ house.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
-                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> שלחו הודעה בוואטסאפ
-                    </a>
-                    <a href="tel:+972503439999" class="btn btn--ghost">
-                        <i class="fa-solid fa-phone" aria-hidden="true"></i> צרו קשר 050-3439999
-                    </a>
-                </div>
-            </div>
             <div class="house-premium__hero-media">
                 {% if hero_video_url %}
                 <video autoplay muted loop playsinline preload="metadata" poster="{{ hero_image_url|default:'' }}">
@@ -62,18 +41,41 @@
                 {% endif %}
                 <div class="house-premium__hero-overlay"></div>
             </div>
+            <div class="house-premium__hero-content">
+                <h1 id="house-hero-title">{{ hero_title|default:house.title }}</h1>
+                {% if hero_subtitle %}
+                <p>{{ hero_subtitle }}</p>
+                {% endif %}
+                <span class="house-premium__hero-title-line" aria-hidden="true"></span>
+            </div>
         </div>
     </section>
 
     <section class="house-premium__feature-strip" aria-label="נתוני הדגם">
         <div class="house-premium__feature-strip-card">
-            {% for item in feature_strip_items %}
-            <article class="house-premium__feature-item">
-                <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
-                <span>{{ item.title }}</span>
-                <strong>{{ item.value }}</strong>
-            </article>
-            {% endfor %}
+            <div class="house-premium__feature-items">
+                {% for item in feature_strip_items %}
+                <article class="house-premium__feature-item">
+                    <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
+                    <span>{{ item.title }}</span>
+                    <strong>{{ item.value }}</strong>
+                </article>
+                {% endfor %}
+            </div>
+            {% if whatsapp_url or contact_phone_display %}
+            <div class="house-premium__feature-actions">
+                {% if whatsapp_url %}
+                <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> שלחו הודעה בוואטסאפ
+                </a>
+                {% endif %}
+                {% if contact_phone_display %}
+                <a href="tel:{{ contact_phone_tel }}" class="btn btn--ghost">
+                    <i class="fa-solid fa-phone" aria-hidden="true"></i> צור קשר {{ contact_phone_display }}
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
     </section>
 

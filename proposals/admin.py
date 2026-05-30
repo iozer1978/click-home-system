@@ -159,6 +159,7 @@ class HouseAdmin(admin.ModelAdmin):
                 "fields": (
                     "description",
                     "marketing_title",
+                    "hero_subtitle",
                     "short_description_template",
                     "short_description",
                     "full_description",
@@ -223,6 +224,8 @@ class HouseAdmin(admin.ModelAdmin):
                     "delivery_time",
                     "warranty",
                     "construction_type",
+                    "contact_phone",
+                    "whatsapp_link",
                 ),
             },
         ),
