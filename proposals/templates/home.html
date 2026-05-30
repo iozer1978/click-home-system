@@ -54,30 +54,16 @@
 
 <section id="projects" class="home-projects" aria-labelledby="projects-heading">
     <div class="home-projects__contain">
-        <h2 id="projects-heading" class="home-projects__title">עובדים עם יצרנים מובילים בעולם</h2>
-        <p class="home-projects__sub">פרויקטים שבוצעו ע״י השותפים שלנו בעולם</p>
-        {% if project_gallery_media %}
-        <div class="home-projects__grid" role="list">
-            {% for house_title, media in project_gallery_media %}
-            <div class="home-projects__thumb" role="listitem">
-                <img src="{{ media.file.url }}" alt="פרויקט בינלאומי — דגם {{ house_title|truncatechars:32 }}" loading="lazy" decoding="async">
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        <div class="home-projects__trust">
-            <div class="home-projects__trust-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="#B8893A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                מאות פרויקטים בעולם
-            </div>
-            <div class="home-projects__trust-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="#B8893A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                טכנולוגיה מוכחת
-            </div>
-            <div class="home-projects__trust-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="#B8893A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                איכות ללא פשרות
-            </div>
+        <div class="home-projects__panel">
+            <h2 id="projects-heading" class="home-projects__title">הבית שלכם מתחיל בהקשבה</h2>
+            <p class="home-projects__lead">ב-Click Home אנחנו מאמינים שלפני שבונים בית, צריך להכיר את האנשים שיגורו בו.</p>
+            <p class="home-projects__copy">לכל משפחה יש חלומות, צרכים, הרגלי חיים, תוכניות לעתיד ותקציב שונה. לכן כל תהליך אצלנו מתחיל בהקשבה אמיתית, בירור צרכים מעמיק והבנה מדויקת של מה שחשוב לכם באמת.</p>
+            <p class="home-projects__copy">עם ניסיון של למעלה מ-15 שנה בליווי משפחות ולקוחות בתחום הנדל"ן וניהול הפרויקטים, למדנו שהבית המושלם אינו בהכרח הבית הגדול ביותר או היקר ביותר - אלא הבית שמתאים בצורה המדויקת ביותר לאנשים שחיים בו.</p>
+            <p class="home-projects__copy">לכן אנו מלווים כל לקוח באופן אישי, החל משלב הרעיון הראשוני, דרך אפיון הצרכים, התכנון ובחירת המפרט, ועד לקבלת המפתח. אנו מעניקים מעטפת מלאה המאפשרת לכם ליהנות מתהליך מסודר, מקצועי ונטול דאגות, עם כתובת אחת שמנהלת עבורכם את כל הפרויקט.</p>
+            <p class="home-projects__copy">השקיפות והאמון הם אבני היסוד שלנו. אנו מאמינים שלקוחות צריכים להיות מעורבים בכל שלב, ולכן אנו מקפידים על תקשורת פתוחה, שיתוף מלא, הצגת האפשרויות בצורה ברורה וליווי אישי לאורך כל הדרך. אצלנו אין הפתעות - יש תהליך ברור, מקצועי ומדויק שמותאם לצרכים ולחלומות שלכם.</p>
+            <p class="home-projects__copy">בין אם אתם מחפשים בית פרטי, וילה, יחידת דיור מניבה, בית נופש או פתרון מגורים מתקדם, המטרה שלנו היא אחת - ליצור עבורכם את הבית שמתאים בדיוק לכם, למשפחה שלכם ולעתיד שאתם חולמים לבנות.</p>
+            <p class="home-projects__signature">Click Home - מקשיבים, מתכננים ובונים את הדרך לבית שמתאים בדיוק לכם.</p>
+            <a class="home-projects__cta" href="#lead">לתיאום פגישת ייעוץ</a>
         </div>
     </div>
 </section>
@@ -94,7 +80,7 @@
             <div class="home-benefits__item">
                 <svg class="icon-line" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
                 <h3>בנייה מהירה תוך 60 יום</h3>
-                <p>ייצור במפעל ושלבי הרכבה מהירים תורמים ללוח זמנים קצר משמעותית לעומת בנייה מסורתית.</p>
+                <p>תכנון מוקדם ושלבי ביצוע מדויקים תורמים ללוח זמנים קצר משמעותית לעומת בנייה מסורתית.</p>
             </div>
             <div class="home-benefits__item">
                 <svg class="icon-line" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-6-6"/><path d="M9 3l6 6"/></svg>
@@ -188,7 +174,7 @@
             <span class="home-process__arrow" aria-hidden="true">→</span>
             <div class="home-process__step">
                 <svg class="icon-line" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 20h20"/><path d="M4 20V10l4 3 4-5 4 4 4-6v12"/><path d="M14 20v-4h-4v4"/></svg>
-                <h3>ייצור והכנה במפעל</h3>
+                <h3>תכנון מפורט ותיאום מלא</h3>
             </div>
             <span class="home-process__arrow" aria-hidden="true">→</span>
             <div class="home-process__step">
@@ -204,26 +190,26 @@
         <h2 id="stats-heading" class="sr-only">מספרים</h2>
         <div class="home-stats__grid">
             <div class="home-stats__card">
-                <div class="home-stats__num">150+</div>
-                <div class="home-stats__label">פרויקטים בעולם</div>
+                <div class="home-stats__num">15+</div>
+                <div class="home-stats__label">שנות ניסיון בליווי לקוחות</div>
             </div>
             <div class="home-stats__card">
-                <div class="home-stats__num">10+</div>
-                <div class="home-stats__label">שנות ניסיון ייצור</div>
+                <div class="home-stats__num">100%</div>
+                <div class="home-stats__label">התאמה אישית לכל פרויקט</div>
             </div>
             <div class="home-stats__card">
-                <div class="home-stats__num">אלפי</div>
-                <div class="home-stats__label">לקוחות מרוצים בעולם</div>
+                <div class="home-stats__num">1</div>
+                <div class="home-stats__label">כתובת אחת מתכנון ועד מפתח</div>
             </div>
         </div>
-        <p class="home-stats__note">הנתונים מתייחסים ליצרנים ולשותפים הבינלאומיים שאיתם Click Home עובדת.</p>
+        <p class="home-stats__note">Click Home מעניקה ליווי אישי, שקיפות ומעטפת מלאה לכל אורך הדרך.</p>
     </div>
 </section>
 
 <section class="home-testimonials" aria-labelledby="testimonials-heading">
     <div class="home-testimonials__contain">
-        <h2 id="testimonials-heading" class="home-testimonials__title">מה לקוחות בעולם אומרים</h2>
-        <p class="home-testimonials__tag">חוות דעת מפרויקטים בינלאומיים של שותפי הייצור</p>
+        <h2 id="testimonials-heading" class="home-testimonials__title">מה הלקוחות שלנו אומרים</h2>
+        <p class="home-testimonials__tag">ליווי אישי, תכנון מדויק ושקט נפשי לכל אורך הפרויקט</p>
         <div class="home-testimonials__grid">
             <figure class="home-testimonials__card">
                 <blockquote>“תהליך מסודר, תקשורת ברורה והבית הורכב בזמן — ממליצים בחום.”</blockquote>

@@ -2,141 +2,80 @@
 {% load static %}
 
 {% block body_class %}page-about{% endblock %}
-{% block title %}אודות — Click Home | מי אנחנו וחזון החברה{% endblock %}
-{% block meta_description %}הכירו את קליק הום — מובילים בייבוא ושיווק בתים יבילים, בתי קונטיינר ופתרונות דיור חכמים. איכות, התאמה אישית וליווי מקצה לקצה.{% endblock %}
+{% block title %}אודות — Click Home | מעטפת מלאה לבית שלכם{% endblock %}
+{% block meta_description %}הכירו את Click Home: ליווי אישי, התאמה מדויקת ומעטפת מלאה מתכנון ועד קבלת המפתח, בשקיפות מלאה.{% endblock %}
 
 {% block extra_head %}
 <style>
-    .about-hero { min-height: 400px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); background-size: cover; background-position: center bottom; background-image: url('/media/main-hero.jpg'); background-color: #ccc; position: relative; }
-    .about-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.6)); border-radius: inherit; }
-    .about-hero__inner { position: relative; z-index: 1; text-align: center; color: #fff; padding: var(--space-xl) var(--space-md); }
-    .about-hero__inner h1 { margin: 0; font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 900; }
-    .about-hero__inner p { margin: 0.5rem 0 0; font-size: 1.15rem; opacity: 0.95; }
-    .about-wrap { max-width: 1000px; margin: -4rem auto var(--space-xl); padding: 0 var(--space-md); position: relative; z-index: 2; }
-    .about-card { background: var(--white); border-radius: var(--radius-md); padding: var(--space-lg); box-shadow: var(--shadow-card); margin-bottom: var(--space-md); border-top: 6px solid var(--primary-green); }
-    .about-card h2 { display: flex; align-items: center; gap: 0.75rem; font-size: 1.35rem; color: var(--primary-green); margin: 0 0 var(--space-md); padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-soft); }
-    .about-card h2 i { color: var(--gold); }
-    .intro-text { font-size: 1.05rem; line-height: 1.85; color: var(--text-muted); text-align: justify; }
-    .intro-text strong { color: var(--primary-green); font-weight: 800; }
-    .vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-md); margin-top: var(--space-md); }
-    .vision-item { text-align: center; padding: var(--space-md); background: var(--bg-soft); border-radius: var(--radius-sm); border: 1px solid var(--border-soft); }
-    .vision-icon { font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem; }
-    .features-list { list-style: none; padding: 0; margin: 0; }
-    .features-list li { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
-    .check-icon { color: var(--white); background: var(--primary-green); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; margin-top: 0.2rem; }
-    .feature-content h3 { margin: 0 0 0.25rem; font-size: 1.05rem; color: var(--primary-green); }
-    .feature-content p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
-    .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
-    @media (max-width: 768px) { .split-section { grid-template-columns: 1fr; } .about-wrap { margin-top: -2rem; } }
-    .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .tag { background: var(--bg-soft); padding: 0.45rem 1rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.9rem; border: 1px solid var(--border-soft); display: inline-flex; align-items: center; gap: 0.35rem; }
-    .tag i { color: var(--primary-green); }
-    .about-cta { text-align: center; margin: var(--space-xl) 0; }
+    .about-hero { min-height: 360px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); background-size: cover; background-position: center center; background-image: url('/media/main-hero.jpg'); background-color: #ccc; position: relative; display: flex; align-items: center; }
+    .about-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,81,50,0.28), rgba(15,81,50,0.66)); border-radius: inherit; }
+    .about-hero__inner { position: relative; z-index: 1; width: min(1080px, calc(100% - 32px)); margin-inline: auto; color: #fff; text-align: right; }
+    .about-hero__kicker { margin: 0 0 10px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.02em; opacity: 0.95; }
+    .about-hero__inner h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; font-weight: 900; }
+    .about-hero__inner p { margin: 14px 0 0; max-width: 700px; font-size: 1.08rem; line-height: 1.75; }
+    .about-wrap { max-width: 1080px; margin: -54px auto var(--space-xl); padding: 0 var(--space-md); position: relative; z-index: 2; }
+    .about-section { background: var(--white); border-radius: var(--radius-md); padding: clamp(20px, 3vw, 34px); margin-bottom: var(--space-md); box-shadow: var(--shadow-card); border: 1px solid rgba(184, 137, 58, 0.2); text-align: right; }
+    .about-section h2 { margin: 0 0 14px; color: var(--primary-green); font-size: clamp(1.25rem, 3vw, 1.9rem); line-height: 1.3; }
+    .about-section p { margin: 0 0 14px; color: var(--text-muted); font-size: 1.03rem; line-height: 1.9; }
+    .about-values { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .about-value-chip { background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: var(--radius-pill); padding: 11px 14px; text-align: center; font-weight: 800; color: var(--btn-brand); }
+    .about-signature { margin-top: 18px; font-weight: 800; color: var(--primary-green); }
+    .about-cta-wrap { margin-top: 10px; text-align: center; }
+    .about-cta-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 26px; border-radius: var(--radius-pill); text-decoration: none; background: var(--btn-brand); color: var(--white) !important; font-weight: 800; font-size: 1rem; transition: background-color var(--transition-fast), transform var(--transition-fast); }
+    .about-cta-btn:hover { background: var(--btn-brand-hover); transform: translateY(-1px); }
+    @media (max-width: 900px) { .about-values { grid-template-columns: repeat(2, minmax(0, 1fr)); } .about-wrap { margin-top: -34px; } }
+    @media (max-width: 560px) { .about-values { grid-template-columns: 1fr; } .about-hero { min-height: 300px; } .about-hero__inner p { font-size: 1rem; } }
 </style>
 {% endblock %}
 
 {% block content %}
 <section class="about-hero" aria-labelledby="about-hero-title">
     <div class="about-hero__inner">
-        <h1 id="about-hero-title">הסיפור שלנו</h1>
-        <p>מובילים את מהפכת הדיור החכם בישראל</p>
+        <p class="about-hero__kicker">אודות Click Home</p>
+        <h1 id="about-hero-title">הבית שלכם מתחיל באנשים</h1>
+        <p>אנחנו מקשיבים, מתכננים ומלווים אתכם באופן אישי כדי להפוך חלום לבית שמתאים בדיוק למשפחה, לתקציב ולאיכות החיים שאתם רוצים לעצמכם.</p>
     </div>
 </section>
 
 <div class="about-wrap">
-    <article class="about-card">
-        <h2><i class="fas fa-building" aria-hidden="true"></i> מי אנחנו?</h2>
-        <div class="intro-text">
-            <strong>Click Home</strong> מתמחה בייבוא, שיווק והפצה של בתים יבילים, בתי קונטיינר ופתרונות מגורים קלים בבנייה מתועשת.
-            <br><br>
-            אנחנו מציעים פתרונות דיור חדשניים, מודרניים וברי־קיימא: עיצוב מתקדם, איכות גבוהה ומחיר גלוי. כל פרויקט מותאם אישית ללקוח – מגודל ומפרט ועד גימורים ותוספות כמו מערכות סולאריות ובית חכם.
-            <br><br>
-            אנחנו מאמינים שדיור בר־השגה לא צריך לבוא על חשבון איכות או קיימות – ולכן בוחרים בקפידה חומרים ותהליכים שמפחיתים פסולת וצריכת משאבים, עם ליווי מקצה לקצה מהתכנון ועד ההתקנה בשטח.
+    <section class="about-section">
+        <h2>אנחנו מתחילים בהקשבה, לא בתבנית קבועה</h2>
+        <p>אנחנו ב-Click Home מאמינים שבית הוא הרבה יותר ממבנה.</p>
+        <p>בית הוא המקום שבו נוצרים הזיכרונות, שבו המשפחה גדלה, שבו חוגגים רגעים מיוחדים ובונים את העתיד.</p>
+        <p>לכן לפני שאנחנו מדברים על תוכניות, מפרטים או חומרי גמר - אנחנו מתחילים באנשים.</p>
+        <p>מאחורי כל בית עומדת משפחה, חלום, סיפור אישי וצרכים ייחודיים. בדיוק בגלל זה אין אצלנו פתרונות מדף ואין שני פרויקטים זהים.</p>
+        <p>אנחנו מקדישים זמן להכיר את הלקוחות שלנו, להבין כיצד הם חיים היום, איך הם חולמים לחיות בעתיד, מה חשוב להם באמת ומה יהפוך עבורם בית למקום מושלם.</p>
+    </section>
+
+    <section class="about-section">
+        <h2>התאמה אישית שמתחילה בהבנה עמוקה</h2>
+        <p>במשך למעלה מ-15 שנה אנו מלווים משפחות, זוגות, משקיעים ובעלי מגרשים בתהליכים משמעותיים של תכנון ובניית סביבת המגורים המתאימה להם.</p>
+        <p>לאורך השנים למדנו שהצלחת הפרויקט אינה מתחילה בתוכנית אדריכלית אלא בהקשבה.</p>
+        <p>לכן כל תהליך מתחיל בהיכרות אמיתית עם הלקוח: מה חשוב לו, איך נראית שגרת החיים שלו, מה הצרכים של בני המשפחה, מה התקציב הנכון עבורו ואיך ניתן להגשים את החלום בצורה החכמה והנכונה ביותר.</p>
+        <p>רק לאחר שאנחנו מבינים את התמונה המלאה, אנו יוצאים יחד לדרך ובונים פתרון שמותאם בדיוק לאנשים שיגורו בו.</p>
+    </section>
+
+    <section class="about-section">
+        <h2>מעטפת מלאה ושקיפות מתכנון ועד קבלת מפתח</h2>
+        <p>אנחנו יודעים שבניית בית היא אחת ההחלטות הגדולות והמרגשות בחיים, אך גם אחת המורכבות שבהן.</p>
+        <p>לכן יצרנו עבור לקוחותינו מעטפת שירות מלאה המאפשרת להם ליהנות מכתובת אחת שמרכזת ומנהלת את כל התהליך - החל משלב הרעיון הראשוני, דרך התכנון, בחירת המפרט וחומרי הגמר, ועד למסירת הבית המוכן.</p>
+        <p>בנוסף לבתי מגורים פרטיים, אנו מציעים גם פתרונות מתקדמים של יחידות דיור, בתי נופש ופתרונות השקעה מניבים, המאפשרים ללקוחות ליצור מקורות הכנסה נוספים ולמקסם את הפוטנציאל של הנכס שברשותם.</p>
+        <p>הערך החשוב ביותר עבורנו הוא אמון. אנחנו מאמינים ששיתוף מלא ושקיפות מוחלטת הם הבסיס לכל מערכת יחסים מוצלחת עם לקוח.</p>
+        <p>לכן אנו מקפידים לשתף את לקוחותינו בכל שלב, לספק מידע ברור, להסביר כל החלטה וללוות אותם באופן אישי לאורך כל הדרך. אצלנו אין הפתעות ואין סימני שאלה - יש תהליך מסודר, ליווי צמוד וידיעה שיש מי שמנהל עבורכם את הפרויקט כאילו היה הבית שלו.</p>
+        <p>המטרה שלנו אינה רק לבנות עבורכם בית. המטרה שלנו היא ליצור עבורכם מקום שתרגישו בו בבית - מקום שמתאים למשפחה שלכם, לחלומות שלכם, לתקציב שלכם ולאיכות החיים שאתם רוצים לעצמכם.</p>
+        <p>זה מה שמניע אותנו בכל פרויקט מחדש.</p>
+        <div class="about-values" aria-label="הערכים המובילים של Click Home">
+            <span class="about-value-chip">הקשבה</span>
+            <span class="about-value-chip">התאמה אישית</span>
+            <span class="about-value-chip">שקיפות</span>
+            <span class="about-value-chip">מעטפת מלאה</span>
+            <span class="about-value-chip">קבלת מפתח</span>
         </div>
-    </article>
+        <p class="about-signature">Click Home - הופכים חלומות למציאות, בדרך אישית, מקצועית ומלאת שקיפות.</p>
+    </section>
 
-    <article class="about-card">
-        <h2><i class="fas fa-lightbulb" aria-hidden="true"></i> החזון שלנו</h2>
-        <p style="margin:0 0 1rem;color:var(--text-muted);">להנגיש פתרונות דיור מתקדמים ולספק מענה אמיתי לצרכים המשתנים של שוק הדיור:</p>
-        <div class="vision-grid">
-            <div class="vision-item">
-                <div class="vision-icon" aria-hidden="true"><i class="fas fa-rocket"></i></div>
-                <div style="font-weight:700;">חדשנות וקדמה</div>
-            </div>
-            <div class="vision-item">
-                <div class="vision-icon" aria-hidden="true"><i class="fas fa-leaf"></i></div>
-                <div style="font-weight:700;">ידידותי לסביבה</div>
-            </div>
-            <div class="vision-item">
-                <div class="vision-icon" aria-hidden="true"><i class="fas fa-pencil-ruler"></i></div>
-                <div style="font-weight:700;">התאמה אישית</div>
-            </div>
-            <div class="vision-item">
-                <div class="vision-icon" aria-hidden="true"><i class="fas fa-tag"></i></div>
-                <div style="font-weight:700;">מחיר נגיש</div>
-            </div>
-        </div>
-    </article>
-
-    <div class="split-section">
-        <article class="about-card">
-            <h2><i class="fas fa-check-circle" aria-hidden="true"></i> למה Click Home?</h2>
-            <ul class="features-list">
-                <li>
-                    <span class="check-icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-                    <div class="feature-content">
-                        <h3>סטנדרטים גבוהים</h3>
-                        <p>עבודה עם יצרנים מובילים ועמידה בתקני איכות בינלאומיים.</p>
-                    </div>
-                </li>
-                <li>
-                    <span class="check-icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-                    <div class="feature-content">
-                        <h3>התאמה אישית מלאה</h3>
-                        <p>גמישות מוחלטת בתכנון, בחומרים ובגימורים.</p>
-                    </div>
-                </li>
-                <li>
-                    <span class="check-icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-                    <div class="feature-content">
-                        <h3>קיימות ואחריות</h3>
-                        <p>שימוש בחומרים ותהליכים המפחיתים פסולת וצריכת משאבים.</p>
-                    </div>
-                </li>
-                <li>
-                    <span class="check-icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-                    <div class="feature-content">
-                        <h3>ליווי מקצה לקצה</h3>
-                        <p>משלב הייעוץ והתכנון ועד ההתקנה והמסירה בשטח.</p>
-                    </div>
-                </li>
-            </ul>
-        </article>
-
-        <article class="about-card">
-            <h2><i class="fas fa-tools" aria-hidden="true"></i> התמחות ופתרונות</h2>
-            <p style="font-weight:700;color:var(--text-dark);margin:0 0 0.5rem;">פתרונות דיור:</p>
-            <div class="tag-cloud" style="margin-bottom:1.25rem;">
-                <span class="tag"><i class="fas fa-home" aria-hidden="true"></i> בתי קונטיינר</span>
-                <span class="tag"><i class="fas fa-expand-arrows-alt" aria-hidden="true"></i> בתים מתרחבים</span>
-                <span class="tag"><i class="fas fa-store" aria-hidden="true"></i> מבנים מסחריים</span>
-                <span class="tag"><i class="fas fa-city" aria-hidden="true"></i> בתי קפסולה</span>
-                <span class="tag"><i class="fas fa-industry" aria-hidden="true"></i> בנייה מתועשת קלה</span>
-            </div>
-            <p style="font-weight:700;color:var(--text-dark);margin:0 0 0.5rem;">תוספות ושדרוגים:</p>
-            <div class="tag-cloud">
-                <span class="tag"><i class="fas fa-solar-panel" aria-hidden="true"></i> מערכות סולאריות</span>
-                <span class="tag"><i class="fas fa-wifi" aria-hidden="true"></i> בית חכם</span>
-                <span class="tag"><i class="fas fa-wind" aria-hidden="true"></i> חימום וקירור</span>
-                <span class="tag"><i class="fas fa-couch" aria-hidden="true"></i> ריהוט פנים/חוץ</span>
-                <span class="tag"><i class="fas fa-layer-group" aria-hidden="true"></i> דקים ופרגולות</span>
-            </div>
-        </article>
-    </div>
-
-    <div class="about-cta">
-        <h2 class="section__title" style="margin-bottom:1rem;">מוכנים להתקדם לבית הבא שלכם?</h2>
-        <a href="{% url 'catalog' %}" class="btn btn--primary" style="padding:0.85rem 2rem;">לצפייה בקטלוג הדגמים <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+    <div class="about-cta-wrap">
+        <a href="{% url 'contact' %}" class="about-cta-btn">לתיאום פגישת ייעוץ</a>
     </div>
 </div>
 {% endblock %}

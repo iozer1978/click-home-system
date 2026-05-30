@@ -17,6 +17,7 @@
 
             <nav id="site-drawer-nav" class="site-nav" aria-label="ניווט ראשי">
                 <a class="site-nav__link" href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>דף הבית</a>
+                <a class="site-nav__link" href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>אודות</a>
                 <a class="site-nav__link" href="{% url 'catalog' %}" {% if request.resolver_match.url_name == 'catalog' %}aria-current="page"{% endif %}>דגמים</a>
                 {% if request.resolver_match.url_name == 'home' %}
                 <a class="site-nav__link" href="#how">איך זה עובד</a>
