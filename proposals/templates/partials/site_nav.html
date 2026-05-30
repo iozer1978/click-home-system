@@ -9,9 +9,9 @@
                     <img class="site-header__logo-img" src="/media/logo.png" width="120" alt="Click Home" decoding="async" onerror="this.onerror=null;this.src='{% static 'site/img/logo_clickhome.png' %}';">
                 </a>
                 {% if request.resolver_match.url_name == 'home' %}
-                <a class="nav-cta nav-cta--header-quote" href="#lead">קבל הצעת מחיר</a>
+                <a class="nav-cta nav-cta--header-quote" href="#lead">קבלו הצעת מחיר</a>
                 {% else %}
-                <a class="nav-cta nav-cta--header-quote" href="{% url 'home' %}#lead">קבל הצעת מחיר</a>
+                <a class="nav-cta nav-cta--header-quote" href="{% url 'home' %}#lead">קבלו הצעת מחיר</a>
                 {% endif %}
             </div>
 
@@ -30,9 +30,9 @@
 
                 <div class="site-nav__cta-wrap">
                     {% if request.resolver_match.url_name == 'home' %}
-                    <a class="nav-cta site-nav__cta--mobile" href="#lead">קבל הצעת מחיר</a>
+                    <a class="nav-cta site-nav__cta--mobile" href="#lead">קבלו הצעת מחיר</a>
                     {% else %}
-                    <a class="nav-cta site-nav__cta--mobile" href="{% url 'home' %}#lead">קבל הצעת מחיר</a>
+                    <a class="nav-cta site-nav__cta--mobile" href="{% url 'home' %}#lead">קבלו הצעת מחיר</a>
                     {% endif %}
                 </div>
 
