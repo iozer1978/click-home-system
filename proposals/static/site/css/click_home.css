@@ -2867,7 +2867,7 @@ a:hover {
 }
 
 .home-faq--premium .faq-item {
-  border-radius: 16px;
+  border-radius: 20px;
   border: 1px solid #e8d7b8;
   background: #fff;
   box-shadow: 0 14px 34px rgba(20, 37, 32, 0.08);
@@ -2934,6 +2934,50 @@ a:hover {
   font-size: 1.08rem;
 }
 
+.home-faq__search-wrap {
+  margin: 0 auto 14px;
+  max-width: 620px;
+}
+
+.home-faq__search {
+  width: 100%;
+  min-height: 56px;
+  border-radius: 14px;
+  border: 1px solid #e4cca0;
+  padding: 0 16px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: #0d3b2a;
+  background: #fff;
+}
+
+.home-faq__search:focus {
+  outline: none;
+  border-color: #c89b52;
+  box-shadow: 0 0 0 3px rgba(200, 155, 82, 0.14);
+}
+
+.home-faq__top-benefits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.home-faq__top-benefits span {
+  border: 1px solid #e7d5b2;
+  background: #fffdf8;
+  border-radius: 999px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  color: #2a433b;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
 .home-faq__long-benefits {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2945,6 +2989,28 @@ a:hover {
   border-radius: 12px;
   padding: 10px 12px;
   background: #fff;
+}
+
+.home-faq__benefit-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #1f3c34;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.home-faq__benefit-emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.home-faq__benefit-desc {
+  margin: 8px 0 0;
+  color: #455851;
+  font-size: 0.9rem;
+  line-height: 1.65;
 }
 
 .home-faq__long-benefits h4 {
@@ -2982,6 +3048,12 @@ a:hover {
 
 .home-faq__quick-highlights i {
   color: #c89b52;
+}
+
+.home-faq__highlights-intro {
+  margin: 14px 0 10px;
+  color: #2f463f;
+  font-size: 0.94rem;
 }
 
 .home-faq__adv-box {
@@ -3130,6 +3202,10 @@ a:hover {
 }
 
 @media (max-width: 1024px) {
+  .home-faq__top-benefits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .home-faq__long-benefits,
   .home-faq__quick-highlights,
   .home-faq__adv-grid,
@@ -3156,7 +3232,8 @@ a:hover {
   .home-faq__long-benefits,
   .home-faq__quick-highlights,
   .home-faq__stat-grid,
-  .home-faq__trust-icons {
+  .home-faq__trust-icons,
+  .home-faq__top-benefits {
     grid-template-columns: 1fr;
   }
 }
